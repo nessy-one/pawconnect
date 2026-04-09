@@ -5,8 +5,599 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PawConnect - Adopt</title>
     <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        body {
+            background-color: #F4F1E6;
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* HEADER */
+        .header {
+            background-color: #DA8063;
+            display: flex;
+            align-items: center;
+            padding: 10px 24px;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+
+        .logo-circle {
+            border-radius: 50%;
+            background-color: #3b8fc4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .logo-circle img {
+            width: 52px;
+            height: 52px;
+            object-fit: cover;
+        }
+
+        .search {
+            flex: 2;
+            position: relative;
+            max-width: 80%;
+            margin: 0 auto;
+        }
+
+        .search input {
+            width: 100%;
+            padding: 9px 44px 9px 18px;
+            border-radius: 8px;
+            border: none;
+            background: #F4F1E6;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: #8A8686;
+            outline: none;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+
+        .search input::placeholder {
+            color: #8A8686;
+        }
+
+        .search .search-icon {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8A8686;
+            font-size: 16px;
+            pointer-events: none;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-shrink: 0;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: opacity 0.15s;
+        }
+
+        .nav a:hover { opacity: 0.75; }
+
+        .nav svg {
+            width: 24px;
+            height: 24px;
+            stroke: #012224;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* PAGE CONTENT */
+        .page {
+            max-width: 95%;
+            margin: 0 auto;
+            padding: 32px 32px 60px;
+        }
+
+        /* DESCRIPTION */
+        .desc {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            margin-bottom: 32px;
+        }
+
+        .desc-title {
+            font-family: 'Cherry Bomb One', cursive;
+            font-size: 50px;
+            font-weight: 400;
+            color: #4E8DC0;
+            line-height: 1.2;
+            flex-shrink: 0;
+            width: 220px;
+            align-self: center;
+        }
+
+        .desc img {
+            flex: 1;
+            max-height: 225px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        /*CATEGORY BUTTONS*/
+        .categories {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 36px;
+            gap: 50px;
+        }   
+
+        .btn-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.15s, box-shadow 0.15s;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .btn-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-card img {
+            width: 150px;
+            height: 130px;
+            display: block;
+        }
+
+        /*DIVIDER*/
+        .divi h3 {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #012224;
+            margin-bottom: 16px;
+        }
+
+        /*PRODUCT GRID*/
+        .pet-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .pet-card {
+            background: #F4F1E6;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.15s;
+            cursor: pointer;
+        }
+
+        .pet-card:hover { transform: translateY(-3px); }
+
+        .pet-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .pet-card .card-body {
+            padding: 10px 12px 12px;
+        }
+
+        .card-name-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .card-name-row span {
+            font-size: 15px;
+            font-weight: 600;
+            color: #012224;
+        }
+
+        .heart-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .heart-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: #8A8686;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.15s, fill 0.15s;
+        }
+
+        .heart-btn.liked svg {
+            stroke: #DA8063;
+            fill: #DA8063;
+        }
+
+        .pet-tag {
+            display: inline-block;
+            background: #4E8DC0;
+            color: #F4F1E6;
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+
+        .pet-card.hidden { display: none; }
+
+        /*MODAL*/
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+ 
+        .modal-overlay.open {
+            display: flex;
+        }
+ 
+        .modal {
+            background: #F4F1E6;
+            border-radius: 18px;
+            width: 400px;
+            max-width: 95vw;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        }
+ 
+        .modal-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+ 
+        .modal-body {
+            padding: 20px 24px 28px;
+        }
+ 
+        .modal-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #012224;
+            margin-bottom: 4px;
+        }
+ 
+        .modal-price {
+            font-size: 18px;
+            color: #DA8063;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+ 
+        .modal-tag {
+            display: inline-block;
+            background: #4E8DC0;
+            color: #F4F1E6;
+            font-size: 11px;
+            padding: 3px 12px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+        }
+ 
+        .modal-desc {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+ 
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+ 
+        .btn-add-cart {
+            flex: 1;
+            background: #DA8063;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+ 
+        .btn-add-cart:hover { opacity: 0.85; }
+ 
+        .btn-close-modal {
+            background: #e5e0d0;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+ 
+        .btn-close-modal:hover { background: #d4cfbf; }
+    </style>
 </head>
 <body>
-    
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo-circle">
+            <img src="image/logo.png" alt="PawConnect Logo">
+        </div>
+        <div class="search">
+            <input type="text" placeholder="Search">
+            <span class="search-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+            </span>
+        </div>
+        <div class="nav">
+            <a href="settings.html" title="Profile">
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </a>
+            <a href="favorites.html" title="Favorites">
+                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </a>
+            <a href="notifications.html" title="Notifications">
+                <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </a>
+        </div>
+    </div>
+
+    <div class="page">
+        <!-- DESCRIPTION -->
+        <div class="desc">
+            <div class="desc-title">Shop</div>
+            <img src="image/shop.jpg" alt="Shop">
+        </div>
+
+        <!-- CATEGORIES -->
+        <div class="categories">
+            <button class="btn-card" onclick="filterCat('toys', this)">
+                <img src="image/toys.png" alt="Toys">
+            </button>
+            <button class="btn-card" onclick="filterCat('accessories', this)">
+                <img src="image/accessories.png" alt="Accessories">
+            </button>
+            <button class="btn-card" onclick="filterCat('apparel', this)">
+                <img src="image/apparel.png" alt="Apparel">
+            </button>
+            <button class="btn-card" onclick="filterCat('food', this)">
+                <img src="image/food.png" alt="Food">
+            </button>
+            <button class="btn-card" onclick="filterCat('grooming', this)">
+                <img src="image/grooming.png" alt="Grooming">
+            </button>
+            <button class="btn-card" onclick="filterCat('others', this)">
+                <img src="image/others.png" alt="Others">
+            </button>
+        </div>
+
+        <!-- DIVIDER -->
+        <div class="divi">
+            <h3>DISCOVER</h3>
+        </div>
+
+        <!-- PET GRID -->
+        <div class="pet-grid" id="petGrid">
+            <!-- FOOD -->
+            <div class="pet-card" data-type="food" onclick="openModal(this)">
+                <img src="image/whiskas.png" alt="Whiskas"
+                data-name="Whiskas"
+                data-price="₱ 000"
+                data-category="Food"
+                data-desc="Cat food iykyk">
+
+                <div class="card-body">
+                    <div class="card-name-row">
+                        <span>Whiskas</span>
+                        <button class="heart-btn" onclick="toggleHeart(this)">
+                            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        </button>
+                    </div>
+                    <span>₱ 000</span>
+                </div>
+            </div>
+
+            <!-- TOYS -->
+            <div class="pet-card" data-type="toys" onclick="openModal(this)">
+                <img src="image/chewrope.png" alt="Chew Rope"
+                     data-name="Chew Rope"
+                     data-price="₱ 000"
+                     data-category="toys"
+                     data-desc="Durable braided rope toy. Perfect for tug-of-war and dental health.">
+                <div class="card-body">
+                    <div class="card-name-row">
+                        <span>Chew Rope</span>
+                        <button class="heart-btn" onclick="toggleHeart(event, this)">
+                            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        </button>
+                    </div>
+                    <span>₱ 000</span>
+                </div>
+            </div>
+
+            <!-- ACCESSORIES -->
+            <div class="pet-card" data-type="accessories" onclick="openModal(this)">
+                <img src="image/petcollar.png" alt="Pet Collar"
+                     data-name="Pet Collar"
+                     data-price="₱ 000"
+                     data-category="accessories"
+                     data-desc="Adjustable nylon collar with a quick-release buckle. Available in multiple colors.">
+                <div class="card-body">
+                    <div class="card-name-row">
+                        <span>Pet Collar</span>
+                        <button class="heart-btn" onclick="toggleHeart(event, this)">
+                            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        </button>
+                    </div>
+                    <span>₱ 000</span>
+                </div>
+            </div>
+ 
+            <!-- APPAREL -->
+            <div class="pet-card" data-type="apparel" onclick="openModal(this)">
+                <img src="image/pethoodie.png" alt="Pet Hoodie"
+                     data-name="Pet Hoodie"
+                     data-price="₱ 000"
+                     data-category="apparel"
+                     data-desc="Cozy fleece hoodie for small dogs. Keeps your pup warm on cool days.">
+                <div class="card-body">
+                    <div class="card-name-row">
+                        <span>Pet Hoodie</span>
+                        <button class="heart-btn" onclick="toggleHeart(event, this)">
+                            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        </button>
+                    </div>
+                    <span>₱ 000</span>
+                </div>
+            </div>
+ 
+            <!-- GROOMING -->
+            <div class="pet-card" data-type="grooming" onclick="openModal(this)">
+                <img src="image/petshampoo.png" alt="Pet Shampoo"
+                     data-name="Pet Shampoo"
+                     data-price="₱ 000"
+                     data-category="grooming"
+                     data-desc="Gentle hypoallergenic shampoo for sensitive pet skin. Leaves coat shiny and fresh.">
+                <div class="card-body">
+                    <div class="card-name-row">
+                        <span>Pet Shampoo</span>
+                        <button class="heart-btn" onclick="toggleHeart(event, this)">
+                            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        </button>
+                    </div>
+                    <span>₱ 000</span>
+                </div>
+            </div>
+
+            <!-- OTHERS -->
+            <div class="pet-card" data-type="others" onclick="openModal(this)">
+                <img src="image/petbed.png" alt="Pet Bed"
+                     data-name="Pet Bed"
+                     data-price="₱ 000"
+                     data-category="others"
+                     data-desc="Soft orthopedic pet bed with washable cover. Suitable for cats and small dogs.">
+                <div class="card-body">
+                    <div class="card-name-row">
+                        <span>Pet Bed</span>
+                        <button class="heart-btn" onclick="toggleHeart(event, this)">
+                            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        </button>
+                    </div>
+                    <span>₱ 000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUCT MODAL -->
+        <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+            <div class="modal" id="modal">
+                <img class="modal-img" id="modalImg" src="" alt="">
+                <div class="modal-body">
+                    <div class="modal-name" id="modalName"></div>
+                    <div class="modal-price" id="modalPrice"></div>
+                    <span class="modal-tag" id="modalTag"></span>
+                    <div class="modal-desc" id="modalDesc"></div>
+                    <div class="modal-actions">
+                        <button class="btn-add-cart">Add to Cart</button>
+                        <button class="btn-close-modal" onclick="document.getElementById('modalOverlay').classList.remove('open')">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+    <script>
+        // ── HEART TOGGLE ──
+        function toggleHeart(event, btn) {
+            event.stopPropagation();
+            btn.classList.toggle('liked');
+        }
+ 
+        // ── CATEGORY FILTER ──
+        let activeCategory = 'all';
+ 
+        function filterCat(cat, btn) {
+            activeCategory = cat;
+            filterProducts();
+        }
+ 
+        // ── SEARCH + CATEGORY FILTER ──
+        function filterProducts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.pet-card');
+            cards.forEach(card => {
+                const type = card.getAttribute('data-type');
+                const name = card.querySelector('.card-name-row span').textContent.toLowerCase();
+                const matchCat = activeCategory === 'all' || type === activeCategory;
+                const matchSearch = name.includes(query);
+                card.classList.toggle('hidden', !(matchCat && matchSearch));
+            });
+        }
+ 
+        // ── OPEN PRODUCT MODAL ──
+        function openModal(card) {
+            const img = card.querySelector('img');
+            document.getElementById('modalImg').src = img.src;
+            document.getElementById('modalImg').alt = img.alt;
+            document.getElementById('modalName').textContent = img.dataset.name;
+            document.getElementById('modalPrice').textContent = img.dataset.price;
+            document.getElementById('modalTag').textContent =
+                img.dataset.category.charAt(0).toUpperCase() + img.dataset.category.slice(1);
+            document.getElementById('modalDesc').textContent = img.dataset.desc;
+            document.getElementById('modalOverlay').classList.add('open');
+        }
+ 
+        // ── CLOSE MODAL BY CLICKING OUTSIDE ──
+        function closeModalOutside(event) {
+            if (event.target === document.getElementById('modalOverlay')) {
+                document.getElementById('modalOverlay').classList.remove('open');
+            }
+        }
+    </script>
 </body>
 </html>

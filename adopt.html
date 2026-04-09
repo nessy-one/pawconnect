@@ -3,9 +3,573 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adopt</title>
+    <title>PawConnect - Adopt</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        body {
+            background-color: #F4F1E6;
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .header {
+            background-color: #DA8063;
+            display: flex;
+            align-items: center;
+            padding: 10px 24px;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+
+        .logo-circle {
+            border-radius: 50%;
+            background-color: #3b8fc4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .logo-circle img {
+            width: 52px;
+            height: 52px;
+            object-fit: cover;
+        }
+
+        .search {
+            flex: 1;
+            position: relative;
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        .search input {
+            width: 100%;
+            padding: 9px 44px 9px 18px;
+            border-radius: 8px;
+            border: none;
+            background: #F4F1E6;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: #8A8686;
+            outline: none;
+        }
+
+        .search input::placeholder { 
+            color: #8A8686; 
+        }
+
+        .search .search-icon {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-shrink: 0;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: opacity 0.15s;
+        }
+
+        .nav a:hover { opacity: 0.75; }
+
+        .nav svg {
+            width: 24px;
+            height: 24px;
+            stroke: #012224;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .page {
+            max-width: 95%;
+            margin: 0 auto;
+            padding: 32px 32px 60px;
+        }
+
+        .desc {
+            display: flex;
+            align-items: flex-start;
+            gap: 40px;
+            margin-bottom: 32px;
+        }
+
+        .desc-title {
+            font-family: 'Cherry Bomb One', cursive;
+            font-size: 36px;
+            font-weight: 400;
+            color: #4E8DC0;
+            line-height: 1.2;
+            flex-shrink: 0;
+            width: 220px;
+        }
+
+        .desc-desc {
+            font-size: 18px;
+            color: #012224;
+            line-height: 1.7;
+            padding-top: 4px;
+        }
+
+        .body {
+            display: flex;
+            gap: 28px;
+            align-items: flex-start;
+        }
+
+        .sidebar {
+            width: 200px;
+            margin-right: 50px;
+            flex-shrink: 0;
+        }
+
+        .sidebar h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #012224;
+            margin-bottom: 10px;
+        }
+
+        .filter-group {
+            margin-bottom: 16px;
+        }
+
+        .filter-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            margin-bottom: 8px;
+        }
+
+        .filter-group-header h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #012224;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #012224;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0 2px;
+        }
+
+        .filter-items label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #012224;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+
+        .filter-items input[type="checkbox"] {
+            accent-color: #DA8063;
+            width: 13px;
+            height: 13px;
+            cursor: pointer;
+        }
+
+        .main {
+            flex: 1;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 24px;
+        }
+
+        .tab-btn {
+            padding: 8px 24px;
+            border: 1.5px solid #ccc;
+            background: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: #012224;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .tab-btn:first-child { border-radius: 6px 0 0 6px; }
+        .tab-btn:last-child  { border-radius: 0 6px 6px 0; }
+
+        .tab-btn.active {
+            background: #4E8DC0;
+            color: #fff;
+            border-color: #4E8DC0;
+        }
+
+        .tab-btn:not(.active):hover {
+            background: #f0f0f0;
+        }
+
+        .pet-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .pet-card {
+            background: #F4F1E6;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.15s;
+        }
+
+        .pet-card:hover { transform: translateY(-3px); }
+
+        .pet-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .pet-card .card-body {
+            padding: 10px 12px 12px;
+        }
+
+        .card-name-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .card-name-row span {
+            font-size: 15px;
+            font-weight: 600;
+            color: #012224;
+        }
+
+        .heart-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .heart-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: #8A8686;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.15s, fill 0.15s;
+        }
+
+        .heart-btn.liked svg {
+            stroke: #DA8063;
+            fill: #DA8063;
+        }
+
+        .pet-tag {
+            display: inline-block;
+            background: #4E8DC0;
+            color: #F4F1E6;
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+
+        .pet-card.hidden { display: none; }
+
+        .faq-section {
+            margin-top: 48px;
+        }
+
+        .faq-header {
+            background: #6b6b2e;
+            color: #F4F1E6;
+            font-family: 'Cherry Bomb One', cursive;
+            font-size: 22px;
+            font-weight: 300;
+            padding: 12px 24px;
+            display: inline-block;
+            border-radius: 4px;
+            margin-bottom: 24px;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+        }
+
+        .faq-item h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #012224;
+            margin-bottom: 4px;
+        }
+
+        .faq-item p {
+            font-size: 13px;
+            color: #8A8686;
+            line-height: 1.6;
+        }
+    </style>
 </head>
 <body>
-    
+
+<!-- HEADER -->
+<div class="header">
+    <div class="logo-circle">
+        <img src="image/logo.png" alt="PawConnect Logo">
+    </div>
+    <div class="search">
+        <input type="text" placeholder="Search">
+        <span class="search-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+        </span>
+    </div>
+    <div class="nav">
+        <a href="settings.html" title="Profile">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+        <a href="favorites.html" title="Favorites">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </a>
+        <a href="notifications.html" title="Notifications">
+            <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </a>
+    </div>
+</div>
+
+<!-- PAGE -->
+<div class="page">
+    <!-- Desc -->
+    <div class="desc">
+        <div class="desc-title">Stray Animal for Adoption</div>
+        <p class="desc-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+
+    <!-- BODY -->
+    <div class="body">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <h3>Filters</h3>
+
+            <!-- Age -->
+            <div class="filter-group">
+                <div class="filter-group-header" onclick="toggleFilter('age')">
+                    <h4>Age</h4>
+                    <button class="toggle-btn" id="toggle-age">−</button>
+                </div>
+                <hr>
+                <div class="filter-items" id="filter-age">
+                    <label><input type="checkbox" name="age" value=""> All</label>
+                    <label><input type="checkbox" name="age" value="0-5"> 0–5</label>
+                    <label><input type="checkbox" name="age" value="6-10"> 6–10</label>
+                    <label><input type="checkbox" name="age" value="11-15"> 11–15</label>
+                    <label><input type="checkbox" name="age" value="16-20"> 16–20</label>
+                    <label><input type="checkbox" name="age" value="21-25"> 21–25</label>
+                    <label><input type="checkbox" name="age" value="26-30"> 26–30</label>
+                    <label><input type="checkbox" name="age" value="31-35"> 31–35</label>
+                    <label><input type="checkbox" name="age" value="36-40"> 36–40</label>
+                </div>
+            </div>
+
+            <!-- Breed -->
+            <div class="filter-group">
+                <div class="filter-group-header" onclick="toggleFilter('breed')">
+                    <h4>Breed</h4>
+                    <button class="toggle-btn" id="toggle-breed">−</button>
+                </div>
+                <hr>
+                <div class="filter-items" id="filter-breed">
+                    <label><input type="checkbox" name="breed" value=""> All</label>
+                    <label><input type="checkbox" name="breed" value="native"> Native (Aspin / Puspin)</label>
+                    <label><input type="checkbox" name="breed" value="mixed"> Mixed Breed</label>
+                    <label><input type="checkbox" name="breed" value="purebred"> Purebred</label>
+                </div>
+            </div>
+
+            <!-- Priority tag -->
+            <div class="filter-group">
+                <div class="filter-group-header" onclick="toggleFilter('priority')">
+                    <h4>Priority tag</h4>
+                    <button class="toggle-btn" id="toggle-priority">−</button>
+                </div>
+                <hr>
+                <div class="filter-items" id="filter-priority">
+                    <label><input type="checkbox" name="priority" value=""> All</label>
+                    <label><input type="checkbox" name="priority" value="urgent"> Urgent</label>
+                    <label><input type="checkbox" name="priority" value="normal"> Normal</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN -->
+        <div class="main">
+            <!-- Category tabs -->
+            <div class="category-tabs">
+                <button class="tab-btn active" onclick="filterCategory('all', this)">ALL</button>
+                <button class="tab-btn" onclick="filterCategory('cat', this)">CATS</button>
+                <button class="tab-btn" onclick="filterCategory('dog', this)">DOGS</button>
+            </div>
+
+            <!-- Pet grid -->
+            <div class="pet-grid" id="petGrid">
+
+                <div class="pet-card" data-type="dog">
+                    <img src="image/thormund.jpg" alt="Thormund">
+                    <div class="card-body">
+                        <div class="card-name-row">
+                            <span>Thormund</span>
+                            <button class="heart-btn" onclick="toggleHeart(this)">
+                                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                            </button>
+                        </div>
+                        <span class="pet-tag">Male, 7 yrs old</span>
+                    </div>
+                </div>
+
+                <div class="pet-card" data-type="dog">
+                    <img src="image/ezra.jpg" alt="Ezra">
+                    <div class="card-body">
+                        <div class="card-name-row">
+                            <span>Ezra</span>
+                            <button class="heart-btn" onclick="toggleHeart(this)">
+                                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                            </button>
+                        </div>
+                        <span class="pet-tag">Female, 2 yrs old</span>
+                    </div>
+                </div>
+
+                <div class="pet-card" data-type="cat">
+                    <img src="image/tiktok.jpg" alt="Tiktok">
+                    <div class="card-body">
+                        <div class="card-name-row">
+                            <span>Tiktok</span>
+                            <button class="heart-btn liked" onclick="toggleHeart(this)">
+                                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                            </button>
+                        </div>
+                        <span class="pet-tag">Male, 2 yrs old</span>
+                    </div>
+                </div>
+
+                <div class="pet-card" data-type="cat">
+                    <img src="image/dasurv.jpg" alt="Dasurv">
+                    <div class="card-body">
+                        <div class="card-name-row">
+                            <span>Dasurv</span>
+                            <button class="heart-btn" onclick="toggleHeart(this)">
+                                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                            </button>
+                        </div>
+                        <span class="pet-tag">Female, 2 yrs old</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq-section">
+        <div class="faq-header">Adoption FAQ</div>
+
+        <div class="faq-item">
+            <h4>Tanong</h4>
+            <p>Basta ito yung sagot sa tanong. Tapos ito yung mga tanong &amp; sagot about sa process ng adoption natin :)</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>How do I adopt a pet?</h4>
+            <p> </p>
+        </div>
+
+        <div class="faq-item">
+            <h4>What are the requirements for adoption?</h4>
+            <p>Adoption requirements may vary depending on the shelter or rescue organization. Generally, you will need to provide proof of identification, proof of residence, and sometimes references.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>Can I adopt if I live in an apartment?</h4>
+            <p>Yes, many pets can adapt well to apartment living. However, it's important to consider the pet's energy level and exercise needs.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>Is there an adoption fee?</h4>
+            <p>Yes, most shelters and rescue organizations charge an adoption fee. This fee helps cover the cost of caring for the animals and may include vaccinations, spaying/neutering, and microchipping.</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // ── FILTER COLLAPSE ──
+    function toggleFilter(id) {
+        const items = document.getElementById('filter-' + id);
+        const btn   = document.getElementById('toggle-' + id);
+        if (items.style.display === 'none') {
+            items.style.display = 'block';
+            btn.textContent = '−';
+        } else {
+            items.style.display = 'none';
+            btn.textContent = '+';
+        }
+    }
+
+    // ── CATEGORY TABS ──
+    function filterCategory(type, clickedBtn) {
+        // Update active tab
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        clickedBtn.classList.add('active');
+
+        // Show/hide cards
+        document.querySelectorAll('.pet-card').forEach(card => {
+            if (type === 'all' || card.dataset.type === type) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+    }
+
+    // ── HEART TOGGLE ──
+    function toggleHeart(btn) {
+        btn.classList.toggle('liked');
+    }
+</script>
 </body>
 </html>

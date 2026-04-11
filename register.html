@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - PawConnect</title>
+<title>Regsiter - PawConnect</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -47,7 +47,7 @@ body { background:#F4F1E6; }
 }
 
 .password-row input {
-  padding-right: 20px; 
+  padding-right: 20px;
 }
 
 
@@ -93,24 +93,26 @@ body { background:#F4F1E6; }
 </style>
 </head>
 <body>
-
 <div class="container">
 
   <div class="image">
     <div class="image-wrapper">
       <img src="imgaes/logo.png" class="logo-img">
-      <img src="imgaes/dog1.png" class="dog-img">
+      <img src="imgaes/dog2-removebg-preview.png" class="dog-img">
     </div>
   </div>
 
   <div class="form-section">
     <div class="card">
 
-      <img src="imgaes/sign_in.png" class="title-img">
+      <img src="imgaes/sing_up.png" class="title-img">
+
+       <div class="input-group">
+        <input type="text" placeholder="Name">
+      </div>
 
       <div class="input-group">
         <input type="email" id="email" placeholder="Email">
-
       </div>
 
       <div class="input-group password-row">
@@ -119,8 +121,7 @@ body { background:#F4F1E6; }
  
 </div>
 
-    <button class="btn" onclick="login()">SIGN IN</button>
-     
+      <button class="btn" onclick="login()">SIGN UP</button>
 
       
     <div class="or-line"><span>OR</span></div>
@@ -129,7 +130,7 @@ body { background:#F4F1E6; }
       <div class="social"><i class="fa-brands fa-facebook"></i> Continue with Facebook</div>
 
       <div class="footer">
-        No account? <a href="register.html">Sign up</a>
+        Already have an account? <a href="login.html">Sign in</a>
       </div>
 
     </div>
@@ -152,27 +153,7 @@ function togglePassword(id, el) {
     icon.classList.add("fa-eye");
   }
 }
-
-function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("loginPassword").value;
-
-  // SIMPLE VALIDATION
-  if (email === "" || password === "") {
-    alert("Please fill in all fields");
-    return;
-  }
-
-  // DEMO ACCOUNT (you can change this)
-  if (email === "admin@gmail.com" && password === "123456") {
-    alert("Login Successful!");
-
-    // redirect to another page
-    window.location.href = "dashboard.html";
-  } else {
-    alert("Invalid Email or Password");
-  }
-}
 </script>
+
 </body>
 </html>

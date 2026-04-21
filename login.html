@@ -34,12 +34,26 @@ body { background:#F4F1E6; }
 
 .title-img { display:block; margin:10px auto 20px; width:300px; }
 
+.input-group {
+  position:relative;
+}
+
 .input-group input {
   width:100%;
   padding:10px;
   border:1px solid #8A8686;
   border-radius:6px;
   margin-bottom:12px;
+}
+
+/* PASSWORD ICON */
+.password-toggle {
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+  color:#555;
 }
 
 .btn {
@@ -108,7 +122,10 @@ body { background:#F4F1E6; }
         </div>
 
         <div class="input-group">
-          <input type="password" name="password" placeholder="Password" required>
+          <input type="password" id="password" name="password" placeholder="Password" minlength="6" required>
+          <span class="password-toggle" onclick="togglePassword('password', this)">
+            <i class="fa-solid fa-eye"></i>
+          </span>
         </div>
 
         <button type="submit" class="btn">SIGN IN</button>
@@ -126,8 +143,20 @@ body { background:#F4F1E6; }
 
     </div>
   </div>
-
 </div>
+<script>
+  function togglePassword(id, el) {
+    const input = document.getElementById(id);
+    const icon = el.querySelector("i");
 
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.replace("fa-eye", "fa-eye-slash");
+    } else {
+      input.type = "password";
+      icon.classList.replace("fa-eye-slash", "fa-eye");
+    }
+  }
+</script>
 </body>
 </html>

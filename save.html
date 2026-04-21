@@ -30,9 +30,24 @@ body {
     padding:20px;
     border-right:1px solid #ccc;
 }
-.logo{
-    width:185px;
-    margin-bottom:20px;
+/* Logo */
+.logo-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #3b8fc4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  margin-bottom: 20px;  
+}
+
+.logo-circle img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
 }
 
 /* menu items */
@@ -134,7 +149,11 @@ body {
 <div class="container">
 
  <div class="sidebar">
-    <img src="imgaes/userlogo.png" class="logo">
+    <a href="dashboard.html">
+      <div class="logo-circle">
+          <img src="image/logo.png" alt="PawConnect Logo">
+      </div>
+    </a>
 
     <a href="userprof.html" class="menu-item">
       <i class="fa-regular fa-user"></i> My Account

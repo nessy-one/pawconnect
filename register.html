@@ -3,36 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Regsiter - PawConnect</title>
-
+<title>PawConnect</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 <style>
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
-body { background:#F4F1E6; }
+* {
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins', sans-serif;
+}
 
-.container { display:flex; height:100vh; }
+body {
+  background:#F4F1E6;
+}
 
-.image { flex:1; display:flex; justify-content:center; align-items:center; }
+.container {
+  display:flex;
+  height:100vh;
+}
 
-.image-wrapper { position:relative; display:flex; justify-content:center; align-items:center; width:100%; height:100%; }
+/* LEFT IMAGE */
+.image {
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
 
-.dog-img { width:85%; max-height:90%; object-fit:contain; }
+.image-wrapper {
+  position:relative;
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.dog-img {
+  width:85%;
+  max-height:90%;
+  object-fit:contain;
+}
 
 .logo-img {
   position:absolute;
   top:-60px;
   left:50%;
   transform:translateX(-50%);
-  width:500px;
+  width:400px;
 }
 
-.form-section { flex:1; display:flex; justify-content:center; align-items:center; }
+/* FORM */
+.form-section {
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
 
-.card { width:320px; }
+.card {
+  width:340px;
+}
 
-.title-img { display:block; margin:10px auto 20px; width:300px; }
+.title-img {
+  display:block;
+  margin:10px auto 20px;
+  width:260px;
+}
+
+.input-group {
+  position:relative;
+}
 
 .input-group input {
   width:100%;
@@ -42,16 +84,25 @@ body { background:#F4F1E6; }
   margin-bottom:12px;
 }
 
-.password-row {
-  position: relative;
+/* PASSWORD ICON */
+.password-toggle {
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+  color:#555;
 }
 
-.password-row input {
-  padding-right: 20px;
+select {
+  width:100%;
+  padding:10px;
+  border:1px solid #8A8686;
+  border-radius:6px;
+  margin-bottom:12px;
 }
 
-
-
+/* BUTTON */
 .btn {
   width:100%;
   padding:10px;
@@ -60,8 +111,14 @@ body { background:#F4F1E6; }
   border:none;
   border-radius:6px;
   cursor:pointer;
+  transition:0.2s;
 }
 
+.btn:hover {
+  background:#3c74a3;
+}
+
+/* OR LINE */
 .or-line {
   display:flex;
   align-items:center;
@@ -76,8 +133,11 @@ body { background:#F4F1E6; }
   border-bottom:1px solid #8A8686;
 }
 
-.or-line span { margin:0 10px; }
+.or-line span {
+  margin:0 10px;
+}
 
+/* SOCIAL */
 .social {
   border:1px solid #8A8686;
   padding:8px;
@@ -85,46 +145,85 @@ body { background:#F4F1E6; }
   margin-bottom:8px;
   border-radius:6px;
   background:white;
+  cursor:pointer;
+  transition:0.2s;
 }
 
-.footer { text-align:center; font-size:13px; }
+.social:hover {
+  background:#f0f0f0;
+}
 
-.footer a { color:#4E8DC0; text-decoration:none; }
+/* FOOTER */
+.footer {
+  text-align:center;
+  font-size:13px;
+  margin-top:10px;
+}
+
+.footer a {
+  color:#4E8DC0;
+  text-decoration:none;
+}
 </style>
 </head>
-<body>
-<div class="container">
 
+<body>
+
+<div class="container">
+  <!-- LEFT SIDE -->
   <div class="image">
     <div class="image-wrapper">
-      <img src="imgaes/logo.png" class="logo-img">
-      <img src="imgaes/dog2-removebg-preview.png" class="dog-img">
+      <img src="form-image/logo.png" class="logo-img">
+      <img src="form-image/dog2-removebg-preview.png" class="dog-img">
     </div>
   </div>
 
+  <!-- RIGHT SIDE -->
   <div class="form-section">
     <div class="card">
 
-      <img src="imgaes/sing_up.png" class="title-img">
+      <img src="form-image/sing_up.png" class="title-img">
 
-       <div class="input-group">
-        <input type="text" placeholder="Name">
-      </div>
+      <form action="php/register.php" method="POST">
 
-      <div class="input-group">
-        <input type="email" id="email" placeholder="Email">
-      </div>
+        <div class="input-group">
+          <input type="text" name="name" placeholder="Name" required>
+        </div>
 
-      <div class="input-group password-row">
-  <input type="password" id="loginPassword" placeholder="Password">
-  
- 
-</div>
+        <div class="input-group">
+          <input type="text" name="username" placeholder="Username" required>
+        </div>
 
-      <button class="btn" onclick="login()">SIGN UP</button>
+        <div class="input-group">
+          <input type="email" name="email" placeholder="Email" required>
+        </div>
 
-      
-    <div class="or-line"><span>OR</span></div>
+        <div class="input-group">
+          <input type="password" id="password" name="password" placeholder="Password" minlength="6" required>
+          <span class="password-toggle" onclick="togglePassword('password', this)">
+            <i class="fa-solid fa-eye"></i>
+          </span>
+        </div>
+
+        <div class="input-group">
+          <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" minlength="6" required>
+          <span class="password-toggle" onclick="togglePassword('confirm_password', this)">
+            <i class="fa-solid fa-eye"></i>
+          </span>
+        </div>
+
+        <div class="input-group">
+          <select name="role" required>
+            <option value="">Select Role</option>
+            <option value="pet_owner">Pet Owner</option>
+            <option value="business_owner">Business Owner</option>
+          </select>
+        </div>
+
+        <button class="btn" type="submit">SIGN UP</button>
+      </form>
+
+      <div class="or-line"><span>OR</span></div>
 
       <div class="social"><i class="fa-brands fa-google"></i> Continue with Google</div>
       <div class="social"><i class="fa-brands fa-facebook"></i> Continue with Facebook</div>
@@ -135,9 +234,7 @@ body { background:#F4F1E6; }
 
     </div>
   </div>
-
 </div>
-
 <script>
 function togglePassword(id, el) {
   const input = document.getElementById(id);
@@ -145,15 +242,12 @@ function togglePassword(id, el) {
 
   if (input.type === "password") {
     input.type = "text";
-    icon.classList.remove("fa-eye");
-    icon.classList.add("fa-eye-slash");
+    icon.classList.replace("fa-eye", "fa-eye-slash");
   } else {
     input.type = "password";
-    icon.classList.remove("fa-eye-slash");
-    icon.classList.add("fa-eye");
+    icon.classList.replace("fa-eye-slash", "fa-eye");
   }
 }
 </script>
-
 </body>
 </html>

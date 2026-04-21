@@ -42,16 +42,6 @@ body { background:#F4F1E6; }
   margin-bottom:12px;
 }
 
-.password-row {
-  position: relative;
-}
-
-.password-row input {
-  padding-right: 20px; 
-}
-
-
-
 .btn {
   width:100%;
   padding:10px;
@@ -96,34 +86,36 @@ body { background:#F4F1E6; }
 
 <div class="container">
 
+  <!-- LEFT IMAGE -->
   <div class="image">
     <div class="image-wrapper">
-      <img src="imgaes/logo.png" class="logo-img">
-      <img src="imgaes/dog1.png" class="dog-img">
+      <img src="form-image/logo.png" class="logo-img">
+      <img src="form-image/dog1.png" class="dog-img">
     </div>
   </div>
 
+  <!-- LOGIN FORM -->
   <div class="form-section">
     <div class="card">
 
-      <img src="imgaes/sign_in.png" class="title-img">
+      <img src="form-image/sign_in.png" class="title-img">
 
-      <div class="input-group">
-        <input type="email" id="email" placeholder="Email">
+      <!-- CONNECTED TO PHP -->
+      <form action="php/login.php" method="POST">
 
-      </div>
+        <div class="input-group">
+          <input type="text" name="username" placeholder="Username" required>
+        </div>
 
-      <div class="input-group password-row">
-  <input type="password" id="loginPassword" placeholder="Password">
-  
- 
-</div>
+        <div class="input-group">
+          <input type="password" name="password" placeholder="Password" required>
+        </div>
 
-    <button class="btn" onclick="login()">SIGN IN</button>
-     
+        <button type="submit" class="btn">SIGN IN</button>
 
-      
-    <div class="or-line"><span>OR</span></div>
+      </form>
+
+      <div class="or-line"><span>OR</span></div>
 
       <div class="social"><i class="fa-brands fa-google"></i> Continue with Google</div>
       <div class="social"><i class="fa-brands fa-facebook"></i> Continue with Facebook</div>
@@ -137,42 +129,5 @@ body { background:#F4F1E6; }
 
 </div>
 
-<script>
-function togglePassword(id, el) {
-  const input = document.getElementById(id);
-  const icon = el.querySelector("i");
-
-  if (input.type === "password") {
-    input.type = "text";
-    icon.classList.remove("fa-eye");
-    icon.classList.add("fa-eye-slash");
-  } else {
-    input.type = "password";
-    icon.classList.remove("fa-eye-slash");
-    icon.classList.add("fa-eye");
-  }
-}
-
-function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("loginPassword").value;
-
-  // SIMPLE VALIDATION
-  if (email === "" || password === "") {
-    alert("Please fill in all fields");
-    return;
-  }
-
-  // DEMO ACCOUNT (you can change this)
-  if (email === "admin@gmail.com" && password === "123456") {
-    alert("Login Successful!");
-
-    // redirect to another page
-    window.location.href = "dashboard.html";
-  } else {
-    alert("Invalid Email or Password");
-  }
-}
-</script>
 </body>
 </html>

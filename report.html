@@ -32,9 +32,25 @@ body {
   padding: 20px;
   border-right: 1px solid #ccc;
 }
-.logo {
-  width: 185px;
-  margin-bottom: 20px;
+
+/* Logo */
+.logo-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #3b8fc4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  margin-bottom: 20px;  
+}
+
+.logo-circle img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
 }
 
 /* menu items */
@@ -82,13 +98,32 @@ body {
   text-align:center;
 }
 
-.img {
+/* Top bar */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Button */
+.btn {
+  background: #4E8DC0;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Center content */
+.pic {
   text-align: center;
   margin-top: 40px;
 }
 
-.imgpic {
-  width: 600px;
+.pic img {
+  height: 250px;
+  width: auto;
   margin-bottom: 15px;
 }
 </style>
@@ -96,10 +131,12 @@ body {
 
 <body>
 <div class="container">
-
-
   <div class="sidebar">
-    <img src="imgaes/userlogo.png" class="logo">
+    <a href="dashboard.html">
+      <div class="logo-circle">
+          <img src="image/logo.png" alt="PawConnect Logo">
+      </div>
+    </a>
 
     <a href="userprof.html" class="menu-item">
       <i class="fa-regular fa-user"></i> My Account
@@ -140,11 +177,14 @@ body {
 </div>
 
 <div class="card">
-  <h2>My Reports</h2>
+  <div class="top-bar">
+    <h2>My Reports</h2>
+    <button class="btn">REPORT NOW</button>
+  </div>
 
-  <div class="empty">
-    <img src="imgaes/bcat.png">
-    <p>You will be able to see all the missing/found animals you reported here</p>
+  <div class="pic">
+    <img src="image/cat.png" alt="No reports">
+    <p>You will be able to see all the missing/found animals you reported here.</p>
   </div>
 
 </div>

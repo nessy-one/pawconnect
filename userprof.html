@@ -10,7 +10,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-
 /* Reset default styles */
 * {
   margin: 0;
@@ -38,9 +37,23 @@ body {
 }
 
 /* Logo */
-.logo {
-  width: 185px;
-  margin-bottom: 20px;
+.logo-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #3b8fc4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  margin-bottom: 20px;  
+}
+
+.logo-circle img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
 }
 
 /* menu items */
@@ -63,7 +76,6 @@ body {
 .menu-item:hover {
   background: #ddd;
 }
-
 
 .main {
   flex: 1;
@@ -227,54 +239,53 @@ body {
 <body>
 
 <div class="container">
-
-  
+  <!-- SIDEBAR -->
   <div class="sidebar">
-    <img src="imgaes/userlogo.png" class="logo">
+    <a href="dashboard.html">
+      <div class="logo-circle">
+          <img src="image/logo.png" alt="PawConnect Logo">
+      </div>
+    </a>
 
-  <a href="profile.html" class="menu-item active">
-    <i class="fa-regular fa-user"></i> My Account
-  </a>
+    <a href="profile.html" class="menu-item active">
+      <i class="fa-regular fa-user"></i> My Account
+    </a>
 
-  <a href="addres.html" class="menu-item">
-    <i class="fa-solid fa-location-dot"></i> My Addresses
-  </a>
+    <a href="addres.html" class="menu-item">
+      <i class="fa-solid fa-location-dot"></i> My Addresses
+    </a>
 
-  <a href="donation.html" class="menu-item">
-    <i class="fa-solid fa-hand-holding-heart"></i> My Donations
-  </a>
+    <a href="donation.html" class="menu-item">
+      <i class="fa-solid fa-hand-holding-heart"></i> My Donations
+    </a>
 
-  <a href="report.html" class="menu-item">
-    <i class="fa-solid fa-bug"></i> My Reports
-  </a>
+    <a href="report.html" class="menu-item">
+      <i class="fa-solid fa-bug"></i> My Reports
+    </a>
 
-  <a href="save.html" class="menu-item">
-    <i class="fa-regular fa-heart"></i> Saves
-  </a>
+    <a href="save.html" class="menu-item">
+      <i class="fa-regular fa-heart"></i> Saves
+    </a>
 
-  <a href="notifications.html" class="menu-item">
-    <i class="fa-regular fa-bell"></i> Notifications
-  </a>
+    <a href="notifications.html" class="menu-item">
+      <i class="fa-regular fa-bell"></i> Notifications
+    </a>
 
-  <a href="login.html" class="menu-item">
-    <i class="fa-solid fa-right-from-bracket"></i> Log out
-  </a>
+    <a href="login.html" class="menu-item">
+      <i class="fa-solid fa-right-from-bracket"></i> Log out
+    </a>
   </div>
 
-
+  <!-- MAIN -->
   <div class="main">
-
-    
     <div class="header">
       <a href="notifications.html"><i class="fa-regular fa-bell"></i></a>
       <a href="save.html"><i class="fa-regular fa-heart"></i></a>
       <a href="userprof.html"><i class="fa-regular fa-user"></i></a>
       <span>User profile</span>
     </div>
-    
-    <div class="card">
 
-      
+    <div class="card">
       <div class="form-section">
         <h2>Profile</h2>
 
@@ -307,24 +318,18 @@ body {
           </div>
         </div>
 
-       
         <button class="btn" onclick="saveChanges()">SAVE CHANGES</button>
       </div>
 
-     
       <div class="image-section">
         <div class="profile-pic">
           <i class="fa-regular fa-user"></i>
         </div>
-
         <div class="upload-btn">Select image</div>
         <div class="remove">Remove</div>
       </div>
-
     </div>
-
   </div>
-
 </div>
 
 

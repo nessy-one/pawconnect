@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Donations - PawConnect</title>
+<title>PawConnect</title>
 
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -12,7 +12,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-
 /* Reset */
 * {
   margin: 0;
@@ -39,9 +38,24 @@ body {
   border-right: 1px solid #ccc;
 }
 
-.logo {
-  width: 185px;
-  margin-bottom: 20px;
+/* Logo */
+.logo-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #3b8fc4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  margin-bottom: 20px;  
+}
+
+.logo-circle img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
 }
 
 /* Sidebar links */
@@ -119,25 +133,27 @@ body {
 }
 
 /* Center content */
-.img {
+.pic {
   text-align: center;
   margin-top: 40px;
 }
 
-.imgpic {
-  width: 600px;
+.pic img {
+  height: 250px;
+  width: auto;
   margin-bottom: 15px;
 }
-
 </style>
 </head>
-
 <body>
 
 <div class="container">
-
   <div class="sidebar">
-    <img src="imgaes/userlogo.png" class="logo">
+    <a href="dashboard.html">
+      <div class="logo-circle">
+          <img src="image/logo.png" alt="PawConnect Logo">
+      </div>
+    </a>
 
     <a href="userprof.html" class="menu-item">
       <i class="fa-regular fa-user"></i> My Account
@@ -168,10 +184,7 @@ body {
     </a>
   </div>
 
-  
   <div class="main">
-
-    
     <div class="header">
       <a href="notifications.html"><i class="fa-regular fa-bell"></i></a>
       <a href="save.html"><i class="fa-regular fa-heart"></i></a>
@@ -179,27 +192,18 @@ body {
       <span>User profile</span>
     </div>
 
-    
     <div class="card">
-
-      
       <div class="top-bar">
         <h2>My Donations</h2>
         <button class="btn">DONATE NOW</button>
       </div>
 
-      
-      <div class="img">
-       
-        <img src="imgaes/bcat.png" alt="No donations">
-        <p>You will be able to see all your monetary or item donations here</p>
+      <div class="pic">
+        <img src="image/cat.png" alt="No donations">
+        <p>You will be able to see all your monetary or item donations here.</p>
       </div>
-
     </div>
-
   </div>
-
 </div>
-
 </body>
 </html>

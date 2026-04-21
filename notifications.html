@@ -9,27 +9,45 @@
 
 <style>
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Poppins;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins;
 }
-body{
+
+body {
     background:#F4F1E6;
 }
+
 .container{
-    display:flex;
-    height:100vh;
+  display:flex;
+  height:100vh;
 }
 
 .sidebar{
-    width:220px;
-    padding:20px;
-    border-right:1px solid #ccc;
+  width:220px;
+  padding:20px;
+  border-right:1px solid #ccc;
 }
-.logo{
-    width:185px;
-    margin-bottom:20px;
+
+/* Logo */
+.logo-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #3b8fc4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  margin-bottom: 20px;  
+}
+
+.logo-circle img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
 }
 
 /* menu items */
@@ -78,13 +96,14 @@ body{
   text-align:center;
 }
 
-.img {
+.pic {
   text-align: center;
   margin-top: 40px;
 }
 
-.imgpic {
-  width: 600px;
+.pic img {
+  height: 250px;
+  width: auto;
   margin-bottom: 15px;
 }
 </style>
@@ -94,7 +113,11 @@ body{
 <div class="container">
 
  <div class="sidebar">
-    <img src="imgaes/userlogo.png" class="logo">
+    <a href="dashboard.html">
+      <div class="logo-circle">
+          <img src="image/logo.png" alt="PawConnect Logo">
+      </div>
+    </a>
 
     <a href="userprof.html" class="menu-item">
       <i class="fa-regular fa-user"></i> My Account
@@ -139,9 +162,9 @@ body{
 <div class="card">
   <h2>Notifications</h2>
 
-  <div class="empty">
-    <img src="imgaes/bcat.png">
-    <p>You will be able to read notifications that we send you here</p>
+  <div class="pic">
+    <img src="image/cat.png" alt="No notifications">
+    <p>You will be able to read notifications that we send you here.</p>
   </div>
 
 </div>

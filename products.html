@@ -3,24 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PawConnect</title>
+    <title>PawConnect – Shop</title>
     <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --cream:   #F4F1E6;
+            --salmon:  #DA8063;
+            --blue:    #4E8DC0;
+            --dark:    #012224;
+            --gray:    #8A8686;
+            --card-bg: #FFFDF6;
+            --shadow:  0 2px 12px rgba(0,0,0,0.08);
         }
 
         body {
-            background-color: #F4F1E6;
-            min-height: 100vh;
+            background: var(--cream);
             font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            color: var(--dark);
         }
 
-        /* HEADER */
+        /* ── HEADER ── */
         .header {
-            background-color: #DA8063;
+            background: var(--salmon);
             display: flex;
             align-items: center;
             padding: 10px 24px;
@@ -28,583 +35,563 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.14);
         }
 
         .logo-circle {
+            width: 48px; height: 48px;
             border-radius: 50%;
-            background-color: #3b8fc4;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            overflow: hidden;
+            background: #3b8fc4;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; flex-shrink: 0;
         }
-
-        .logo-circle img {
-            width: 52px;
-            height: 52px;
-            object-fit: cover;
-        }
+        .logo-circle img { width: 48px; height: 48px; object-fit: cover; }
 
         .search {
-            flex: 2;
+            flex: 1;
             position: relative;
-            max-width: 80%;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
         .search input {
             width: 100%;
-            padding: 9px 44px 9px 18px;
+            padding: 9px 40px 9px 16px;
             border-radius: 8px;
             border: none;
-            background: #F4F1E6;
+            background: var(--cream);
             font-family: 'Poppins', sans-serif;
             font-size: 14px;
-            color: #8A8686;
+            color: var(--dark);
             outline: none;
             box-shadow: 0 1px 4px rgba(0,0,0,0.08);
         }
-
-        .search input::placeholder {
-            color: #8A8686;
-        }
-
+        .search input::placeholder { color: var(--gray); }
         .search .search-icon {
-            position: absolute;
-            right: 14px;
-            top: 50%;
+            position: absolute; right: 12px; top: 50%;
             transform: translateY(-50%);
-            color: #8A8686;
-            font-size: 16px;
             pointer-events: none;
         }
 
         .nav {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex-shrink: 0;
+            display: flex; align-items: center; gap: 18px; flex-shrink: 0;
         }
-
         .nav a {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            transition: opacity 0.15s;
+            display: flex; align-items: center;
+            text-decoration: none; transition: opacity .15s;
         }
-
-        .nav a:hover { opacity: 0.75; }
-
+        .nav a:hover { opacity: .7; }
         .nav svg {
-            width: 24px;
-            height: 24px;
-            stroke: #012224;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+            width: 24px; height: 24px;
+            stroke: var(--dark); fill: none;
+            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
         }
 
-        /* PAGE CONTENT */
+        /* ── PAGE ── */
         .page {
-            max-width: 95%;
+            max-width: 1440px;
             margin: 0 auto;
-            padding: 32px 32px 60px;
+            padding: 32px 48px 60px;
         }
 
-        /* DESCRIPTION */
-        .desc {
+        /* ── HERO BANNER ── */
+        .hero {
             display: flex;
-            align-items: flex-start;
-            gap: 30px;
-            margin-bottom: 32px;
-        }
-
-        .desc-title {
-            font-family: 'Cherry Bomb One', cursive;
-            font-size: 50px;
-            font-weight: 400;
-            color: #4E8DC0;
-            line-height: 1.2;
-            flex-shrink: 0;
-            width: 220px;
-            align-self: center;
-        }
-
-        .desc img {
-            flex: 1;
-            max-height: 225px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        /*CATEGORY BUTTONS*/
-        .categories {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 36px;
-            gap: 50px;
-        }   
-
-        .btn-card {
-            display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            transition: transform 0.15s, box-shadow 0.15s;
-            background: none;
-            border: none;
-            padding: 0;
-            cursor: pointer;
+            gap: 28px;
+            margin-bottom: 36px;
+            background: linear-gradient(135deg, #fff9ef 0%, #f0e9d2 100%);
+            border-radius: 18px;
+            padding: 28px 32px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            right: -40px; top: -40px;
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            background: rgba(218,128,99,.12);
+        }
+        .hero-title {
+            font-family: 'Cherry Bomb One', cursive;
+            font-size: clamp(36px, 6vw, 60px);
+            color: var(--blue);
+            line-height: 1.1;
+            flex-shrink: 0;
+        }
+        .hero img {
+            flex: 1;
+            max-height: 200px;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.12);
         }
 
-        .btn-card:hover {
-            transform: translateY(-3px);
-        }
-
-        .btn-card img {
-            width: 150px;
-            height: 130px;
-            display: block;
-        }
-
-        /*DIVIDER*/
-        .divi h3 {
-            font-size: 14px;
+        /* ── SECTION LABEL ── */
+        .section-label {
+            font-size: 11px;
             font-weight: 700;
-            letter-spacing: 2px;
-            color: #012224;
+            letter-spacing: 3px;
+            color: var(--gray);
+            text-transform: uppercase;
             margin-bottom: 16px;
         }
 
-        /*PRODUCT GRID*/
+        /* ── CATEGORY CHIPS ── */
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 36px;
+        }
+
+        .cat-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px 8px 10px;
+            border-radius: 999px;
+            border: 2px solid #e0dbd0;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all .2s;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+        .cat-chip:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(78,141,192,.15);
+        }
+        .cat-chip.active {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(78,141,192,.35);
+        }
+        .cat-chip.active .cat-icon { filter: brightness(0) invert(1); }
+
+        .cat-icon {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: var(--cream);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 17px;
+            flex-shrink: 0;
+            transition: filter .2s;
+        }
+        .cat-chip.active .cat-icon {
+            background: rgba(255,255,255,.2);
+            filter: none;
+        }
+
+        /* ── PRODUCT GRID ── */
         .pet-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 20px;
         }
 
         .pet-card {
-            background: #F4F1E6;
-            border-radius: 12px;
+            background: var(--card-bg);
+            border-radius: 14px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            transition: transform 0.15s;
+            box-shadow: var(--shadow);
+            transition: transform .18s, box-shadow .18s;
             cursor: pointer;
+            border: 1.5px solid rgba(0,0,0,0.04);
         }
+        .pet-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        .pet-card.hidden { display: none; }
 
-        .pet-card:hover { transform: translateY(-3px); }
-
-        .pet-card img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
+        .pet-card .card-img-wrap {
+            position: relative;
+            height: 190px;
+            overflow: hidden;
+            background: #ffffff;
+        }
+        .pet-card .card-img-wrap img {
+            width: 100%; height: 100%;
+            object-fit: contain;
             display: block;
+            padding: 10px;
+            transition: transform .3s;
         }
+        .pet-card:hover .card-img-wrap img { transform: scale(1.04); }
 
-        .pet-card .card-body {
-            padding: 10px 12px 12px;
-        }
-
-        .card-name-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-
-        .card-name-row span {
-            font-size: 15px;
+        .cat-badge {
+            position: absolute;
+            top: 10px; left: 10px;
+            background: var(--blue);
+            color: #fff;
+            font-size: 10px;
             font-weight: 600;
-            color: #012224;
+            padding: 2px 10px;
+            border-radius: 999px;
+            letter-spacing: .5px;
+            text-transform: capitalize;
         }
 
         .heart-btn {
-            background: none;
+            position: absolute;
+            top: 8px; right: 8px;
+            background: white;
             border: none;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
             cursor: pointer;
-            padding: 0;
-            display: flex;
-            align-items: center;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.15);
+            transition: transform .15s;
         }
-
+        .heart-btn:hover { transform: scale(1.15); }
         .heart-btn svg {
-            width: 18px;
-            height: 18px;
-            stroke: #8A8686;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            transition: stroke 0.15s, fill 0.15s;
+            width: 16px; height: 16px;
+            stroke: var(--gray); fill: none;
+            stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+            transition: stroke .15s, fill .15s;
+        }
+        .heart-btn.liked svg { stroke: var(--salmon); fill: var(--salmon); }
+
+        .card-body { padding: 12px 14px 14px; }
+        .card-name {
+            font-size: 14px; font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .card-price {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--salmon);
         }
 
-        .heart-btn.liked svg {
-            stroke: #DA8063;
-            fill: #DA8063;
-        }
-
-        .pet-tag {
-            display: inline-block;
-            background: #4E8DC0;
-            color: #F4F1E6;
-            font-size: 11px;
-            padding: 3px 10px;
-            border-radius: 999px;
-        }
-
-        .pet-card.hidden { display: none; }
-
-        /*MODAL*/
+        /* ── MODAL ── */
         .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 200;
-            align-items: center;
-            justify-content: center;
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.48);
+            z-index: 300;
+            align-items: center; justify-content: center;
+            padding: 16px;
         }
- 
-        .modal-overlay.open {
-            display: flex;
-        }
- 
+        .modal-overlay.open { display: flex; }
+
         .modal {
-            background: #F4F1E6;
-            border-radius: 18px;
-            width: 400px;
-            max-width: 95vw;
+            background: var(--cream);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 420px;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            box-shadow: 0 12px 48px rgba(0,0,0,0.25);
+            animation: slideUp .22s ease;
         }
- 
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to   { transform: translateY(0);    opacity: 1; }
+        }
+
         .modal-img {
             width: 100%;
-            height: 220px;
-            object-fit: cover;
+            height: 260px;
+            object-fit: contain;
             display: block;
+            background: #ffffff;
+            padding: 16px;
         }
- 
-        .modal-body {
-            padding: 20px 24px 28px;
-        }
- 
-        .modal-name {
-            font-size: 22px;
-            font-weight: 700;
-            color: #012224;
-            margin-bottom: 4px;
-        }
- 
-        .modal-price {
-            font-size: 18px;
-            color: #DA8063;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
- 
+        .modal-body { padding: 22px 24px 28px; }
+        .modal-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+        .modal-name { font-size: 22px; font-weight: 700; color: var(--dark); }
+        .modal-price { font-size: 20px; color: var(--salmon); font-weight: 700; margin-bottom: 10px; }
         .modal-tag {
             display: inline-block;
-            background: #4E8DC0;
-            color: #F4F1E6;
-            font-size: 11px;
-            padding: 3px 12px;
-            border-radius: 999px;
-            margin-bottom: 12px;
+            background: var(--blue); color: #fff;
+            font-size: 11px; padding: 3px 12px;
+            border-radius: 999px; margin-bottom: 12px;
         }
- 
-        .modal-desc {
-            font-size: 13px;
-            color: #555;
-            line-height: 1.6;
-            margin-bottom: 18px;
-        }
- 
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-        }
- 
+        .modal-desc { font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 20px; }
+        .modal-actions { display: flex; }
+
         .btn-add-cart {
-            flex: 1;
-            background: #DA8063;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            font-family: 'Poppins', sans-serif;
-            cursor: pointer;
-            transition: opacity 0.15s;
+            flex: 1; background: var(--salmon); color: white;
+            border: none; border-radius: 10px;
+            padding: 11px; font-size: 14px; font-weight: 600;
+            font-family: 'Poppins', sans-serif; cursor: pointer;
+            transition: opacity .15s;
         }
- 
-        .btn-add-cart:hover { opacity: 0.85; }
- 
+        .btn-add-cart:hover { opacity: .85; }
         .btn-close-modal {
-            background: #e5e0d0;
-            color: #333;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 18px;
-            font-size: 14px;
-            font-weight: 600;
-            font-family: 'Poppins', sans-serif;
-            cursor: pointer;
-            transition: background 0.15s;
+            background: #e5e0d0; color: #444;
+            border: none; border-radius: 10px;
+            padding: 11px 18px; font-size: 14px; font-weight: 600;
+            font-family: 'Poppins', sans-serif; cursor: pointer;
+            transition: background .15s;
         }
- 
         .btn-close-modal:hover { background: #d4cfbf; }
+
+        /* ── EMPTY STATE ── */
+        .empty-state {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray);
+            grid-column: 1/-1;
+        }
+        .empty-state .emoji { font-size: 48px; margin-bottom: 12px; }
+        .empty-state p { font-size: 15px; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .header { padding: 10px 14px; gap: 10px; }
+            .search { max-width: none; }
+            .nav { gap: 12px; }
+            .nav svg { width: 22px; height: 22px; }
+
+            .page { padding: 20px 16px 48px; }
+
+            .hero { flex-direction: column; padding: 20px; gap: 16px; text-align: center; }
+            .hero img { max-height: 150px; }
+
+            .pet-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+            .pet-card .card-img-wrap { height: 150px; }
+        }
+
+        @media (max-width: 480px) {
+            .logo-circle { width: 38px; height: 38px; }
+            .logo-circle img { width: 38px; height: 38px; }
+            .search input { font-size: 13px; padding: 8px 36px 8px 12px; }
+
+            .cat-chip { padding: 7px 14px 7px 8px; font-size: 12px; }
+            .cat-icon { width: 28px; height: 28px; font-size: 15px; }
+
+            .pet-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .pet-card .card-img-wrap { height: 130px; }
+            .card-name { font-size: 13px; }
+            .card-price { font-size: 13px; }
+        }
     </style>
 </head>
 <body>
-    <!-- HEADER -->
-    <div class="header">
-        <!-- Logo -->
-        <a href="dashboard.html">
-            <div class="logo-circle">
-                <img src="image/logo.png" alt="PawConnect Logo">
-            </div>
-        </a>
 
-        <!-- Search -->
-        <div class="search">
-            <input type="text" placeholder="Search">
-            <span class="search-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                </svg>
-            </span>
+<!-- HEADER -->
+<div class="header">
+    <a href="dashboard.html">
+        <div class="logo-circle">
+            <img src="image/logo.png" alt="PawConnect Logo">
         </div>
+    </a>
 
-        <!-- Nav -->
-        <div class="nav">
-            <a href="userprof.html" title="Profile">
-                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </a>
-            <a href="save.html" title="Favourites">
-                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-            </a>
-            <a href="notifications.html" title="Notifications">
-                <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-            </a>
-        </div>
+    <div class="search">
+        <input type="text" id="searchInput" placeholder="Search product">
+        <span class="search-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
+                 stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+        </span>
     </div>
 
-    <div class="page">
-        <!-- DESCRIPTION -->
-        <div class="desc">
-            <div class="desc-title">Shop</div>
-            <img src="image/shop.jpg" alt="Shop">
+    <div class="nav">
+        <a href="userprof.html" title="Profile">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+        <a href="save.html" title="Favourites">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </a>
+        <a href="notifications.html" title="Notifications">
+            <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </a>
+    </div>
+</div>
+
+<div class="page">
+
+    <!-- HERO BANNER -->
+    <div class="hero">
+        <div class="hero-title">Shop</div>
+        <img src="image/shop.jpg" alt="Shop">
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="section-label">Browse by Category</div>
+    <div class="categories">
+        <button class="cat-chip active" data-cat="all" onclick="filterCat('all', this)">
+            <div class="cat-icon">🐾</div>
+            All
+        </button>
+        <button class="cat-chip" data-cat="toy" onclick="filterCat('toy', this)">
+            <div class="cat-icon">🧸</div>
+            Toys
+        </button>
+        <button class="cat-chip" data-cat="accessories" onclick="filterCat('accessories', this)">
+            <div class="cat-icon">🏷️</div>
+            Accessories
+        </button>
+        <button class="cat-chip" data-cat="apparel" onclick="filterCat('apparel', this)">
+            <div class="cat-icon">👕</div>
+            Apparel
+        </button>
+        <button class="cat-chip" data-cat="food" onclick="filterCat('food', this)">
+            <div class="cat-icon">🍖</div>
+            Food
+        </button>
+        <button class="cat-chip" data-cat="grooming" onclick="filterCat('grooming', this)">
+            <div class="cat-icon">🛁</div>
+            Grooming
+        </button>
+        <button class="cat-chip" data-cat="others" onclick="filterCat('others', this)">
+            <div class="cat-icon">📦</div>
+            Others
+        </button>
+    </div>
+
+    <!-- SECTION LABEL -->
+    <div class="section-label">Discover</div>
+
+    <!-- PRODUCT GRID -->
+    <div class="pet-grid" id="petGrid">
+        <div class="empty-state" id="emptyState">
+            <div class="emoji">🐾</div>
+            <p>No products found. Try a different category or search.</p>
         </div>
+    </div>   <!-- /pet-grid -->
 
-        <!-- CATEGORIES -->
-        <div class="categories">
-            <button class="btn-card" onclick="filterCat('toys', this)">
-                <img src="image/toys.png" alt="Toys">
-            </button>
-            <button class="btn-card" onclick="filterCat('accessories', this)">
-                <img src="image/accessories.png" alt="Accessories">
-            </button>
-            <button class="btn-card" onclick="filterCat('apparel', this)">
-                <img src="image/apparel.png" alt="Apparel">
-            </button>
-            <button class="btn-card" onclick="filterCat('food', this)">
-                <img src="image/food.png" alt="Food">
-            </button>
-            <button class="btn-card" onclick="filterCat('grooming', this)">
-                <img src="image/grooming.png" alt="Grooming">
-            </button>
-            <button class="btn-card" onclick="filterCat('others', this)">
-                <img src="image/others.png" alt="Others">
-            </button>
-        </div>
+</div><!-- /page -->
 
-        <!-- DIVIDER -->
-        <div class="divi">
-            <h3>DISCOVER</h3>
-        </div>
-
-        <!-- PET GRID -->
-        <div class="pet-grid" id="petGrid">
-            <!-- FOOD -->
-            <div class="pet-card" data-type="food" onclick="openModal(this)">
-                <img src="image/whiskas.png" alt="Whiskas"
-                data-name="Whiskas"
-                data-price="₱ 000"
-                data-category="Food"
-                data-desc="Cat food iykyk">
-
-                <div class="card-body">
-                    <div class="card-name-row">
-                        <span>Whiskas</span>
-                        <button class="heart-btn" onclick="toggleHeart(this)">
-                            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                        </button>
-                    </div>
-                    <span>₱ 000</span>
-                </div>
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+    <div class="modal" id="modal">
+        <img class="modal-img" id="modalImg" src="" alt="">
+        <div class="modal-body">
+            <div class="modal-top">
+                <div class="modal-name" id="modalName"></div>
             </div>
-
-            <!-- TOYS -->
-            <div class="pet-card" data-type="toys" onclick="openModal(this)">
-                <img src="image/chewrope.png" alt="Chew Rope"
-                     data-name="Chew Rope"
-                     data-price="₱ 000"
-                     data-category="toys"
-                     data-desc="Durable braided rope toy. Perfect for tug-of-war and dental health.">
-                <div class="card-body">
-                    <div class="card-name-row">
-                        <span>Chew Rope</span>
-                        <button class="heart-btn" onclick="toggleHeart(event, this)">
-                            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                        </button>
-                    </div>
-                    <span>₱ 000</span>
-                </div>
-            </div>
-
-            <!-- ACCESSORIES -->
-            <div class="pet-card" data-type="accessories" onclick="openModal(this)">
-                <img src="image/petcollar.png" alt="Pet Collar"
-                     data-name="Pet Collar"
-                     data-price="₱ 000"
-                     data-category="accessories"
-                     data-desc="Adjustable nylon collar with a quick-release buckle. Available in multiple colors.">
-                <div class="card-body">
-                    <div class="card-name-row">
-                        <span>Pet Collar</span>
-                        <button class="heart-btn" onclick="toggleHeart(event, this)">
-                            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                        </button>
-                    </div>
-                    <span>₱ 000</span>
-                </div>
-            </div>
- 
-            <!-- APPAREL -->
-            <div class="pet-card" data-type="apparel" onclick="openModal(this)">
-                <img src="image/pethoodie.png" alt="Pet Hoodie"
-                     data-name="Pet Hoodie"
-                     data-price="₱ 000"
-                     data-category="apparel"
-                     data-desc="Cozy fleece hoodie for small dogs. Keeps your pup warm on cool days.">
-                <div class="card-body">
-                    <div class="card-name-row">
-                        <span>Pet Hoodie</span>
-                        <button class="heart-btn" onclick="toggleHeart(event, this)">
-                            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                        </button>
-                    </div>
-                    <span>₱ 000</span>
-                </div>
-            </div>
- 
-            <!-- GROOMING -->
-            <div class="pet-card" data-type="grooming" onclick="openModal(this)">
-                <img src="image/petshampoo.png" alt="Pet Shampoo"
-                     data-name="Pet Shampoo"
-                     data-price="₱ 000"
-                     data-category="grooming"
-                     data-desc="Gentle hypoallergenic shampoo for sensitive pet skin. Leaves coat shiny and fresh.">
-                <div class="card-body">
-                    <div class="card-name-row">
-                        <span>Pet Shampoo</span>
-                        <button class="heart-btn" onclick="toggleHeart(event, this)">
-                            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                        </button>
-                    </div>
-                    <span>₱ 000</span>
-                </div>
-            </div>
-
-            <!-- OTHERS -->
-            <div class="pet-card" data-type="others" onclick="openModal(this)">
-                <img src="image/petbed.png" alt="Pet Bed"
-                     data-name="Pet Bed"
-                     data-price="₱ 000"
-                     data-category="others"
-                     data-desc="Soft orthopedic pet bed with washable cover. Suitable for cats and small dogs.">
-                <div class="card-body">
-                    <div class="card-name-row">
-                        <span>Pet Bed</span>
-                        <button class="heart-btn" onclick="toggleHeart(event, this)">
-                            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                        </button>
-                    </div>
-                    <span>₱ 000</span>
-                </div>
+            <div class="modal-price" id="modalPrice"></div>
+            <span class="modal-tag" id="modalTag"></span>
+            <div class="modal-desc" id="modalDesc"></div>
+            <div class="modal-actions">
+                <button class="btn-close-modal" style="flex:1;" onclick="document.getElementById('modalOverlay').classList.remove('open')">Close</button>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- PRODUCT MODAL -->
-        <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
-            <div class="modal" id="modal">
-                <img class="modal-img" id="modalImg" src="" alt="">
-                <div class="modal-body">
-                    <div class="modal-name" id="modalName"></div>
-                    <div class="modal-price" id="modalPrice"></div>
-                    <span class="modal-tag" id="modalTag"></span>
-                    <div class="modal-desc" id="modalDesc"></div>
-                    <div class="modal-actions">
-                        <button class="btn-add-cart">Add to Cart</button>
-                        <button class="btn-close-modal" onclick="document.getElementById('modalOverlay').classList.remove('open')">Close</button>
-                    </div>
+<script>
+    let activeCategory = 'all';
+
+    // ── FETCH PRODUCTS FROM PHP (Rule-Based Filtering) ──
+    function fetchProducts() {
+        const search = document.getElementById('searchInput').value.trim();
+        const params = new URLSearchParams();
+
+        if (activeCategory !== 'all') params.append('category', activeCategory);
+        if (search)                   params.append('search',   search);
+
+        fetch('php/get_products.php?' + params.toString())
+            .then(res => res.json())
+            .then(products => renderProducts(products))
+            .catch(err => console.error('Fetch error:', err));
+    }
+
+    // ── RENDER CARDS DYNAMICALLY ──
+    function renderProducts(products) {
+        const grid       = document.getElementById('petGrid');
+        const emptyState = document.getElementById('emptyState');
+
+        grid.querySelectorAll('.pet-card').forEach(c => c.remove());
+
+        if (products.length === 0) {
+            emptyState.style.display = 'block';
+            return;
+        }
+
+        emptyState.style.display = 'none';
+
+        products.forEach(p => {
+            const card = document.createElement('div');
+            card.className    = 'pet-card';
+            card.dataset.type = p.category;
+
+            const cat   = p.category.charAt(0).toUpperCase() + p.category.slice(1);
+            const price = '₱ ' + parseFloat(p.price).toLocaleString();
+
+            card.innerHTML = `
+                <div class="card-img-wrap">
+                    <img src="image/${p.image}" alt="${p.name}"
+                         data-name="${p.name}"
+                         data-price="${price}"
+                         data-category="${p.category}"
+                         data-desc="${p.description}">
+                    <span class="cat-badge">${cat}</span>
+                    <button class="heart-btn" onclick="toggleHeart(event, this)">
+                        <svg viewBox="0 0 24 24">
+                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                    </button>
                 </div>
-            </div>
-        </div>
-    </div>    
+                <div class="card-body">
+                    <div class="card-name">${p.name}</div>
+                    <div class="card-price">${price}</div>
+                </div>`;
 
-    <script>
-        // ── HEART TOGGLE ──
-        function toggleHeart(event, btn) {
-            event.stopPropagation();
-            btn.classList.toggle('liked');
+            card.addEventListener('click', () => openModal(card));
+            grid.appendChild(card);
+        });
+    }
+
+    // ── CATEGORY FILTER ──
+    function filterCat(cat, btn) {
+        activeCategory = cat;
+        document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        fetchProducts();
+    }
+
+    // ── SEARCH (debounced) ──
+    let searchTimer;
+    document.getElementById('searchInput').addEventListener('input', () => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(fetchProducts, 300);
+    });
+
+    // ── HEART TOGGLE ──
+    function toggleHeart(event, btn) {
+        event.stopPropagation();
+        btn.classList.toggle('liked');
+    }
+
+    // ── OPEN MODAL ──
+    function openModal(card) {
+        const img = card.querySelector('.card-img-wrap img');
+        document.getElementById('modalImg').src           = img.src;
+        document.getElementById('modalImg').alt           = img.alt;
+        document.getElementById('modalName').textContent  = img.dataset.name;
+        document.getElementById('modalPrice').textContent = img.dataset.price;
+        const cat = img.dataset.category;
+        document.getElementById('modalTag').textContent   = cat.charAt(0).toUpperCase() + cat.slice(1);
+        document.getElementById('modalDesc').textContent  = img.dataset.desc;
+        document.getElementById('modalOverlay').classList.add('open');
+    }
+
+    // ── CLOSE MODAL ──
+    function closeModalOutside(event) {
+        if (event.target === document.getElementById('modalOverlay')) {
+            document.getElementById('modalOverlay').classList.remove('open');
         }
- 
-        // ── CATEGORY FILTER ──
-        let activeCategory = 'all';
- 
-        function filterCat(cat, btn) {
-            activeCategory = cat;
-            filterProducts();
-        }
- 
-        // ── SEARCH + CATEGORY FILTER ──
-        function filterProducts() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const cards = document.querySelectorAll('.pet-card');
-            cards.forEach(card => {
-                const type = card.getAttribute('data-type');
-                const name = card.querySelector('.card-name-row span').textContent.toLowerCase();
-                const matchCat = activeCategory === 'all' || type === activeCategory;
-                const matchSearch = name.includes(query);
-                card.classList.toggle('hidden', !(matchCat && matchSearch));
-            });
-        }
- 
-        // ── OPEN PRODUCT MODAL ──
-        function openModal(card) {
-            const img = card.querySelector('img');
-            document.getElementById('modalImg').src = img.src;
-            document.getElementById('modalImg').alt = img.alt;
-            document.getElementById('modalName').textContent = img.dataset.name;
-            document.getElementById('modalPrice').textContent = img.dataset.price;
-            document.getElementById('modalTag').textContent =
-                img.dataset.category.charAt(0).toUpperCase() + img.dataset.category.slice(1);
-            document.getElementById('modalDesc').textContent = img.dataset.desc;
-            document.getElementById('modalOverlay').classList.add('open');
-        }
- 
-        // ── CLOSE MODAL BY CLICKING OUTSIDE ──
-        function closeModalOutside(event) {
-            if (event.target === document.getElementById('modalOverlay')) {
-                document.getElementById('modalOverlay').classList.remove('open');
-            }
-        }
-    </script>
+    }
+
+    // ── INITIAL LOAD ──
+    fetchProducts();
+</script>
 </body>
 </html>

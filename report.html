@@ -3,119 +3,162 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Reports</title>
+<title>PawConnect</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
-/* Background */
-body {
-  background: #F4F1E6;
-}
+body { background: #F4F1E6; }
 
-/* Layout */
-.container {
-  display: flex;
-  height: 100vh;
-}
+.container { display: flex; height: 100vh; }
+
+/* ── SIDEBAR ─────────────────────────────────────────────── */
 .sidebar {
   width: 220px;
-  padding: 20px;
-  border-right: 1px solid #ccc;
+  flex-shrink: 0;
+  padding: 24px 16px;
+  border-right: 1px solid #ddd;
+  background: #F4F1E6;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
-/* Logo */
 .logo-circle {
-  width: 60px;
-  height: 60px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   background-color: #3b8fc4;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
   overflow: hidden;
-  margin-bottom: 20px;  
+  margin-bottom: 20px;
+  flex-shrink: 0;
 }
 
 .logo-circle img {
-  width: 60px;
-  height: 60px;
+  width: 52px;
+  height: 52px;
   object-fit: cover;
 }
 
-/* menu items */
 .menu-item {
-  padding: 12px;
-  margin-bottom: 8px;
-  border-radius: 6px;
+  padding: 11px 14px;
+  border-radius: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-/* Active menu */
-.menu-item.active {
-  background: #AFC4D6;
-}
-
-/* Hover */
-.menu-item:hover {
-  background: #ddd;
-}
-.menu-item {
   text-decoration: none;
-  color: black;
-}
-.main { 
-  flex:1; 
-  padding:20px; 
-}
-.header {
-  display:flex;
-  justify-content:flex-end;
-  gap:15px;
-  margin-bottom:20px;
-}
-.header a {
-  color:black;
-  text-decoration:none;
+  color: #012224;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
 }
 
+.menu-item:hover { background: #e0ddd2; }
+.menu-item.active { background: #AFC4D6; color: #012224; }
+.menu-item i { width: 18px; text-align: center; font-size: 14px; }
+
+.sidebar-divider {
+  height: 1px;
+  background: #ddd;
+  margin: 8px 0;
+}
+
+/* ── MAIN ─────────────────────────────────────────────────── */
+.main { flex: 1; padding: 20px 28px; overflow-y: auto; }
+
+/* ── TOPBAR ───────────────────────────────────────────────── */
+.topbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.topbar a {
+  color: #012224;
+  text-decoration: none;
+  font-size: 18px;
+  transition: opacity 0.15s;
+}
+
+.topbar a:hover { opacity: 0.65; }
+
+.topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #012224;
+}
+
+.topbar-user .avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  color: #555;
+  overflow: hidden;
+}
+
+.topbar-user .avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── CARD ─────────────────────────────────────────────────── */
 .card {
-  background:white;
-  padding:30px;border-radius:10px;
-  text-align:center;
+  background: white;
+  padding: 24px;
+  border-radius: 10px;
 }
 
-/* Top bar */
-.top-bar {
+.card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 20px;
 }
 
-/* Button */
+.card-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #012224;
+}
+
 .btn {
   background: #4E8DC0;
   color: white;
-  padding: 10px 15px;
+  padding: 8px 14px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.15s;
 }
 
-/* Center content */
+.btn:hover { background: #3a7aad; }
+
+/* ── EMPTY STATE ──────────────────────────────────────────── */
 .pic {
   text-align: center;
   margin-top: 40px;
@@ -126,70 +169,82 @@ body {
   width: auto;
   margin-bottom: 15px;
 }
+
+.pic p {
+  font-size: 13.5px;
+  color: #666;
+}
 </style>
 </head>
-
 <body>
+
 <div class="container">
+
+  <!-- SIDEBAR -->
   <div class="sidebar">
     <a href="dashboard.html">
       <div class="logo-circle">
-          <img src="image/logo.png" alt="PawConnect Logo">
+        <img src="image/logo.png" alt="PawConnect Logo">
       </div>
     </a>
 
     <a href="userprof.html" class="menu-item">
       <i class="fa-regular fa-user"></i> My Account
     </a>
-
     <a href="addres.html" class="menu-item">
       <i class="fa-solid fa-location-dot"></i> My Addresses
     </a>
-
-    <a href="donation.html" class="menu-item ">
+    <a href="donation.html" class="menu-item">
       <i class="fa-solid fa-hand-holding-heart"></i> My Donations
     </a>
-
     <a href="report.html" class="menu-item active">
       <i class="fa-solid fa-bug"></i> My Reports
     </a>
-
+    <!-- <a href="reservations.html" class="menu-item">
+      <i class="fa-regular fa-calendar-check"></i> Reservations
+    </a> -->
     <a href="save.html" class="menu-item">
       <i class="fa-regular fa-heart"></i> Saves
     </a>
-
     <a href="notifications.html" class="menu-item">
       <i class="fa-regular fa-bell"></i> Notifications
     </a>
+
+    <div class="sidebar-divider"></div>
 
     <a href="login.html" class="menu-item">
       <i class="fa-solid fa-right-from-bracket"></i> Log out
     </a>
   </div>
 
-<div class="main">
+  <!-- MAIN -->
+  <div class="main">
 
-<div class="header">
-  <a href="notification.html"><i class="fa-regular fa-bell"></i></a>
-  <a href="save.html"><i class="fa-regular fa-heart"></i></a>
-  <a href="userprof.html"><i class="fa-regular fa-user"></i></a>
-  <span>User profile</span>
-</div>
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <a href="notifications.html" title="Notifications"><i class="fa-regular fa-bell"></i></a>
+      <a href="save.html" title="Saves"><i class="fa-regular fa-heart"></i></a>
+      <div class="topbar-user">
+        <div class="avatar"><i class="fa-regular fa-user"></i></div>
+        <span>User</span>
+      </div>
+    </div>
 
-<div class="card">
-  <div class="top-bar">
-    <h2>My Reports</h2>
-    <button class="btn">REPORT NOW</button>
+    <!-- CARD -->
+    <div class="card">
+      <div class="card-header">
+        <h2>My Reports</h2>
+        <button class="btn">REPORT NOW</button>
+      </div>
+
+      <div class="pic">
+        <img src="image/cat.png" alt="No reports">
+        <p>You will be able to see all the missing/found animals you reported here.</p>
+      </div>
+    </div>
+
   </div>
-
-  <div class="pic">
-    <img src="image/cat.png" alt="No reports">
-    <p>You will be able to see all the missing/found animals you reported here.</p>
-  </div>
-
 </div>
 
-</div>
-</div>
 </body>
 </html>

@@ -5,114 +5,231 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PawConnect</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+
 body { background:#F4F1E6; }
 
-.container { display:flex; height:100vh; }
-
-.image { flex:1; display:flex; justify-content:center; align-items:center; }
-
-.image-wrapper { position:relative; display:flex; justify-content:center; align-items:center; width:100%; height:100%; }
-
-.dog-img { width:85%; max-height:90%; object-fit:contain; }
-
-.logo-img {
-  position:absolute;
-  top:-60px;
-  left:50%;
-  transform:translateX(-50%);
-  width:500px;
+.container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
 }
 
-.form-section { flex:1; display:flex; justify-content:center; align-items:center; }
+/* ── LEFT PANEL ── */
+.image {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: hidden;
+}
 
-.card { width:320px; }
+.logo-img {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  max-width: 500px;
+  transform: translateX(-50%);
+  z-index: 2;
+}
 
-.title-img { display:block; margin:10px auto 20px; width:300px; }
+.dog-img {
+  position: relative;
+  z-index: 1;
+  width: 78%;
+  max-width: 500px;
+  display: block;
+  margin-bottom: -6px;
+  object-fit: contain;
+  object-position: bottom;
+  filter: drop-shadow(0 -8px 24px rgba(0,0,0,0.10));
+}
 
+/* ── DIVIDER ── */
+.divider {
+  width: 1px;
+  background: linear-gradient(to bottom, transparent 8%, #d1c9b4 30%, #d1c9b4 70%, transparent 92%);
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+/* ── RIGHT PANEL ── */
+.form-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px 24px;
+}
+
+.card {
+  width: 100%;
+  max-width: 340px;
+}
+
+.title-img {
+  display: block;
+  margin: 0 auto 28px;
+  width: 210px;
+}
+
+/* ── INPUTS ── */
 .input-group {
-  position:relative;
+  position: relative;
+  margin-bottom: 12px;
 }
 
 .input-group input {
-  width:100%;
-  padding:10px;
-  border:1px solid #8A8686;
-  border-radius:6px;
-  margin-bottom:12px;
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid #cbc5b3;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+  color: #333;
+  transition: border-color .2s, box-shadow .2s;
+  outline: none;
 }
 
-/* PASSWORD ICON */
+.input-group input::placeholder { color: #aaa; }
+
+.input-group input:focus {
+  border-color: #4E8DC0;
+  box-shadow: 0 0 0 3px rgba(78,141,192,.12);
+}
+
 .password-toggle {
-  position:absolute;
-  right:10px;
-  top:50%;
-  transform:translateY(-50%);
-  cursor:pointer;
-  color:#555;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+  font-size: 14px;
+  transition: color .2s;
+}
+.password-toggle:hover { color: #4E8DC0; }
+
+/* ── FORGOT PASSWORD ── */
+.forgot-row {
+  text-align: right;
+  margin-top: -4px;
+  margin-bottom: 16px;
 }
 
+.forgot-row a {
+  font-size: 12px;
+  color: #4E8DC0;
+  text-decoration: none;
+  transition: opacity .2s;
+}
+.forgot-row a:hover { opacity: .7; }
+
+/* ── SIGN IN BUTTON ── */
 .btn {
-  width:100%;
-  padding:10px;
-  background:#4E8DC0;
-  color:white;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
+  width: 100%;
+  padding: 11px;
+  background: #4E8DC0;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  transition: background .2s, transform .1s, box-shadow .2s;
+  box-shadow: 0 3px 12px rgba(78,141,192,.30);
 }
 
+.btn:hover {
+  background: #3a78ab;
+  box-shadow: 0 5px 16px rgba(78,141,192,.38);
+}
+.btn:active { transform: scale(.985); }
+
+/* ── OR DIVIDER ── */
 .or-line {
-  display:flex;
-  align-items:center;
-  margin:15px 0;
-  font-size:13px;
+  display: flex;
+  align-items: center;
+  margin: 18px 0;
+  font-size: 12px;
+  color: #999;
 }
 
 .or-line::before,
 .or-line::after {
-  content:'';
-  flex:1;
-  border-bottom:1px solid #8A8686;
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #d5cebd;
 }
 
-.or-line span { margin:0 10px; }
+.or-line span { margin: 0 12px; }
 
+/* ── SOCIAL BUTTONS ── */
 .social {
-  border:1px solid #8A8686;
-  padding:8px;
-  text-align:center;
-  margin-bottom:8px;
-  border-radius:6px;
-  background:white;
+  border: 1.5px solid #cbc5b3;
+  padding: 9px;
+  text-align: center;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .2s, border-color .2s, box-shadow .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.footer { text-align:center; font-size:13px; }
+.social:hover {
+  background: #faf8f2;
+  border-color: #a8a090;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
 
-.footer a { color:#4E8DC0; text-decoration:none; }
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  font-size: 13px;
+  color: #777;
+  margin-top: 18px;
+}
+
+.footer a {
+  color: #4E8DC0;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
 
 <div class="container">
+
   <!-- LEFT IMAGE -->
   <div class="image">
-    <div class="image-wrapper">
-      <img src="form-image/logo.png" class="logo-img">
-      <img src="form-image/dog1.png" class="dog-img">
-    </div>
+    <img src="form-image/logo.png" class="logo-img" alt="PawConnect">
+    <img src="form-image/dog1.png" class="dog-img" alt="Puppy">
   </div>
+
+  <!-- VISUAL DIVIDER -->
+  <div class="divider"></div>
 
   <!-- LOGIN FORM -->
   <div class="form-section">
     <div class="card">
 
-      <img src="form-image/sign_in.png" class="title-img">
+      <img src="form-image/sign_in.png" class="title-img" alt="Sign in">
 
-      <!-- CONNECTED TO PHP -->
+      <!-- CONNECTED TO PHP — form fields & names unchanged -->
       <form action="php/login.php" method="POST">
 
         <div class="input-group">
@@ -124,6 +241,11 @@ body { background:#F4F1E6; }
           <span class="password-toggle" onclick="togglePassword('password', this)">
             <i class="fa-solid fa-eye"></i>
           </span>
+        </div>
+
+        <!-- FORGOT PASSWORD -->
+        <div class="forgot-row">
+          <a href="forgot_password.html">Forgot password?</a>
         </div>
 
         <button type="submit" class="btn">SIGN IN</button>
@@ -138,14 +260,15 @@ body { background:#F4F1E6; }
       <div class="footer">
         No account? <a href="register.html">Sign up</a>
       </div>
+
     </div>
   </div>
 </div>
+
 <script>
   function togglePassword(id, el) {
     const input = document.getElementById(id);
     const icon = el.querySelector("i");
-
     if (input.type === "password") {
       input.type = "text";
       icon.classList.replace("fa-eye", "fa-eye-slash");

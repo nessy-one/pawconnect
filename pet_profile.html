@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PawConnect — Pet Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #F4F1E6;
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            background-color: #DA8063;
+            display: flex;
+            align-items: center;
+            padding: 10px 24px;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        .logo-circle {
+            border-radius: 50%;
+            background-color: #3b8fc4;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; overflow: hidden;
+            width: 52px; height: 52px;
+        }
+        .logo-circle img { width: 52px; height: 52px; object-fit: cover; }
+        .search {
+            flex: 2; position: relative;
+            max-width: 80%; margin: 0 auto;
+        }
+        .search input {
+            width: 100%;
+            padding: 9px 44px 9px 18px;
+            border-radius: 8px; border: none;
+            background: #F4F1E6;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px; color: #8A8686;
+            outline: none;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+        .search input::placeholder { color: #8A8686; }
+        .search .search-icon {
+            position: absolute; right: 14px; top: 50%;
+            transform: translateY(-50%);
+            color: #8A8686; font-size: 16px; pointer-events: none;
+        }
+        .nav { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+        .nav a { display: flex; align-items: center; text-decoration: none; transition: opacity 0.15s; }
+        .nav a:hover { opacity: 0.75; }
+        .nav svg { width: 24px; height: 24px; stroke: #012224; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        /* ── PAGE ── */
+        .page { padding: 32px 48px 80px; max-width: 95%; margin: 0 auto; }
+
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            text-decoration: none;
+            color: #8A8686;
+            font-size: 13px; font-weight: 600;
+            margin-bottom: 24px;
+            transition: color 0.15s;
+        }
+        .back-link:hover { color: #012224; }
+        .back-link svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+        /* ── LOADING / ERROR ── */
+        .state-box {
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            min-height: 320px; gap: 14px;
+        }
+        .spinner {
+            width: 44px; height: 44px;
+            border: 4px solid #EDE8DB;
+            border-top-color: #DA8063;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .state-box p { font-size: 14px; color: #8A8686; }
+        .state-box .err-emoji { font-size: 48px; }
+
+        /* FAQ */
+        .faq-section { margin-top: 55px; }
+
+        .faq-header {
+            background: #6b6b2e;
+            color: #F4F1E6;
+            font-family: 'Cherry Bomb One', cursive;
+            font-size: 22px;
+            font-weight: 300;
+            padding: 12px 24px;
+            display: inline-block;
+            border-radius: 4px;
+            margin-bottom: 24px;
+            letter-spacing: 1px;
+        }
+
+        .faq-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 16px; 
+        }
+
+        .faq-item { 
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 18px 20px;
+            box-shadow: 0 2px 12px rgba(1,34,36,0.10);
+            margin-bottom: 20px;
+        }
+
+        .faq-item h4 { 
+            font-size: 14px; 
+            font-weight: 700; 
+            color: #012224; 
+            margin-bottom: 6px; 
+        }
+
+        .faq-item p { 
+            font-size: 13px; 
+            color: #8A8686; 
+            line-height: 1.6; 
+        }
+        
+        /* ── PROFILE LAYOUT ── */
+        .profile {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 48px;
+            align-items: start;
+        }
+
+        /* ── LEFT: PHOTO COLUMN ── */
+        .photo-col { display: flex; flex-direction: column; gap: 0; }
+
+        /* After photo — main, on top */
+        .after-wrap {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.13);
+            background: #ddd;
+            margin-bottom: 10px;
+        }
+        /* REPLACE with: */
+        .after-wrap img {
+            width: 100%; height: auto;
+            max-height: 500px;
+            object-fit: contain;
+            display: block;
+            background: #f0ede4;
+        }
+        .after-label {
+            position: absolute;
+            bottom: 10px; right: 10px;
+            background: rgba(1,34,36,0.55);
+            color: #fff;
+            font-size: 11px; font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 999px;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Before photo — smaller, below */
+        .before-wrap {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+            background: #ddd;
+            display: none;
+        }
+
+        .before-wrap img {
+            width: 100%; height: auto;
+            max-height: 320px;
+            object-fit: contain;
+            display: block;
+            background: #f0ede4;
+        }
+        .before-label {
+            position: absolute;
+            top: 10px; left: 10px;
+            background: rgba(1,34,36,0.55);
+            color: #fff;
+            font-size: 11px; font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+
+        /* ── RIGHT: INFO COLUMN ── */
+        .info-col { padding-top: 8px; }
+
+        .pet-name-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+        .pet-name {
+            font-family: 'Cherry Bomb One', cursive;
+            font-size: 38px; font-weight: 400;
+            color: #012224;
+            letter-spacing: 1px;
+        }
+
+        .heart-btn {
+            background: none; border: none; cursor: pointer;
+            padding: 6px;
+            display: flex; align-items: center;
+            border-radius: 50%;
+            transition: background 0.15s;
+        }
+        .heart-btn:hover { background: rgba(218,128,99,0.1); }
+        .heart-btn svg {
+            width: 26px; height: 26px;
+            stroke: #8A8686; fill: none;
+            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+            transition: stroke 0.15s, fill 0.15s;
+        }
+        .heart-btn.liked svg { stroke: #DA8063; fill: #DA8063; }
+
+        /* Tags */
+        .tags-row {
+            display: flex; gap: 8px; flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .tag {
+            display: inline-block;
+            background: #4E8DC0;
+            color: #F4F1E6;
+            font-size: 12px; font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 999px;
+        }
+        .tag.status-reserved { background: #DA8063; }
+        .tag.status-adopted  { background: #6b6b2e; }
+        .tag.urgency-urgent  { background: #c0392b; }
+
+        /* Location */
+        .location-row {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 13px; color: #8A8686;
+            margin-bottom: 18px;
+        }
+        .location-row svg {
+            width: 15px; height: 15px;
+            stroke: #8A8686; fill: none;
+            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: #DDD;
+            margin-bottom: 20px;
+        }
+
+        /* Story */
+        .story-text {
+            font-size: 14px; color: #444;
+            line-height: 1.9;
+            margin-bottom: 28px;
+            white-space: pre-line;
+        }
+
+        /* Action buttons */
+        .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+        .btn-info {
+            padding: 10px 22px;
+            border-radius: 8px;
+            border: 1.5px solid #4E8DC0;
+            background: transparent;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px; font-weight: 600;
+            color: #4E8DC0;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-info:hover { background: #4E8DC0; color: #fff; }
+
+        .btn-support {
+            padding: 10px 22px;
+            border-radius: 8px; border: none;
+            background: #DA8063;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px; font-weight: 700;
+            color: #fff; cursor: pointer;
+            transition: background 0.15s;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-support:hover { background: #c46a4d; }
+
+        .btn-reserve {
+            padding: 10px 22px;
+            border-radius: 8px; border: none;
+            background: #DA8063;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px; font-weight: 700;
+            color: #fff; cursor: pointer;
+            transition: background 0.15s;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-reserve:hover { background: #c46a4d; }
+        .btn-reserve:disabled { background: #ccc; color: #888; cursor: not-allowed; }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(1,34,36,0.45);
+            z-index: 200;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.25s;
+        }
+        .modal-overlay.open { opacity: 1; pointer-events: all; }
+        .modal {
+            background: #F4F1E6;
+            border-radius: 16px; width: 460px;
+            max-width: 95vw; max-height: 92vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.22);
+            transform: translateY(24px) scale(0.97);
+            transition: transform 0.25s;
+        }
+        .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+        .modal-header {
+            background: #DA8063;
+            padding: 18px 24px 16px;
+            border-radius: 16px 16px 0 0;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .modal-header h2 { font-family: 'Cherry Bomb One', cursive; font-size: 22px; color: #fff; font-weight: 400; }
+        .modal-close { background: none; border: none; cursor: pointer; color: #fff; font-size: 22px; line-height: 1; padding: 0; opacity: 0.85; transition: opacity 0.15s; }
+        .modal-close:hover { opacity: 1; }
+        .modal-pet-info { display: flex; align-items: center; gap: 16px; padding: 20px 24px 16px; border-bottom: 1px solid #ddd; }
+        .modal-pet-img { width: 72px; height: 72px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background: #ddd; }
+        .modal-pet-details h3 { font-size: 17px; font-weight: 700; color: #012224; }
+        .modal-pet-details p  { font-size: 12px; color: #666; margin-top: 2px; }
+        .modal-body { padding: 20px 24px; }
+        .modal-body label { display: block; font-size: 12px; font-weight: 600; color: #012224; margin-bottom: 5px; margin-top: 14px; }
+        .modal-body label:first-child { margin-top: 0; }
+        .modal-body input, .modal-body select, .modal-body textarea {
+            width: 100%; padding: 9px 12px; border-radius: 8px;
+            border: 1.5px solid #ccc; background: #fff;
+            font-family: 'Poppins', sans-serif; font-size: 13px; color: #012224;
+            outline: none; transition: border-color 0.15s;
+        }
+        .modal-body input:focus, .modal-body select:focus, .modal-body textarea:focus { border-color: #DA8063; }
+        .modal-body textarea { resize: vertical; min-height: 72px; }
+        .duration-group { display: flex; gap: 8px; flex-wrap: wrap; }
+        .duration-pill { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .duration-pill input[type="radio"] { display: none; }
+        .duration-pill span { display: inline-block; padding: 6px 14px; border-radius: 999px; border: 1.5px solid #ccc; font-size: 12px; font-weight: 600; color: #555; background: #fff; transition: all 0.15s; cursor: pointer; }
+        .duration-pill input[type="radio"]:checked + span { background: #DA8063; border-color: #DA8063; color: #fff; }
+        .modal-notice { background: #fff8f0; border: 1.5px solid #DA8063; border-radius: 8px; padding: 10px 14px; margin-top: 16px; font-size: 12px; color: #7a4020; line-height: 1.6; }
+        .modal-notice strong { color: #DA8063; }
+        .modal-footer { padding: 0 24px 24px; display: flex; gap: 10px; }
+        .btn-cancel { flex: 1; padding: 10px; border-radius: 8px; border: 1.5px solid #ccc; background: #fff; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600; color: #555; cursor: pointer; transition: background 0.15s; }
+        .btn-cancel:hover { background: #f0f0f0; }
+        .btn-confirm { flex: 2; padding: 10px; border-radius: 8px; border: none; background: #DA8063; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; color: #fff; cursor: pointer; transition: background 0.15s; }
+        .btn-confirm:hover { background: #c46a4d; }
+        .modal-success { display: none; flex-direction: column; align-items: center; text-align: center; padding: 40px 30px; }
+        .modal-success.visible { display: flex; }
+        .success-paw { font-size: 56px; margin-bottom: 16px; animation: bounce 0.5s ease; }
+        @keyframes bounce { 0% { transform: scale(0.5); opacity:0; } 70% { transform: scale(1.1); } 100% { transform: scale(1); opacity:1; } }
+        .modal-success h3 { font-family: 'Cherry Bomb One', cursive; font-size: 24px; color: #DA8063; margin-bottom: 8px; }
+        .modal-success p { font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 24px; }
+        .btn-done { padding: 10px 36px; border-radius: 8px; border: none; background: #4E8DC0; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; color: #fff; cursor: pointer; transition: background 0.15s; }
+        .btn-done:hover { background: #3a6f99; }
+
+        /* ── TOAST ── */
+        .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px); background: #012224; color: #F4F1E6; padding: 10px 22px; border-radius: 8px; font-size: 13px; opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s; z-index: 999; white-space: nowrap; }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <a href="dashboard.html">
+        <div class="logo-circle">
+            <img src="image/logo.png" alt="PawConnect Logo">
+        </div>
+    </a>
+    <div class="search">
+        <input type="text" placeholder="Search">
+        <span class="search-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+        </span>
+    </div>
+    <div class="nav">
+        <a href="userprof.html" title="Profile">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+        <a href="save.html" title="Favourites">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </a>
+        <a href="notifications.html" title="Notifications">
+            <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </a>
+    </div>
+</div>
+
+<!-- PAGE -->
+<div class="page">
+    <a href="adopt.html" class="back-link">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to listings
+    </a>
+
+    <div id="content">
+        <div class="state-box">
+            <div class="spinner"></div>
+            <p>Loading profile…</p>
+        </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq-section">
+        <div class="faq-header">Adoption FAQ</div>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4>How do I adopt?</h4>
+                <p>After finding an animal you like, visit the shelter where they're housed. The staff will guide you through the rest of the process.</p>
+            </div>
+            <div class="faq-item">
+                <h4>How do I reserve a pet?</h4>
+                <p>Click <strong>Reserve</strong> on any available card, fill in your details and preferred visit date. We'll confirm within 24 hours.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Is there an adoption fee?</h4>
+                <p>None</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Reserve a Pet 🐾</h2>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div id="modalForm">
+            <div class="modal-pet-info">
+                <img class="modal-pet-img" id="modalPetImg" src="" alt="">
+                <div class="modal-pet-details">
+                    <h3 id="modalPetName">–</h3>
+                    <p id="modalPetInfo">–</p>
+                </div>
+            </div>
+            <div class="modal-body">
+                <label for="reserveName">Your Full Name *</label>
+                <input type="text" id="reserveName" placeholder="e.g. Juan dela Cruz" required>
+                <label for="reserveContact">Contact Number *</label>
+                <input type="tel" id="reserveContact" placeholder="e.g. 09XX XXX XXXX" required>
+                <label for="reserveDate">Preferred Visit Date *</label>
+                <input type="date" id="reserveDate" required>
+                <label>Reservation Duration *</label>
+                <div class="duration-group">
+                    <label class="duration-pill"><input type="radio" name="duration" value="1"> <span>1 day</span></label>
+                    <label class="duration-pill"><input type="radio" name="duration" value="3" checked> <span>3 days</span></label>
+                    <label class="duration-pill"><input type="radio" name="duration" value="5"> <span>5 days</span></label>
+                    <label class="duration-pill"><input type="radio" name="duration" value="7"> <span>7 days</span></label>
+                </div>
+                <label for="reserveNotes">Additional Notes (optional)</label>
+                <textarea id="reserveNotes" placeholder="Any questions or special considerations?"></textarea>
+                <div class="modal-notice">
+                    <strong>Please note:</strong> Reserving a pet holds them for the selected number of days.
+                    If you do not visit within this period, the reservation will automatically be cancelled.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-confirm" onclick="submitReservation()">Confirm Reservation</button>
+            </div>
+        </div>
+        <div class="modal-success" id="modalSuccess">
+            <div class="success-paw">🐾</div>
+            <h3>Reservation Confirmed!</h3>
+            <p id="successMsg">Your reservation has been submitted.<br>We'll contact you within 24 hours to confirm.</p>
+            <button class="btn-done" onclick="closeModal()">Done</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    const USER_ID = 1;
+    let currentPet = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('reserveDate').min   = today;
+        document.getElementById('reserveDate').value = today;
+
+        const params = new URLSearchParams(window.location.search);
+        const petId  = params.get('id');
+        if (!petId) { showError('No pet specified.'); return; }
+        loadPet(petId);
+    });
+
+    function loadPet(petId) {
+        fetch(`php/get-pet.php?id=${encodeURIComponent(petId)}`)
+            .then(r => {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            })
+            .then(data => {
+                if (!data.success) { showError(data.message || 'Pet not found.'); return; }
+                currentPet = data.pet;
+                renderProfile(data.pet);
+            })
+            .catch(err => showError('Could not load pet data: ' + err.message));
+    }
+
+    function renderProfile(p) {
+        const imgSrc    = `image/${p.name.toLowerCase()}.png`;
+        const imgBefore = `image/${p.name.toLowerCase()}_before.png`;
+
+        const statusTag = p.status === 'reserved'
+            ? `<span class="tag status-reserved">Reserved for ${p.reserved_days} day${p.reserved_days > 1 ? 's' : ''}</span>`
+            : p.status === 'adopted'
+            ? `<span class="tag status-adopted">Adopted</span>`
+            : '';
+
+        const urgencyTag = p.urgency && p.urgency.toLowerCase() === 'urgent'
+            ? `<span class="tag urgency-urgent">Urgent Care</span>`
+            : '';
+
+        const reserveBtn = p.status === 'available'
+            ? `<button class="btn-reserve" onclick="openModal()">🐾 Reserve ${p.name}</button>`
+            : `<button class="btn-reserve" disabled>${p.status === 'reserved' ? 'Already Reserved' : 'Not Available'}</button>`;
+
+        document.getElementById('content').innerHTML = `
+            <div class="profile">
+
+                <!-- LEFT: photos -->
+                <div class="photo-col">
+                    <div class="after-wrap">
+                        <img src="${imgSrc}" alt="${p.name}" onerror="this.src='image/placeholder.png'">
+                        <span class="after-label">After</span>
+                    </div>
+                    <div class="before-wrap" id="beforeWrap">
+                        <img src="${imgBefore}" alt="${p.name} before"
+                             onload="document.getElementById('beforeWrap').style.display='block';"
+                             onerror="document.getElementById('beforeWrap').style.display='none';">
+                        <span class="before-label">Before</span>
+                    </div>
+                </div>
+
+                <!-- RIGHT: info -->
+                <div class="info-col">
+                    <div class="pet-name-row">
+                        <div class="pet-name">${p.name.toUpperCase()}</div>
+                        <button class="heart-btn" id="heartBtn" onclick="toggleHeart()">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="tags-row">
+                        <span class="tag">${capitalize(p.gender)}</span>
+                        <span class="tag">${p.age} year${p.age != 1 ? 's' : ''} old</span>
+                        <span class="tag">${p.breed}</span>
+                        ${urgencyTag}
+                        ${statusTag}
+                    </div>
+
+                    <div class="location-row">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        ${p.shelter || p.location || 'Location not specified'}
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <p class="story-text">${p.story || 'No story available yet.'}</p>
+
+                    <div class="actions">
+                        <button class="btn-info" onclick="showToast('More info coming soon!')">
+                            Click to view more information
+                        </button>
+                        <button class="btn-support" onclick="showToast('❤️ Thank you for your support!')">
+                            Support ${p.name}
+                        </button>
+                        ${reserveBtn}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.title = `PawConnect — ${p.name}`;
+        currentPet.imgSrc = imgSrc;
+    }
+
+    function showError(msg) {
+        document.getElementById('content').innerHTML = `
+            <div class="state-box">
+                <span class="err-emoji">🐾</span>
+                <p>${msg}</p>
+                <a href="adopt.html" style="color:#DA8063;font-weight:600;font-size:13px;">← Back to listings</a>
+            </div>`;
+    }
+
+    function capitalize(str) {
+        if (!str) return '';
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function toggleHeart() {
+        if (!currentPet) return;
+        const btn     = document.getElementById('heartBtn');
+        const isLiked = btn.classList.contains('liked');
+        const action  = isLiked ? 'unsave' : 'save';
+        btn.classList.toggle('liked');
+
+        fetch('php/toggle_save.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action, pet_id: currentPet.id, user_id: USER_ID })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (!data.success) { btn.classList.toggle('liked'); showToast('Something went wrong.'); }
+            else showToast(action === 'save' ? 'Saved to your list!' : 'Removed from saves.');
+        })
+        .catch(() => showToast(action === 'save' ? 'Saved to your list!' : 'Removed from saves.'));
+    }
+
+    function openModal() {
+        if (!currentPet) return;
+        document.getElementById('modalPetName').textContent = currentPet.name;
+        document.getElementById('modalPetInfo').textContent = `${capitalize(currentPet.gender)}, ${currentPet.age} yrs old`;
+        document.getElementById('modalPetImg').src = currentPet.imgSrc || '';
+        document.getElementById('modalPetImg').alt = currentPet.name;
+        document.getElementById('reserveName').value    = '';
+        document.getElementById('reserveContact').value = '';
+        document.getElementById('reserveNotes').value   = '';
+        document.querySelector('input[name="duration"][value="3"]').checked = true;
+        document.getElementById('modalForm').style.display = 'block';
+        document.getElementById('modalSuccess').classList.remove('visible');
+        document.getElementById('modalOverlay').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        document.getElementById('modalOverlay').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    function handleOverlayClick(e) {
+        if (e.target === document.getElementById('modalOverlay')) closeModal();
+    }
+
+    function submitReservation() {
+        const name     = document.getElementById('reserveName').value.trim();
+        const contact  = document.getElementById('reserveContact').value.trim();
+        const date     = document.getElementById('reserveDate').value;
+        const duration = document.querySelector('input[name="duration"]:checked')?.value || '3';
+        const notes    = document.getElementById('reserveNotes').value.trim();
+
+        if (!name)    { showToast('Please enter your full name.');     document.getElementById('reserveName').focus();    return; }
+        if (!contact) { showToast('Please enter your contact number.'); document.getElementById('reserveContact').focus(); return; }
+        if (!date)    { showToast('Please select a visit date.');       document.getElementById('reserveDate').focus();    return; }
+
+        fetch('php/reserve_pet.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: USER_ID, pet_id: currentPet.id, name, contact, visit_date: date, duration, notes })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) onReservationSuccess(duration);
+            else showToast(data.message || 'Something went wrong.');
+        })
+        .catch(() => onReservationSuccess(duration));
+    }
+
+    function onReservationSuccess(duration) {
+        document.getElementById('modalForm').style.display = 'none';
+        document.getElementById('successMsg').innerHTML =
+            `<strong>${currentPet.name}</strong> has been reserved for <strong>${duration} day${duration > 1 ? 's' : ''}</strong>.<br>
+             We'll contact you within 24 hours to confirm your visit.`;
+        document.getElementById('modalSuccess').classList.add('visible');
+        const reserveBtn = document.querySelector('.btn-reserve');
+        if (reserveBtn) { reserveBtn.textContent = 'Already Reserved'; reserveBtn.disabled = true; }
+    }
+
+    let toastTimer;
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>

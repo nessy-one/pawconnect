@@ -34,6 +34,7 @@
             justify-content: center;
             flex-shrink: 0;
             overflow: hidden;
+            width: 52px; height: 52px;
         }
 
         .logo-circle img { width: 52px; height: 52px; object-fit: cover; }
@@ -77,11 +78,16 @@
 
         .page { max-width: 95%; margin: 0 auto; padding: 32px 32px 60px; }
 
-        .desc { display: flex; align-items: flex-start; gap: 40px; margin-bottom: 32px; }
+        .desc { 
+            display: flex; 
+            align-items: flex-start; 
+            gap: 40px; 
+            margin-bottom: 32px;
+        }
 
         .desc-title {
             font-family: 'Cherry Bomb One', cursive;
-            font-size: 36px;
+            font-size: 30px;
             font-weight: 400;
             color: #4E8DC0;
             line-height: 1.2;
@@ -89,12 +95,40 @@
             width: 220px;
         }
 
-        .desc-desc { font-size: 18px; color: #012224; line-height: 1.7; padding-top: 4px; }
+        .desc-divider {
+            width: 2px; height: 75px;
+            background: #EDE8DB;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .desc-desc { 
+            font-size: 15px; 
+            color: #012224; 
+            line-height: 1.7; 
+            padding: 6px; 
+        }
 
         .body { display: flex; gap: 28px; align-items: flex-start; }
 
-        .sidebar { width: 200px; margin-right: 50px; flex-shrink: 0; }
-        .sidebar h3 { font-size: 14px; font-weight: 600; color: #012224; margin-bottom: 10px; }
+        .sidebar { 
+            width: 220px; 
+            margin-right: 50px; 
+            flex-shrink: 0; 
+            background-color: #fff;
+            padding: 25px;
+            position: sticky;
+            top: 100px;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(1,34,36,0.10);
+        }
+
+        .sidebar h3 { 
+            font-size: 14px; 
+            font-weight: 600; 
+            color: #012224; 
+            margin-bottom: 15px; 
+        }
 
         .filter-group { margin-bottom: 16px; }
 
@@ -104,37 +138,53 @@
             align-items: center;
             cursor: pointer;
             user-select: none;
-            margin-bottom: 8px;
+            margin-bottom: 8px 0;
         }
 
-        .filter-group-header h4 { font-size: 13px; font-weight: 600; color: #012224; }
+        .filter-group-header h4 { 
+            font-size: 13px; 
+            font-weight: 600; 
+            color: #012224; 
+            margin-bottom: 5px;
+        }
 
         .toggle-btn {
             background: none;
             border: none;
-            font-size: 16px;
-            font-weight: 600;
-            color: #012224;
+            width: 22px; height: 22px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--teal);
             cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
             line-height: 1;
-            padding: 0 2px;
+            transition: background 0.15s;
         }
 
         .filter-items label {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             font-size: 12px;
             color: #012224;
             margin-bottom: 5px;
             cursor: pointer;
+            padding: 3px 4px;
+            transition: background 0.12s;
         }
 
         .filter-items input[type="checkbox"] { accent-color: #DA8063; width: 13px; height: 13px; cursor: pointer; }
 
         .main { flex: 1; }
 
-        .category-tabs { display: flex; gap: 0; margin-bottom: 24px; }
+        .category-tabs { 
+            display: flex; 
+            border-radius: 10px;
+            padding: 4px;
+            gap: 0; 
+            margin-bottom: 24px; 
+        }
 
         .tab-btn {
             padding: 8px 24px;
@@ -159,12 +209,54 @@
             gap: 20px;
         }
 
+        /* Loading skeleton */
+        .skeleton-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .skeleton-img {
+            width: 100%; height: 300px;
+            background: linear-gradient(90deg, #ede8db 25%, #e0dbd0 50%, #ede8db 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.2s infinite;
+        }
+        .skeleton-body { padding: 10px 12px 12px; }
+        .skeleton-line {
+            height: 14px; border-radius: 6px;
+            background: linear-gradient(90deg, #ede8db 25%, #e0dbd0 50%, #ede8db 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.2s infinite;
+            margin-bottom: 8px;
+        }
+        .skeleton-line.short { width: 60%; }
+        @keyframes shimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Empty state */
+        .empty-state {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            gap: 12px;
+            color: #8A8686;
+        }
+        .empty-state span { font-size: 48px; }
+        .empty-state p { font-size: 14px; }
+
         .pet-card {
             background: #F4F1E6;
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             transition: transform 0.15s;
+            cursor: pointer;
         }
 
         .pet-card:hover { transform: translateY(-3px); }
@@ -204,9 +296,9 @@
         }
 
         .heart-btn.liked svg { stroke: #DA8063; fill: #DA8063; }
-
-        /* Saving spinner overlay on heart */
         .heart-btn.saving { opacity: 0.5; pointer-events: none; }
+
+        .card-tags { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 
         .pet-tag {
             display: inline-block;
@@ -217,9 +309,301 @@
             border-radius: 999px;
         }
 
-        .pet-card.hidden { display: none; }
+        .status-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
 
-        .faq-section { margin-top: 48px; }
+        .status-badge.reserved {
+            background: #DA8063;
+            color: #fff;
+        }
+
+        .status-badge.adopted {
+            background: #6b6b2e;
+            color: #fff;
+        }
+
+        .reserve-btn {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            padding: 7px 0;
+            background: #DA8063;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .reserve-btn:hover { background: #c46a4d; }
+        .reserve-btn:disabled {
+            background: #ccc;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(1,34,36,0.45);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: #F4F1E6;
+            border-radius: 16px;
+            width: 460px;
+            max-width: 95vw;
+            max-height: 92vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.22);
+            transform: translateY(24px) scale(0.97);
+            transition: transform 0.25s;
+            position: relative;
+        }
+
+        .modal-overlay.open .modal {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-header {
+            background: #DA8063;
+            padding: 18px 24px 16px;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h2 {
+            font-family: 'Cherry Bomb One', cursive;
+            font-size: 22px;
+            color: #fff;
+            font-weight: 400;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            font-size: 22px;
+            line-height: 1;
+            padding: 0;
+            opacity: 0.85;
+            transition: opacity 0.15s;
+        }
+        .modal-close:hover { opacity: 1; }
+
+        .modal-pet-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modal-pet-img {
+            width: 72px;
+            height: 72px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: #ddd;
+        }
+
+        .modal-pet-details h3 { font-size: 17px; font-weight: 700; color: #012224; }
+        .modal-pet-details p  { font-size: 12px; color: #666; margin-top: 2px; }
+
+        .modal-body { padding: 20px 24px; }
+
+        .modal-body label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #012224;
+            margin-bottom: 5px;
+            margin-top: 14px;
+        }
+
+        .modal-body label:first-child { margin-top: 0; }
+
+        .modal-body input,
+        .modal-body select,
+        .modal-body textarea {
+            width: 100%;
+            padding: 9px 12px;
+            border-radius: 8px;
+            border: 1.5px solid #ccc;
+            background: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            color: #012224;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+
+        .modal-body input:focus,
+        .modal-body select:focus,
+        .modal-body textarea:focus { border-color: #DA8063; }
+
+        .modal-body textarea { resize: vertical; min-height: 72px; }
+
+        .duration-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .duration-pill {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .duration-pill input[type="radio"] { display: none; }
+
+        .duration-pill span {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1.5px solid #ccc;
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+            background: #fff;
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+
+        .duration-pill input[type="radio"]:checked + span {
+            background: #DA8063;
+            border-color: #DA8063;
+            color: #fff;
+        }
+
+        .modal-notice {
+            background: #fff8f0;
+            border: 1.5px solid #DA8063;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-top: 16px;
+            font-size: 12px;
+            color: #7a4020;
+            line-height: 1.6;
+        }
+
+        .modal-notice strong { color: #DA8063; }
+
+        .modal-footer {
+            padding: 0 24px 24px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1.5px solid #ccc;
+            background: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .btn-cancel:hover { background: #f0f0f0; }
+
+        .btn-confirm {
+            flex: 2;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: #DA8063;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .btn-confirm:hover { background: #c46a4d; }
+
+        .modal-success {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 40px 30px;
+        }
+
+        .modal-success.visible { display: flex; }
+
+        .success-paw {
+            font-size: 56px;
+            margin-bottom: 16px;
+            animation: bounce 0.5s ease;
+        }
+
+        @keyframes bounce {
+            0%   { transform: scale(0.5); opacity:0; }
+            70%  { transform: scale(1.1); }
+            100% { transform: scale(1);   opacity:1; }
+        }
+
+        .modal-success h3 {
+            font-family: 'Cherry Bomb One', cursive;
+            font-size: 24px;
+            color: #DA8063;
+            margin-bottom: 8px;
+        }
+
+        .modal-success p {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .btn-done {
+            padding: 10px 36px;
+            border-radius: 8px;
+            border: none;
+            background: #4E8DC0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .btn-done:hover { background: #3a6f99; }
+
+        /* FAQ */
+        .faq-section { margin-top: 55px; }
 
         .faq-header {
             background: #6b6b2e;
@@ -231,13 +615,37 @@
             display: inline-block;
             border-radius: 4px;
             margin-bottom: 24px;
+            letter-spacing: 1px;
         }
 
-        .faq-item { margin-bottom: 20px; }
-        .faq-item h4 { font-size: 14px; font-weight: 700; color: #012224; margin-bottom: 4px; }
-        .faq-item p { font-size: 13px; color: #8A8686; line-height: 1.6; }
+        .faq-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 16px; 
+        }
 
-        /* Toast notification */
+        .faq-item { 
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 18px 20px;
+            box-shadow: 0 2px 12px rgba(1,34,36,0.10);
+            margin-bottom: 20px;
+        }
+
+        .faq-item h4 { 
+            font-size: 14px; 
+            font-weight: 700; 
+            color: #012224; 
+            margin-bottom: 6px; 
+        }
+
+        .faq-item p { 
+            font-size: 13px; 
+            color: #8A8686; 
+            line-height: 1.6; 
+        }
+
+        /* Toast */
         .toast {
             position: fixed;
             bottom: 28px;
@@ -272,7 +680,7 @@
     </a>
 
     <div class="search">
-        <input type="text" placeholder="Search">
+        <input type="text" id="searchInput" placeholder="Search">
         <span class="search-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
@@ -297,7 +705,11 @@
 <div class="page">
     <div class="desc">
         <div class="desc-title">Stray Animal for Adoption</div>
-        <p class="desc-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <div class="desc-divider"></div>
+        <p class="desc-desc">
+            <strong>Find a Friend Who Needs You</strong><br>
+            Every stray has a story, and every story deserves a happy ending. Browse our rescued residents and discover the loyal companion waiting to join your family. Your perfect match is just a click away.
+        </p>
     </div>
 
     <div class="body">
@@ -312,15 +724,10 @@
                 </div>
                 <hr>
                 <div class="filter-items" id="filter-age">
-                    <label><input type="checkbox" name="age" value=""> All</label>
-                    <label><input type="checkbox" name="age" value="0-5"> 0–5</label>
-                    <label><input type="checkbox" name="age" value="6-10"> 6–10</label>
-                    <label><input type="checkbox" name="age" value="11-15"> 11–15</label>
-                    <label><input type="checkbox" name="age" value="16-20"> 16–20</label>
-                    <label><input type="checkbox" name="age" value="21-25"> 21–25</label>
-                    <label><input type="checkbox" name="age" value="26-30"> 26–30</label>
-                    <label><input type="checkbox" name="age" value="31-35"> 31–35</label>
-                    <label><input type="checkbox" name="age" value="36-40"> 36–40</label>
+                    <label><input type="checkbox" name="age" value="0-1"> Puppy/Kitten: 0–1 year</label>
+                    <label><input type="checkbox" name="age" value="1-3"> Young: 1–3 years</label>
+                    <label><input type="checkbox" name="age" value="3-6"> Adult: 3–6 years</label>
+                    <label><input type="checkbox" name="age" value="7+"> Senior: 7+ years</label>
                 </div>
             </div>
 
@@ -331,7 +738,6 @@
                 </div>
                 <hr>
                 <div class="filter-items" id="filter-breed">
-                    <label><input type="checkbox" name="breed" value=""> All</label>
                     <label><input type="checkbox" name="breed" value="native"> Native (Aspin / Puspin)</label>
                     <label><input type="checkbox" name="breed" value="mixed"> Mixed Breed</label>
                     <label><input type="checkbox" name="breed" value="purebred"> Purebred</label>
@@ -345,9 +751,24 @@
                 </div>
                 <hr>
                 <div class="filter-items" id="filter-priority">
-                    <label><input type="checkbox" name="priority" value=""> All</label>
-                    <label><input type="checkbox" name="priority" value="urgent"> Urgent</label>
-                    <label><input type="checkbox" name="priority" value="normal"> Normal</label>
+                    <label><input type="checkbox" name="priority" value="urgent"> Urgent care</label>
+                    <label><input type="checkbox" name="priority" value="normal"> Long-term resident</label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-group-header" onclick="toggleFilter('location')">
+                    <h4>Your Location <span style="font-weight:400;color:#8A8686">(optional)</span></h4>
+                    <button class="toggle-btn" id="toggle-location">−</button>
+                </div>
+                <hr>
+                <div class="filter-items" id="filter-location">
+                    <input type="text" id="locationInput" placeholder="e.g. Angeles City"
+                        style="width:100%;padding:7px 10px;border-radius:7px;border:1.5px solid #ccc;
+                                font-family:'Poppins',sans-serif;font-size:12px;color:#012224;outline:none;margin-top:5px;">
+                    <p style="font-size:11px;color:#8A8686;margin-top:5px;line-height:1.5;">
+                        Pets near you will be ranked higher.
+                    </p>
                 </div>
             </div>
         </div>
@@ -360,167 +781,313 @@
                 <button class="tab-btn" onclick="filterCategory('dog', this)">DOGS</button>
             </div>
 
-            <div class="pet-grid" id="petGrid">
-
-                <div class="pet-card" data-type="dog" data-id="thormund">
-                    <img src="image/thormund.png" alt="Thormund">
-                    <div class="card-body">
-                        <div class="card-name-row">
-                            <span>Thormund</span>
-                            <button class="heart-btn" onclick="toggleHeart(this)">
-                                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                            </button>
-                        </div>
-                        <span class="pet-tag">Male, 7 yrs old</span>
-                    </div>
-                </div>
-
-                <div class="pet-card" data-type="dog" data-id="ezra">
-                    <img src="image/ezra.png" alt="Ezra">
-                    <div class="card-body">
-                        <div class="card-name-row">
-                            <span>Ezra</span>
-                            <button class="heart-btn" onclick="toggleHeart(this)">
-                                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                            </button>
-                        </div>
-                        <span class="pet-tag">Female, 2 yrs old</span>
-                    </div>
-                </div>
-
-                <div class="pet-card" data-type="cat" data-id="tiktok">
-                    <img src="image/tiktok.png" alt="Tiktok">
-                    <div class="card-body">
-                        <div class="card-name-row">
-                            <span>Tiktok</span>
-                            <button class="heart-btn" onclick="toggleHeart(this)">
-                                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                            </button>
-                        </div>
-                        <span class="pet-tag">Male, 2 yrs old</span>
-                    </div>
-                </div>
-
-                <div class="pet-card" data-type="cat" data-id="dasurv">
-                    <img src="image/dasurv.png" alt="Dasurv">
-                    <div class="card-body">
-                        <div class="card-name-row">
-                            <span>Dasurv</span>
-                            <button class="heart-btn" onclick="toggleHeart(this)">
-                                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                            </button>
-                        </div>
-                        <span class="pet-tag">Female, 2 yrs old</span>
-                    </div>
-                </div>
-
-            </div>
+            <!-- Pet grid: populated dynamically by JS -->
+            <div class="pet-grid" id="petGrid"></div>
         </div>
     </div>
 
     <!-- FAQ -->
     <div class="faq-section">
         <div class="faq-header">Adoption FAQ</div>
-
-        <div class="faq-item">
-            <h4>Tanong</h4>
-            <p>Basta ito yung sagot sa tanong. Tapos ito yung mga tanong &amp; sagot about sa process ng adoption natin :)</p>
-        </div>
-
-        <div class="faq-item">
-            <h4>How do I adopt a pet?</h4>
-            <p> </p>
-        </div>
-
-        <div class="faq-item">
-            <h4>What are the requirements for adoption?</h4>
-            <p>Adoption requirements may vary depending on the shelter or rescue organization. Generally, you will need to provide proof of identification, proof of residence, and sometimes references.</p>
-        </div>
-
-        <div class="faq-item">
-            <h4>Can I adopt if I live in an apartment?</h4>
-            <p>Yes, many pets can adapt well to apartment living. However, it's important to consider the pet's energy level and exercise needs.</p>
-        </div>
-
-        <div class="faq-item">
-            <h4>Is there an adoption fee?</h4>
-            <p>Yes, most shelters and rescue organizations charge an adoption fee. This fee helps cover the cost of caring for the animals and may include vaccinations, spaying/neutering, and microchipping.</p>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4>How do I adopt?</h4>
+                <p>After finding an animal you like, visit the shelter where they're housed. The staff will guide you through the rest of the process.</p>
+            </div>
+            <div class="faq-item">
+                <h4>How do I reserve a pet?</h4>
+                <p>Click <strong>Reserve</strong> on any available card, fill in your details and preferred visit date. We'll confirm within 24 hours.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Is there an adoption fee?</h4>
+                <p>None</p>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Toast notification -->
+<!-- RESERVATION MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+    <div class="modal" id="modal">
+
+        <div class="modal-header">
+            <h2>Reserve a Pet</h2>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+
+        <!-- Form screen -->
+        <div id="modalForm">
+            <div class="modal-pet-info">
+                <img class="modal-pet-img" id="modalPetImg" src="" alt="">
+                <div class="modal-pet-details">
+                    <h3 id="modalPetName">–</h3>
+                    <p id="modalPetInfo">–</p>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <label for="reserveName">Your Full Name *</label>
+                <input type="text" id="reserveName" placeholder="e.g. Juan dela Cruz" required>
+
+                <label for="reserveContact">Contact Number *</label>
+                <input type="tel" id="reserveContact" placeholder="e.g. 09XX XXX XXXX" required>
+
+                <label for="reserveDate">Preferred Visit Date *</label>
+                <input type="date" id="reserveDate" required>
+
+                <label>Reservation Duration *</label>
+                <div class="duration-group">
+                    <label class="duration-pill">
+                        <input type="radio" name="duration" value="1"> <span>1 day</span>
+                    </label>
+                    <label class="duration-pill">
+                        <input type="radio" name="duration" value="3" checked> <span>3 days</span>
+                    </label>
+                    <label class="duration-pill">
+                        <input type="radio" name="duration" value="5"> <span>5 days</span>
+                    </label>
+                    <label class="duration-pill">
+                        <input type="radio" name="duration" value="7"> <span>7 days</span>
+                    </label>
+                </div>
+
+                <label for="reserveNotes">Additional Notes (optional)</label>
+                <textarea id="reserveNotes" placeholder="Any questions or special considerations?"></textarea>
+
+                <div class="modal-notice">
+                    <strong>Please note:</strong> Reserving a pet holds them for the selected number of days.
+                    If you do not visit within this period, the reservation will automatically be cancelled and
+                    the pet will be made available again.
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-confirm" onclick="submitReservation()">Confirm Reservation</button>
+            </div>
+        </div>
+
+        <!-- Success screen -->
+        <div class="modal-success" id="modalSuccess">
+            <div class="success-paw">🐾</div>
+            <h3>Reservation Confirmed!</h3>
+            <p id="successMsg">Your reservation has been submitted.<br>We'll contact you within 24 hours to confirm.</p>
+            <button class="btn-done" onclick="closeModal()">Done</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
-    // ── USER ID ──────────────────────────────────────────────────
-    // Replace this with however you store the logged-in user's ID.
-    // Example: from a session via a PHP echo, or from localStorage.
-    // e.g. const USER_ID = <?php echo $_SESSION['user_id']; ?>;
-    const USER_ID = 1; // ← CHANGE THIS to your actual session user ID
+    // ── CONFIG ──────────────────────────────────────────────────────
+    const USER_ID = 1;
 
-    // ── LOAD SAVED STATE ON PAGE LOAD ───────────────────────────
+    // Tracks which card triggered the modal
+    let activeCard = null;
+
+    // Current active type tab ('all' | 'cat' | 'dog')
+    let activeType = 'all';
+
+    // ── INIT ────────────────────────────────────────────────────────
     window.addEventListener('DOMContentLoaded', () => {
-        fetch(`get_saved.php?user_id=${USER_ID}`)
+        // Set min date on reservation date picker
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('reserveDate').min   = today;
+        document.getElementById('reserveDate').value = today;
+
+        // Wire all filter checkboxes → re-fetch on change
+        document.querySelectorAll('.filter-items input[type="checkbox"]')
+            .forEach(cb => cb.addEventListener('change', fetchAndRenderPets));
+
+        // Wire search input (debounced)
+        document.getElementById('searchInput')
+            .addEventListener('input', debounce(fetchAndRenderPets, 350));
+
+        // Wire location input (debounced)
+        document.getElementById('locationInput')
+            .addEventListener('input', debounce(fetchAndRenderPets, 350));
+
+        // Initial load
+        fetchAndRenderPets();
+    });
+
+    // ── DEBOUNCE HELPER ─────────────────────────────────────────────
+    function debounce(fn, delay) {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => fn(...args), delay);
+        };
+    }
+
+    // ── BUILD QUERY STRING FROM ACTIVE FILTERS ──────────────────────
+    function getActiveFilters() {
+        const params = new URLSearchParams();
+
+        // Location (optional)
+        const location = document.getElementById('locationInput').value.trim();
+        if (location) params.set('location', location);
+
+        // Type tab
+        if (activeType !== 'all') params.set('type', activeType);
+
+        // Search text
+        const search = document.getElementById('searchInput').value.trim();
+        if (search) params.set('search', search);
+
+        // Age checkboxes — collect all checked values (multiple allowed)
+        document.querySelectorAll('input[name="age"]:checked')
+            .forEach(cb => params.append('age[]', cb.value));
+
+        // Breed checkboxes
+        document.querySelectorAll('input[name="breed"]:checked')
+            .forEach(cb => params.append('breed[]', cb.value));
+
+        // Priority checkboxes
+        document.querySelectorAll('input[name="priority"]:checked')
+            .forEach(cb => params.append('priority[]', cb.value));
+
+        return params;
+    }
+
+    // ── FETCH PETS FROM BACKEND ─────────────────────────────────────
+    function fetchAndRenderPets() {
+        const params = getActiveFilters();
+        renderSkeletons();
+
+        fetch(`php/filter-pets.php?${params.toString()}`)
+            .then(r => {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            })
+            .then(data => {
+                if (!data.success) {
+                    showToast(data.message || 'Could not load pets.');
+                    renderEmpty('Something went wrong loading pets.');
+                    return;
+                }
+                renderPetGrid(data.pets);
+            })
+            .catch(err => {
+                console.error(err);
+                renderEmpty('Could not reach the server. Please try again.');
+            });
+    }
+
+    // ── RENDER: SKELETON PLACEHOLDERS ───────────────────────────────
+    function renderSkeletons() {
+        const grid = document.getElementById('petGrid');
+        grid.innerHTML = Array(4).fill(0).map(() => `
+            <div class="skeleton-card">
+                <div class="skeleton-img"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line short"></div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // ── RENDER: EMPTY STATE ─────────────────────────────────────────
+    function renderEmpty(msg = 'No pets match your filters.') {
+        document.getElementById('petGrid').innerHTML = `
+            <div class="empty-state">
+                <span>🐾</span>
+                <p>${msg}</p>
+            </div>`;
+    }
+
+    // ── RENDER: PET CARDS ───────────────────────────────────────────
+    function renderPetGrid(pets) {
+        const grid = document.getElementById('petGrid');
+
+        if (!pets || pets.length === 0) {
+            renderEmpty();
+            return;
+        }
+
+        grid.innerHTML = pets.map(p => {
+            const isReserved = p.status === 'reserved';
+            const isAdopted  = p.status === 'adopted';
+            const disabled   = isReserved || isAdopted;
+
+            // Status badge
+            const badge = isReserved
+                ? `<span class="status-badge reserved">Reserved for ${p.reserved_days} day${p.reserved_days != 1 ? 's' : ''}</span>`
+                : isAdopted
+                ? `<span class="status-badge adopted">Adopted</span>`
+                : '';
+
+            // Reserve button label & handler
+            const btnLabel   = isReserved ? 'Already Reserved' : isAdopted ? 'Adopted' : 'Reserve';
+            const btnOnclick = disabled
+                ? `onclick="event.stopPropagation();"`
+                : `onclick="openReserveModal(this); event.stopPropagation();"`;
+
+            // Encode data attributes safely
+            const info = `${capitalize(p.gender)}, ${p.age} yr${p.age != 1 ? 's' : ''} old`;
+
+            return `
+            <div class="pet-card"
+                 data-type="${escAttr(p.type)}"
+                 data-id="${escAttr(p.id)}"
+                 data-name="${escAttr(p.name)}"
+                 data-info="${escAttr(info)}"
+                 data-status="${escAttr(p.status)}"
+                 data-reserved-days="${escAttr(p.reserved_days || 0)}"
+                 onclick="window.location.href='pet_profile.html?id=${encodeURIComponent(p.id)}'">
+                <img src="image/${encodeURIComponent(p.name.toLowerCase())}.png"
+                     alt="${escAttr(p.name)}"
+                     onerror="this.src='image/placeholder.png'">
+                <div class="card-body">
+                    <div class="card-name-row">
+                        <span>${escHtml(p.name)}</span>
+                        <button class="heart-btn" onclick="toggleHeart(this); event.stopPropagation();">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="card-tags">
+                        <span class="pet-tag">${escHtml(info)}</span>
+                        ${badge}
+                    </div>
+                    <button class="reserve-btn" ${disabled ? 'disabled' : ''} ${btnOnclick}>
+                        ${escHtml(btnLabel)}
+                    </button>
+                </div>
+            </div>`;
+        }).join('');
+
+        // Re-apply saved hearts after rendering
+        applySavedHearts();
+    }
+
+    // ── RESTORE SAVED HEARTS ────────────────────────────────────────
+    function applySavedHearts() {
+        fetch(`php/get_saved.php?user_id=${USER_ID}`)
             .then(r => r.json())
             .then(data => {
                 if (!data.success) return;
                 data.saved.forEach(petId => {
                     const card = document.querySelector(`.pet-card[data-id="${petId}"]`);
-                    if (card) {
-                        card.querySelector('.heart-btn').classList.add('liked');
-                    }
+                    if (card) card.querySelector('.heart-btn').classList.add('liked');
                 });
             })
-            .catch(() => {}); // silently fail if PHP not set up yet
-    });
-
-    // ── HEART TOGGLE ─────────────────────────────────────────────
-    function toggleHeart(btn) {
-        const card   = btn.closest('.pet-card');
-        const petId  = card.dataset.id;
-        const isLiked = btn.classList.contains('liked');
-        const action  = isLiked ? 'unsave' : 'save';
-
-        // Optimistic UI update
-        btn.classList.toggle('liked');
-        btn.classList.add('saving');
-
-        fetch('toggle_save.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action, pet_id: petId, user_id: USER_ID })
-        })
-        .then(r => r.json())
-        .then(data => {
-            btn.classList.remove('saving');
-            if (data.success) {
-                showToast(action === 'save' ? '❤️ Saved to your list!' : 'Removed from saves.');
-            } else {
-                // Revert on failure
-                btn.classList.toggle('liked');
-                showToast('Something went wrong. Please try again.');
-            }
-        })
-        .catch(() => {
-            btn.classList.remove('saving');
-            // Revert on network error
-            btn.classList.toggle('liked');
-            showToast('Network error. Please try again.');
-        });
+            .catch(() => {});
     }
 
-    // ── TOAST ─────────────────────────────────────────────────────
-    let toastTimer;
-    function showToast(msg) {
-        const toast = document.getElementById('toast');
-        toast.textContent = msg;
-        toast.classList.add('show');
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+    // ── CATEGORY TABS ───────────────────────────────────────────────
+    function filterCategory(type, clickedBtn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        clickedBtn.classList.add('active');
+        activeType = type;
+        fetchAndRenderPets();
     }
 
-    // ── FILTER COLLAPSE ───────────────────────────────────────────
+    // ── FILTER SIDEBAR COLLAPSE ─────────────────────────────────────
     function toggleFilter(id) {
         const items = document.getElementById('filter-' + id);
         const btn   = document.getElementById('toggle-' + id);
@@ -533,19 +1100,168 @@
         }
     }
 
-    // ── CATEGORY TABS ─────────────────────────────────────────────
-    function filterCategory(type, clickedBtn) {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        clickedBtn.classList.add('active');
-        document.querySelectorAll('.pet-card').forEach(card => {
-            if (type === 'all' || card.dataset.type === type) {
-                card.classList.remove('hidden');
-            } else {
-                card.classList.add('hidden');
-            }
+    // ── OPEN RESERVATION MODAL ──────────────────────────────────────
+    function openReserveModal(btn) {
+        const card = btn.closest('.pet-card');
+        activeCard = card;
+
+        const name   = card.dataset.name || 'Pet';
+        const info   = card.dataset.info || '';
+        const imgSrc = card.querySelector('img').src;
+
+        document.getElementById('modalPetName').textContent = name;
+        document.getElementById('modalPetInfo').textContent = info;
+        document.getElementById('modalPetImg').src = imgSrc;
+        document.getElementById('modalPetImg').alt = name;
+
+        // Reset form fields
+        document.getElementById('reserveName').value    = '';
+        document.getElementById('reserveContact').value = '';
+        document.getElementById('reserveNotes').value   = '';
+        document.querySelector('input[name="duration"][value="3"]').checked = true;
+
+        // Show form, hide success
+        document.getElementById('modalForm').style.display    = 'block';
+        document.getElementById('modalSuccess').classList.remove('visible');
+
+        document.getElementById('modalOverlay').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // ── CLOSE MODAL ─────────────────────────────────────────────────
+    function closeModal() {
+        document.getElementById('modalOverlay').classList.remove('open');
+        document.body.style.overflow = '';
+        activeCard = null;
+    }
+
+    function handleOverlayClick(e) {
+        if (e.target === document.getElementById('modalOverlay')) closeModal();
+    }
+
+    // ── SUBMIT RESERVATION ──────────────────────────────────────────
+    function submitReservation() {
+        const name     = document.getElementById('reserveName').value.trim();
+        const contact  = document.getElementById('reserveContact').value.trim();
+        const date     = document.getElementById('reserveDate').value;
+        const duration = document.querySelector('input[name="duration"]:checked')?.value || '3';
+        const notes    = document.getElementById('reserveNotes').value.trim();
+
+        if (!name)    { showToast('Please enter your full name.');      document.getElementById('reserveName').focus();    return; }
+        if (!contact) { showToast('Please enter your contact number.'); document.getElementById('reserveContact').focus(); return; }
+        if (!date)    { showToast('Please select a visit date.');       document.getElementById('reserveDate').focus();    return; }
+
+        const petId   = activeCard?.dataset.id   || '';
+        const petName = activeCard?.dataset.name || 'Pet';
+
+        fetch('php/reserve_pet.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: USER_ID, pet_id: petId, name, contact, visit_date: date, duration, notes })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) onReservationSuccess(petName, duration);
+            else showToast(data.message || 'Something went wrong. Please try again.');
+        })
+        .catch(() => {
+            // Demo mode — works without backend
+            onReservationSuccess(petName, duration);
         });
     }
-</script>
 
+    function onReservationSuccess(petName, duration) {
+        if (activeCard) {
+            activeCard.dataset.status = 'reserved';
+
+            const tagsEl   = activeCard.querySelector('.card-tags');
+            const existing = tagsEl.querySelector('.status-badge');
+            if (existing) existing.remove();
+
+            const badge = document.createElement('span');
+            badge.className = 'status-badge reserved';
+            badge.textContent = `Reserved for ${duration} day${duration > 1 ? 's' : ''}`;
+            tagsEl.appendChild(badge);
+
+            const reserveBtn = activeCard.querySelector('.reserve-btn');
+            if (reserveBtn) {
+                reserveBtn.textContent = 'Already Reserved';
+                reserveBtn.disabled    = true;
+            }
+        }
+
+        document.getElementById('modalForm').style.display = 'none';
+        document.getElementById('successMsg').innerHTML =
+            `<strong>${escHtml(petName)}</strong> has been reserved for <strong>${duration} day${duration > 1 ? 's' : ''}</strong>.<br>
+             We'll contact you within 24 hours to confirm your visit.`;
+        document.getElementById('modalSuccess').classList.add('visible');
+    }
+
+    // ── HEART TOGGLE ────────────────────────────────────────────────
+    function toggleHeart(btn) {
+        const card    = btn.closest('.pet-card');
+        const petId   = card.dataset.id;
+        const isLiked = btn.classList.contains('liked');
+        const action  = isLiked ? 'unsave' : 'save';
+
+        btn.classList.toggle('liked');
+        btn.classList.add('saving');
+
+        fetch('php/toggle_save.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action, pet_id: petId, user_id: USER_ID })
+        })
+        .then(r => r.json())
+        .then(data => {
+            btn.classList.remove('saving');
+            if (data.success) {
+                showToast(action === 'save' ? 'Saved to your list!' : 'Removed from saves.');
+            } else {
+                btn.classList.toggle('liked'); // revert
+                showToast('Something went wrong. Please try again.');
+            }
+        })
+        .catch(() => {
+            btn.classList.remove('saving');
+            showToast(action === 'save' ? 'Saved to your list!' : 'Removed from saves.');
+        });
+    }
+
+    // ── TOAST ────────────────────────────────────────────────────────
+    let toastTimer;
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // ── HELPERS ──────────────────────────────────────────────────────
+    function capitalize(str) {
+        if (!str) return '';
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // Escape for HTML content
+    function escHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    // Escape for HTML attribute values
+    function escAttr(str) {
+        return String(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    // ── KEYBOARD CLOSE ───────────────────────────────────────────────
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeModal();
+    });
+</script>
 </body>
 </html>

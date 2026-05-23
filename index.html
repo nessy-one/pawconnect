@@ -1,91 +1,313 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PawConnect</title>
-    <style>
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PawConnect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --sky: #4E8DC0;
+      --cream: #FEFAE8;
+      --cream-dim: rgba(254,250,232,0.18);
+      --cream-mid: rgba(254,250,232,0.60);
+    }
 
-        body {
-            background-color: #4E8DC0;
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            font-family: 'Poppins', sans-serif;
-        }
+    html { height: 100%; }
 
-        .mid {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+    body {
+      background: var(--sky);
+      height: 100vh; width: 100vw;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      font-family: 'Nunito', sans-serif;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+    }
+    body.loaded { opacity: 1; }
 
-        .bg-pawprints {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            z-index: 0;
-            pointer-events: none;
-        }
+    /* vignette */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse at center, transparent 48%, rgba(30,60,90,0.38) 100%);
+      pointer-events: none; z-index: 10;
+    }
 
-        .logo-img {
-            position: relative;
-            z-index: 1;
-            width: 700px;
-            height: auto;
-            margin-bottom: 20px;
-            display: block;
-        }
+    /* blobs */
+    .blob-wrap { position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden; }
+    .blob { position:absolute;border-radius:50%;filter:blur(80px);opacity:0.28;animation:drift 12s ease-in-out infinite alternate; }
+    .blob-1 { width:600px;height:600px;background:#6aaed4;top:-150px;left:-100px;animation-duration:14s; }
+    .blob-2 { width:500px;height:500px;background:#3a6f9a;bottom:-120px;right:-80px;animation-duration:11s;animation-delay:-4s; }
+    .blob-3 { width:350px;height:350px;background:#85c4e8;top:40%;left:55%;animation-duration:16s;animation-delay:-7s; }
+    @keyframes drift { from{transform:translate(0,0) scale(1);}to{transform:translate(30px,20px) scale(1.08);} }
 
-        .btn-start {
-            position: relative;
-            z-index: 1;
-            background: #DDDDDD;
-            color: #012224;
-            border: none;
-            border-radius: 999px;
-            padding: 10px 34px;
-            font-size: 15px;
-            font-family: poppins, sans-serif;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.13);
-            text-decoration: none;
-            display: inline-block;
-            transition: transform 0.15s, box-shadow 0.15s;
-        }
+    /* canvas layers */
+    #trail-canvas { position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1; }
+    #cursor-canvas { position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9; }
 
-        .btn-start:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.20);
-        }
+    .stage {
+      position:relative;z-index:5;
+      display:flex;flex-direction:column;align-items:center;
+      text-align:center;padding:0 20px;
+    }
 
-        .btn-start:active {
-            transform: translateY(0);
-        }
-    </style>
+    /* logo */
+    .logo-img {
+      width:clamp(300px,52vw,680px);height:auto;
+      filter:drop-shadow(0 6px 28px rgba(0,0,0,0.22));
+      animation:fadeUp 0.9s 0.1s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    /* subheading */
+    .subhead {
+      margin-top:6px;
+      font-size:clamp(13px,1.6vw,17px);font-weight:600;
+      color:var(--cream-mid);letter-spacing:0.05em;
+      animation:fadeUp 0.9s 0.25s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    /* tagline */
+    .tagline {
+      margin-top:8px;
+      font-size:clamp(11px,1.3vw,14px);font-weight:700;
+      color:rgba(254,250,232,0.38);letter-spacing:0.12em;text-transform:uppercase;
+      animation:fadeUp 0.9s 0.35s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .tagline span { opacity:0.5;margin:0 5px; }
+
+    /* buttons */
+    .btn-wrap {
+      margin-top:28px;display:flex;gap:14px;align-items:center;
+      animation:fadeUp 0.9s 0.45s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    .btn-primary {
+      background:var(--cream);color:#2a5f82;border:none;border-radius:999px;
+      padding:14px 44px;font-family:'Nunito',sans-serif;font-size:17px;font-weight:800;
+      cursor:pointer;text-decoration:none;display:inline-block;
+      box-shadow:0 8px 28px rgba(0,0,0,0.18),0 2px 0 rgba(255,255,255,0.5) inset;
+      transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.2s ease;
+    }
+    .btn-primary:hover { transform:translateY(-4px) scale(1.04);box-shadow:0 16px 38px rgba(0,0,0,0.24),0 2px 0 rgba(255,255,255,0.5) inset; }
+    .btn-primary:active { transform:translateY(0) scale(0.97); }
+
+    .btn-secondary {
+      background:transparent;color:var(--cream);
+      border:1.5px solid rgba(254,250,232,0.45);border-radius:999px;
+      padding:13px 26px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;
+      cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+      backdrop-filter:blur(6px);
+      transition:background 0.2s,border-color 0.2s,transform 0.2s;
+    }
+    .btn-secondary:hover { background:rgba(254,250,232,0.12);border-color:rgba(254,250,232,0.85);transform:translateY(-2px); }
+
+    /* wave */
+    .wave { position:fixed;bottom:0;left:0;width:100%;z-index:2;pointer-events:none;opacity:0.13; }
+    .wave path { animation:waveDrift 8s ease-in-out infinite alternate; transform-origin:center bottom; }
+    @keyframes waveDrift {
+      from { d: path("M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z"); }
+      to   { d: path("M0,40 C240,0 480,80 720,40 C960,0 1200,80 1440,40 L1440,80 L0,80 Z"); }
+    }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);} }
+  </style>
 </head>
 <body>
-    <div class="mid">
-        <img class="bg-pawprints" src="image/paw trail.png" alt="PawConnect">
 
-        <img class="logo-img" src="image/paw connect.png" alt="PawConnect">
+  <div class="blob-wrap">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
 
-        <a class="btn-start" href="login.html">Get Started</a>
+  <!-- trail paws (behind content) -->
+  <canvas id="trail-canvas"></canvas>
+
+  <!-- cursor paws (above content) -->
+  <canvas id="cursor-canvas"></canvas>
+
+  <svg class="wave" viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z" fill="#FEFAE8"/>
+  </svg>
+
+  <div class="stage" id="stage">
+    <img class="logo-img" src="image/paw connect.png" alt="PawConnect">
+    <p class="subhead">A Safer Journey from Stray to Care.</p>
+    <p class="tagline">Find <span>·</span> Connect <span>·</span> Care</p>
+    <div class="btn-wrap">
+      <a class="btn-primary" href="login.html">Get Started</a>
     </div>
+  </div>
+
+
+<script>
+/* ── page fade-in ── */
+window.addEventListener('load', () => document.body.classList.add('loaded'));
+
+/* ── shared paw draw function ── */
+function drawPaw(ctx, x, y, size, alpha, angle, color) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = color || '#c8dae8';
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.ellipse(0, size*0.18, size*0.46, size*0.38, 0, 0, Math.PI*2);
+  ctx.fill();
+  [
+    [-size*0.44,-size*0.18,size*0.18,size*0.22],
+    [-size*0.16,-size*0.38,size*0.18,size*0.22],
+    [ size*0.16,-size*0.38,size*0.18,size*0.22],
+    [ size*0.44,-size*0.18,size*0.18,size*0.22],
+  ].forEach(([dx,dy,rx,ry]) => {
+    ctx.beginPath();
+    ctx.ellipse(dx,dy,rx,ry,0,0,Math.PI*2);
+    ctx.fill();
+  });
+  ctx.restore();
+}
+
+/* TRAIL CANVAS — arc walking animal */
+const tCanvas = document.getElementById('trail-canvas');
+const tCtx    = tCanvas.getContext('2d');
+
+let prints = [];
+let walkerT = -0.05;
+const WALK_SPEED  = 0.00065;
+const PRINT_COUNT = 40;
+const LINGER      = 0.90;
+
+function cubicBez(p0,p1,p2,p3,t) {
+  const m=1-t;
+  return {
+    x:m*m*m*p0.x+3*m*m*t*p1.x+3*m*t*t*p2.x+t*t*t*p3.x,
+    y:m*m*m*p0.y+3*m*m*t*p1.y+3*m*t*t*p2.y+t*t*t*p3.y,
+  };
+}
+function cubicTan(p0,p1,p2,p3,t) {
+  const m=1-t;
+  return {
+    x:3*(m*m*(p1.x-p0.x)+2*m*t*(p2.x-p1.x)+t*t*(p3.x-p2.x)),
+    y:3*(m*m*(p1.y-p0.y)+2*m*t*(p2.y-p1.y)+t*t*(p3.y-p2.y)),
+  };
+}
+
+/* per-print jitter seed so each print looks slightly different */
+function seededRand(seed) {
+  const x = Math.sin(seed+1)*10000;
+  return x - Math.floor(x);
+}
+
+function initTrail() {
+  const W=tCanvas.width, H=tCanvas.height;
+  const p0={x:W*0.00,y:H*0.82};
+  const p1={x:W*0.28,y:H*0.20};
+  const p2={x:W*0.62,y:H*0.08};
+  const p3={x:W*1.02,y:H*0.30};
+  const STAGGER=13;
+  prints=[];
+  for(let i=0;i<PRINT_COUNT;i++){
+    const t=i/(PRINT_COUNT-1);
+    const pos=cubicBez(p0,p1,p2,p3,t);
+    const tan=cubicTan(p0,p1,p2,p3,t);
+    const angle=Math.atan2(tan.y,tan.x);
+    const perp=angle+Math.PI/2;
+    const side=(i%2===0)?1:-1;
+    const jitterAngle=(seededRand(i*7)-0.5)*0.18;
+    const jitterSize=(seededRand(i*13)*0.22)+0.89;
+    const jitterAlpha=(seededRand(i*31)*0.18)+0.88;
+    const px=pos.x+Math.cos(perp)*STAGGER*side+(seededRand(i*3)-0.5)*3;
+    const py=pos.y+Math.sin(perp)*STAGGER*side+(seededRand(i*5)-0.5)*3;
+    const sizeBase=14*(1+0.22*Math.sin(t*Math.PI));
+    prints.push({
+      x:px,y:py,
+      angle:angle+Math.PI/2+jitterAngle,
+      t,
+      size:sizeBase*jitterSize,
+      baseAlpha:0.52*jitterAlpha,
+    });
+  }
+}
+
+function resizeTrail() {
+  tCanvas.width=window.innerWidth;
+  tCanvas.height=window.innerHeight;
+  initTrail();
+}
+resizeTrail();
+
+function animateTrail() {
+  tCtx.clearRect(0,0,tCanvas.width,tCanvas.height);
+  walkerT+=WALK_SPEED;
+  if(walkerT>1.22) walkerT=-0.06;
+
+  prints.forEach(p=>{
+    const behind=walkerT-p.t;
+    if(behind<0) return;
+    const fadeIn=Math.min(behind/0.022,1);
+    const fadeOut=behind>LINGER?Math.max(1-(behind-LINGER)/0.14,0):1;
+    const cycleFade=walkerT>1.05?Math.max(1-(walkerT-1.05)/0.17,0):1;
+    const alpha=p.baseAlpha*fadeIn*fadeOut*cycleFade;
+    if(alpha>0.005) drawPaw(tCtx,p.x,p.y,p.size,alpha,p.angle);
+  });
+  requestAnimationFrame(animateTrail);
+}
+animateTrail();
+
+/* CURSOR CANVAS — paws follow mouse */
+const cCanvas = document.getElementById('cursor-canvas');
+const cCtx    = cCanvas.getContext('2d');
+cCanvas.width=window.innerWidth; cCanvas.height=window.innerHeight;
+
+const cursorPrints = [];
+let lastX=null, lastY=null, lastAngle=0, stepAcc=0, cursorSide=1;
+const CURSOR_STEP=28, CURSOR_SIZE=11, CURSOR_ALPHA=0.38, CURSOR_LINGER=3200;
+
+window.addEventListener('mousemove', e=>{
+  if(lastX===null){lastX=e.clientX;lastY=e.clientY;return;}
+  const dx=e.clientX-lastX, dy=e.clientY-lastY;
+  const dist=Math.sqrt(dx*dx+dy*dy);
+  stepAcc+=dist;
+  if(dist>0.5) lastAngle=Math.atan2(dy,dx);
+  if(stepAcc>=CURSOR_STEP){
+    stepAcc=0;
+    const perp=lastAngle+Math.PI/2;
+    const offset=CURSOR_SIZE*0.75*cursorSide;
+    cursorPrints.push({
+      x:e.clientX+Math.cos(perp)*offset,
+      y:e.clientY+Math.sin(perp)*offset,
+      angle:lastAngle+Math.PI/2,
+      born:performance.now(),
+      size:CURSOR_SIZE,
+      alpha:CURSOR_ALPHA,
+    });
+    cursorSide*=-1;
+  }
+  lastX=e.clientX; lastY=e.clientY;
+});
+
+function animateCursor() {
+  cCtx.clearRect(0,0,cCanvas.width,cCanvas.height);
+  const now=performance.now();
+  for(let i=cursorPrints.length-1;i>=0;i--){
+    const p=cursorPrints[i];
+    const age=now-p.born;
+    if(age>CURSOR_LINGER){cursorPrints.splice(i,1);continue;}
+    const fadeIn=Math.min(age/80,1);
+    const fadeOut=age>CURSOR_LINGER*0.6?1-(age-CURSOR_LINGER*0.6)/(CURSOR_LINGER*0.4):1;
+    drawPaw(cCtx,p.x,p.y,p.size,p.alpha*fadeIn*fadeOut,p.angle,'rgba(255,255,255,0.85)');
+  }
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+/* resize */
+window.addEventListener('resize',()=>{
+  resizeTrail();
+  cCanvas.width=window.innerWidth; cCanvas.height=window.innerHeight;
+});
+</script>
 </body>
 </html>

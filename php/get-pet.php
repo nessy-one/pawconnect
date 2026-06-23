@@ -1,4 +1,5 @@
 <?php
+// para 2 sa pet
 header('Content-Type: application/json');
 
 $host = "localhost";
@@ -6,11 +7,9 @@ $user = "root";
 $pass = "123456";
 $db   = "pawconnect";
 $charset = 'utf8mb4';
-
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-
+ 
 try {
-    $pdo = new PDO($dsn, $user, $pass, [
+    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=$charset", $user, $pass, [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
@@ -19,6 +18,7 @@ try {
     exit;
 }
 
+// Validate id
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if (!$id) {
@@ -26,6 +26,7 @@ if (!$id) {
     exit;
 }
 
+// Fetch pet
 $stmt = $pdo->prepare('SELECT * FROM pet WHERE id = ? LIMIT 1');
 $stmt->execute([$id]);
 $pet = $stmt->fetch();

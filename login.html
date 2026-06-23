@@ -31,18 +31,18 @@ body { background:#F4F1E6; }
 
 .logo-img {
   position: absolute;
-  top: 5px;
+  top: -50px;
   left: 50%;
-  max-width: 500px;
+  max-width: 600px;
   transform: translateX(-50%);
   z-index: 2;
 }
-
+ 
 .dog-img {
   position: relative;
   z-index: 1;
   width: 78%;
-  max-width: 500px;
+  max-width: 480px;
   display: block;
   margin-bottom: -6px;
   object-fit: contain;
@@ -74,8 +74,8 @@ body { background:#F4F1E6; }
 
 .title-img {
   display: block;
-  margin: 0 auto 28px;
-  width: 210px;
+  margin: 0 auto 15px;
+  width: 300px;
 }
 
 /* ── INPUTS ── */
@@ -193,6 +193,12 @@ body { background:#F4F1E6; }
   box-shadow: 0 2px 8px rgba(0,0,0,.06);
 }
 
+/* Google brand colors */
+.social .fa-google { color: #4285F4; }
+ 
+/* Facebook brand color */
+.social .fa-facebook { color: #1877F2; }
+
 /* ── FOOTER ── */
 .footer {
   text-align: center;
@@ -217,7 +223,7 @@ body { background:#F4F1E6; }
   <!-- LEFT IMAGE -->
   <div class="image">
     <img src="form-image/logo.png" class="logo-img" alt="PawConnect">
-    <img src="form-image/dog1.png" class="dog-img" alt="Puppy">
+    <img src="form-image/dog2.png" class="dog-img" alt="Puppy">
   </div>
 
   <!-- VISUAL DIVIDER -->
@@ -277,6 +283,44 @@ body { background:#F4F1E6; }
       icon.classList.replace("fa-eye-slash", "fa-eye");
     }
   }
+
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const error = params.get("error");
+    if (!error) return;
+
+    const messages = {
+      wrong_password: "Incorrect password. Please try again.",
+      user_not_found: "No account found with that username."
+    };
+
+    const text = messages[error];
+    if (!text) return;
+
+    // Find the password input group
+    const passwordGroup = document.getElementById("password").closest(".input-group");
+
+    // Style the input border red
+    document.getElementById("password").style.borderColor = "#E24B4A";
+
+    // Create the error message element
+    const msg = document.createElement("p");
+    msg.textContent = text;
+    msg.style.cssText = "margin:6px 0 0 2px;font-size:12px;color:#E24B4A;display:flex;align-items:center;gap:5px;";
+    msg.innerHTML = `<i class="fa-solid fa-circle-exclamation" style="font-size:11px;"></i> ${text}`;
+
+    passwordGroup.appendChild(msg);
+
+    // Clear error styling when user starts typing
+    document.getElementById("password").addEventListener("input", function () {
+      this.style.borderColor = "";
+      msg.remove();
+      history.replaceState(null, "", window.location.pathname);
+    }, { once: true });
+
+    // Clean URL without reloading
+    history.replaceState(null, "", window.location.pathname);
+  })();
 </script>
 </body>
 </html>

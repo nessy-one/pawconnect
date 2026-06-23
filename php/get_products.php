@@ -19,26 +19,28 @@ try {
 $conditions = [];
 $params     = [];
 
-// Filter by category (matches your cat-chip buttons)
+// Filter by category
 if (!empty($_GET['category']) && $_GET['category'] !== 'all') {
     $conditions[] = "category = ?";
     $params[]     = $_GET['category'];
 }
 
-// Filter by search (name LIKE)
+// ── SEARCH filter — now checks name, category, AND description ───
 if (!empty($_GET['search'])) {
-    $conditions[] = "name LIKE ?";
-    $params[]     = '%' . $_GET['search'] . '%';
+    $t = '%' . $_GET['search'] . '%';
+    $conditions[] = "(name LIKE ? OR category LIKE ? OR description LIKE ?)";
+    array_push($params, $t, $t, $t);
 }
 
-// Build query
+// ── BUILD & RUN QUERY ────────────────────────────────────────────
 $sql = "SELECT * FROM product";
 if ($conditions) {
     $sql .= " WHERE " . implode(" AND ", $conditions);
 }
-
+$sql .= " ORDER BY name ASC";
+ 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+ 
 echo json_encode($products);

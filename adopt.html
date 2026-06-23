@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PawConnect</title>
+    <title>PawConnect - adopt</title>
     <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -78,10 +78,10 @@
 
         .page { max-width: 95%; margin: 0 auto; padding: 32px 32px 60px; }
 
-        .desc { 
-            display: flex; 
-            align-items: flex-start; 
-            gap: 40px; 
+        .desc {
+            display: flex;
+            align-items: flex-start;
+            gap: 40px;
             margin-bottom: 32px;
         }
 
@@ -102,19 +102,19 @@
             flex-shrink: 0;
         }
 
-        .desc-desc { 
-            font-size: 15px; 
-            color: #012224; 
-            line-height: 1.7; 
-            padding: 6px; 
+        .desc-desc {
+            font-size: 15px;
+            color: #012224;
+            line-height: 1.7;
+            padding: 6px;
         }
 
         .body { display: flex; gap: 28px; align-items: flex-start; }
 
-        .sidebar { 
-            width: 220px; 
-            margin-right: 50px; 
-            flex-shrink: 0; 
+        .sidebar {
+            width: 220px;
+            margin-right: 50px;
+            flex-shrink: 0;
             background-color: #fff;
             padding: 25px;
             position: sticky;
@@ -123,11 +123,11 @@
             box-shadow: 0 2px 12px rgba(1,34,36,0.10);
         }
 
-        .sidebar h3 { 
-            font-size: 14px; 
-            font-weight: 600; 
-            color: #012224; 
-            margin-bottom: 15px; 
+        .sidebar h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #012224;
+            margin-bottom: 15px;
         }
 
         .filter-group { margin-bottom: 16px; }
@@ -141,10 +141,10 @@
             margin-bottom: 8px 0;
         }
 
-        .filter-group-header h4 { 
-            font-size: 13px; 
-            font-weight: 600; 
-            color: #012224; 
+        .filter-group-header h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #012224;
             margin-bottom: 5px;
         }
 
@@ -178,12 +178,12 @@
 
         .main { flex: 1; }
 
-        .category-tabs { 
-            display: flex; 
+        .category-tabs {
+            display: flex;
             border-radius: 10px;
             padding: 4px;
-            gap: 0; 
-            margin-bottom: 24px; 
+            gap: 0;
+            margin-bottom: 24px;
         }
 
         .tab-btn {
@@ -209,7 +209,6 @@
             gap: 20px;
         }
 
-        /* Loading skeleton */
         .skeleton-card {
             background: #fff;
             border-radius: 12px;
@@ -236,7 +235,6 @@
             100% { background-position: -200% 0; }
         }
 
-        /* Empty state */
         .empty-state {
             grid-column: 1 / -1;
             display: flex;
@@ -317,15 +315,8 @@
             border-radius: 999px;
         }
 
-        .status-badge.reserved {
-            background: #DA8063;
-            color: #fff;
-        }
-
-        .status-badge.adopted {
-            background: #6b6b2e;
-            color: #fff;
-        }
+        .status-badge.reserved { background: #DA8063; color: #fff; }
+        .status-badge.adopted  { background: #6b6b2e; color: #fff; }
 
         .reserve-btn {
             display: block;
@@ -344,13 +335,9 @@
         }
 
         .reserve-btn:hover { background: #c46a4d; }
-        .reserve-btn:disabled {
-            background: #ccc;
-            color: #888;
-            cursor: not-allowed;
-        }
+        .reserve-btn:disabled { background: #ccc; color: #888; cursor: not-allowed; }
 
-        /* ── MODAL ── */
+        /* ── RESERVATION MODAL ── */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -382,9 +369,7 @@
             position: relative;
         }
 
-        .modal-overlay.open .modal {
-            transform: translateY(0) scale(1);
-        }
+        .modal-overlay.open .modal { transform: translateY(0) scale(1); }
 
         .modal-header {
             background: #DA8063;
@@ -469,21 +454,10 @@
 
         .modal-body textarea { resize: vertical; min-height: 72px; }
 
-        .duration-group {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+        .duration-group { display: flex; gap: 8px; flex-wrap: wrap; }
 
-        .duration-pill {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-        }
-
+        .duration-pill { display: flex; align-items: center; gap: 5px; cursor: pointer; }
         .duration-pill input[type="radio"] { display: none; }
-
         .duration-pill span {
             display: inline-block;
             padding: 6px 14px;
@@ -496,12 +470,7 @@
             transition: all 0.15s;
             cursor: pointer;
         }
-
-        .duration-pill input[type="radio"]:checked + span {
-            background: #DA8063;
-            border-color: #DA8063;
-            color: #fff;
-        }
+        .duration-pill input[type="radio"]:checked + span { background: #DA8063; border-color: #DA8063; color: #fff; }
 
         .modal-notice {
             background: #fff8f0;
@@ -513,42 +482,21 @@
             color: #7a4020;
             line-height: 1.6;
         }
-
         .modal-notice strong { color: #DA8063; }
 
-        .modal-footer {
-            padding: 0 24px 24px;
-            display: flex;
-            gap: 10px;
-        }
+        .modal-footer { padding: 0 24px 24px; display: flex; gap: 10px; }
 
         .btn-cancel {
-            flex: 1;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1.5px solid #ccc;
-            background: #fff;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            color: #555;
-            cursor: pointer;
-            transition: background 0.15s;
+            flex: 1; padding: 10px; border-radius: 8px; border: 1.5px solid #ccc;
+            background: #fff; font-family: 'Poppins', sans-serif; font-size: 13px;
+            font-weight: 600; color: #555; cursor: pointer; transition: background 0.15s;
         }
         .btn-cancel:hover { background: #f0f0f0; }
 
         .btn-confirm {
-            flex: 2;
-            padding: 10px;
-            border-radius: 8px;
-            border: none;
-            background: #DA8063;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            font-weight: 700;
-            color: #fff;
-            cursor: pointer;
-            transition: background 0.15s;
+            flex: 2; padding: 10px; border-radius: 8px; border: none;
+            background: #DA8063; font-family: 'Poppins', sans-serif; font-size: 13px;
+            font-weight: 700; color: #fff; cursor: pointer; transition: background 0.15s;
         }
         .btn-confirm:hover { background: #c46a4d; }
 
@@ -559,46 +507,22 @@
             text-align: center;
             padding: 40px 30px;
         }
-
         .modal-success.visible { display: flex; }
 
-        .success-paw {
-            font-size: 56px;
-            margin-bottom: 16px;
-            animation: bounce 0.5s ease;
-        }
-
+        .success-paw { font-size: 56px; margin-bottom: 16px; animation: bounce 0.5s ease; }
         @keyframes bounce {
             0%   { transform: scale(0.5); opacity:0; }
             70%  { transform: scale(1.1); }
             100% { transform: scale(1);   opacity:1; }
         }
 
-        .modal-success h3 {
-            font-family: 'Cherry Bomb One', cursive;
-            font-size: 24px;
-            color: #DA8063;
-            margin-bottom: 8px;
-        }
-
-        .modal-success p {
-            font-size: 13px;
-            color: #555;
-            line-height: 1.7;
-            margin-bottom: 24px;
-        }
+        .modal-success h3 { font-family: 'Cherry Bomb One', cursive; font-size: 24px; color: #DA8063; margin-bottom: 8px; }
+        .modal-success p  { font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 24px; }
 
         .btn-done {
-            padding: 10px 36px;
-            border-radius: 8px;
-            border: none;
-            background: #4E8DC0;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            font-weight: 700;
-            color: #fff;
-            cursor: pointer;
-            transition: background 0.15s;
+            padding: 10px 36px; border-radius: 8px; border: none;
+            background: #4E8DC0; font-family: 'Poppins', sans-serif;
+            font-size: 13px; font-weight: 700; color: #fff; cursor: pointer; transition: background 0.15s;
         }
         .btn-done:hover { background: #3a6f99; }
 
@@ -618,32 +542,17 @@
             letter-spacing: 1px;
         }
 
-        .faq-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 16px; 
-        }
+        .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
-        .faq-item { 
+        .faq-item {
             background-color: #fff;
             border-radius: 12px;
             padding: 18px 20px;
             box-shadow: 0 2px 12px rgba(1,34,36,0.10);
             margin-bottom: 20px;
         }
-
-        .faq-item h4 { 
-            font-size: 14px; 
-            font-weight: 700; 
-            color: #012224; 
-            margin-bottom: 6px; 
-        }
-
-        .faq-item p { 
-            font-size: 13px; 
-            color: #8A8686; 
-            line-height: 1.6; 
-        }
+        .faq-item h4 { font-size: 14px; font-weight: 700; color: #012224; margin-bottom: 6px; }
+        .faq-item p  { font-size: 13px; color: #8A8686; line-height: 1.6; }
 
         /* Toast */
         .toast {
@@ -662,11 +571,83 @@
             z-index: 999;
             white-space: nowrap;
         }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
+        /* ── UNSAVE CONFIRM MODAL ── */
+        .unsave-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 400;
+            align-items: center;
+            justify-content: center;
         }
+        .unsave-overlay.open { display: flex; }
+        .unsave-box {
+            background: #F4F1E6;
+            border-radius: 16px;
+            padding: 28px 32px;
+            max-width: 340px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+            animation: slideUp .22s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to   { transform: translateY(0);    opacity: 1; }
+        }
+        .unsave-emoji { font-size: 32px; margin-bottom: 12px; }
+        .unsave-box h3 { font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700; color: #012224; margin-bottom: 8px; }
+        .unsave-box p  { font-size: 13px; color: #8A8686; margin-bottom: 20px; line-height: 1.6; }
+        .unsave-actions { display: flex; gap: 10px; }
+        .unsave-no  {
+            flex: 1; padding: 10px; border-radius: 8px; border: 1.5px solid #ccc;
+            background: #fff; font-family: 'Poppins', sans-serif; font-size: 13px;
+            font-weight: 600; color: #555; cursor: pointer; transition: background 0.15s;
+        }
+        .unsave-no:hover { background: #f0f0f0; }
+        .unsave-yes {
+            flex: 1; padding: 10px; border-radius: 8px; border: none;
+            background: #DA8063; font-family: 'Poppins', sans-serif; font-size: 13px;
+            font-weight: 700; color: #fff; cursor: pointer; transition: background 0.15s;
+        }
+        .unsave-yes:hover { background: #c46a4d; }
+    
+        /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+        .pet-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 900px) {
+        .body { flex-direction: column; }
+        .sidebar {
+            width: 100%;
+            position: static;
+            margin-right: 0;
+            margin-bottom: 20px;
+        }
+        .pet-grid { grid-template-columns: repeat(2, 1fr); }
+        .faq-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+        .page { padding: 20px 16px 60px; }
+        .desc { flex-direction: column; gap: 12px; }
+        .desc-divider { display: none; }
+        .desc-title { width: auto; font-size: 24px; }
+        .pet-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .header { padding: 8px 12px; gap: 10px; }
+        .search { max-width: 100%; }
+        .modal { width: 95vw; }
+        .category-tabs { overflow-x: auto; }
+    }
+
+    @media (max-width: 400px) {
+        .pet-grid { grid-template-columns: 1fr; }
+    }
+    
     </style>
 </head>
 <body>
@@ -725,8 +706,8 @@
                 <hr>
                 <div class="filter-items" id="filter-age">
                     <label><input type="checkbox" name="age" value="0-1"> Puppy/Kitten: 0–1 year</label>
-                    <label><input type="checkbox" name="age" value="1-3"> Young: 1–3 years</label>
-                    <label><input type="checkbox" name="age" value="3-6"> Adult: 3–6 years</label>
+                    <label><input type="checkbox" name="age" value="2-3"> Young: 2–3 years</label>
+                    <label><input type="checkbox" name="age" value="4-6"> Adult: 4–6 years</label>
                     <label><input type="checkbox" name="age" value="7+"> Senior: 7+ years</label>
                 </div>
             </div>
@@ -781,7 +762,6 @@
                 <button class="tab-btn" onclick="filterCategory('dog', this)">DOGS</button>
             </div>
 
-            <!-- Pet grid: populated dynamically by JS -->
             <div class="pet-grid" id="petGrid"></div>
         </div>
     </div>
@@ -815,7 +795,6 @@
             <button class="modal-close" onclick="closeModal()">✕</button>
         </div>
 
-        <!-- Form screen -->
         <div id="modalForm">
             <div class="modal-pet-info">
                 <img class="modal-pet-img" id="modalPetImg" src="" alt="">
@@ -837,18 +816,10 @@
 
                 <label>Reservation Duration *</label>
                 <div class="duration-group">
-                    <label class="duration-pill">
-                        <input type="radio" name="duration" value="1"> <span>1 day</span>
-                    </label>
-                    <label class="duration-pill">
-                        <input type="radio" name="duration" value="3" checked> <span>3 days</span>
-                    </label>
-                    <label class="duration-pill">
-                        <input type="radio" name="duration" value="5"> <span>5 days</span>
-                    </label>
-                    <label class="duration-pill">
-                        <input type="radio" name="duration" value="7"> <span>7 days</span>
-                    </label>
+                    <label class="duration-pill"><input type="radio" name="duration" value="1"> <span>1 day</span></label>
+                    <label class="duration-pill"><input type="radio" name="duration" value="3" checked> <span>3 days</span></label>
+                    <label class="duration-pill"><input type="radio" name="duration" value="5"> <span>5 days</span></label>
+                    <label class="duration-pill"><input type="radio" name="duration" value="7"> <span>7 days</span></label>
                 </div>
 
                 <label for="reserveNotes">Additional Notes (optional)</label>
@@ -867,7 +838,6 @@
             </div>
         </div>
 
-        <!-- Success screen -->
         <div class="modal-success" id="modalSuccess">
             <div class="success-paw">🐾</div>
             <h3>Reservation Confirmed!</h3>
@@ -877,120 +847,101 @@
     </div>
 </div>
 
+<!-- UNSAVE CONFIRM MODAL -->
+<div class="unsave-overlay" id="unsaveOverlay">
+    <div class="unsave-box">
+        <div class="unsave-emoji">💔</div>
+        <h3>Remove from saves?</h3>
+        <p>This pet will be removed from your saved list.</p>
+        <div class="unsave-actions">
+            <button class="unsave-no"  id="unsaveNoBtn">Cancel</button>
+            <button class="unsave-yes" id="unsaveYesBtn">Yes, remove</button>
+        </div>
+    </div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
-    // ── CONFIG ──────────────────────────────────────────────────────
-    const USER_ID = 1;
+//    const USER_ID = 1; 
+    let USER_ID = 1;
 
-    // Tracks which card triggered the modal
     let activeCard = null;
-
-    // Current active type tab ('all' | 'cat' | 'dog')
     let activeType = 'all';
 
     // ── INIT ────────────────────────────────────────────────────────
     window.addEventListener('DOMContentLoaded', () => {
-        // Set min date on reservation date picker
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('reserveDate').min   = today;
         document.getElementById('reserveDate').value = today;
 
-        // Wire all filter checkboxes → re-fetch on change
         document.querySelectorAll('.filter-items input[type="checkbox"]')
             .forEach(cb => cb.addEventListener('change', fetchAndRenderPets));
 
-        // Wire search input (debounced)
         document.getElementById('searchInput')
-            .addEventListener('input', debounce(fetchAndRenderPets, 350));
+            .addEventListener('input', debounce(() => {
+                const search = document.getElementById('searchInput').value.trim();
+                fetchAndRenderPets();
+                if (search.length > 2) {
+                    fetch('php/log_activity.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ user_id: USER_ID, item_type: 'pet', search_term: search })
+                    });
+                }
+            }, 350));
 
-        // Wire location input (debounced)
         document.getElementById('locationInput')
             .addEventListener('input', debounce(fetchAndRenderPets, 350));
 
-        // Initial load
+        const qs = new URLSearchParams(window.location.search).get('search');
+         if (qs) document.getElementById('searchInput').value = qs;
         fetchAndRenderPets();
     });
 
-    // ── DEBOUNCE HELPER ─────────────────────────────────────────────
     function debounce(fn, delay) {
         let timer;
-        return (...args) => {
-            clearTimeout(timer);
-            timer = setTimeout(() => fn(...args), delay);
-        };
+        return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), delay); };
     }
 
-    // ── BUILD QUERY STRING FROM ACTIVE FILTERS ──────────────────────
     function getActiveFilters() {
         const params = new URLSearchParams();
-
-        // Location (optional)
         const location = document.getElementById('locationInput').value.trim();
         if (location) params.set('location', location);
-
-        // Type tab
         if (activeType !== 'all') params.set('type', activeType);
-
-        // Search text
         const search = document.getElementById('searchInput').value.trim();
         if (search) params.set('search', search);
-
-        // Age checkboxes — collect all checked values (multiple allowed)
-        document.querySelectorAll('input[name="age"]:checked')
-            .forEach(cb => params.append('age[]', cb.value));
-
-        // Breed checkboxes
-        document.querySelectorAll('input[name="breed"]:checked')
-            .forEach(cb => params.append('breed[]', cb.value));
-
-        // Priority checkboxes
-        document.querySelectorAll('input[name="priority"]:checked')
-            .forEach(cb => params.append('priority[]', cb.value));
-
+        document.querySelectorAll('input[name="age"]:checked').forEach(cb => params.append('age[]', cb.value));
+        document.querySelectorAll('input[name="breed"]:checked').forEach(cb => params.append('breed[]', cb.value));
+        document.querySelectorAll('input[name="priority"]:checked').forEach(cb => params.append('priority[]', cb.value));
         return params;
     }
 
-    // ── FETCH PETS FROM BACKEND ─────────────────────────────────────
     function fetchAndRenderPets() {
         const params = getActiveFilters();
         renderSkeletons();
 
         fetch(`php/filter-pets.php?${params.toString()}`)
-            .then(r => {
-                if (!r.ok) throw new Error('HTTP ' + r.status);
-                return r.json();
-            })
+            .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
             .then(data => {
-                if (!data.success) {
-                    showToast(data.message || 'Could not load pets.');
-                    renderEmpty('Something went wrong loading pets.');
-                    return;
-                }
+                if (!data.success) { showToast(data.message || 'Could not load pets.'); renderEmpty('Something went wrong loading pets.'); return; }
                 renderPetGrid(data.pets);
             })
-            .catch(err => {
-                console.error(err);
-                renderEmpty('Could not reach the server. Please try again.');
-            });
+            .catch(err => { console.error(err); renderEmpty('Could not reach the server. Please try again.'); });
     }
 
-    // ── RENDER: SKELETON PLACEHOLDERS ───────────────────────────────
     function renderSkeletons() {
-        const grid = document.getElementById('petGrid');
-        grid.innerHTML = Array(4).fill(0).map(() => `
+        document.getElementById('petGrid').innerHTML = Array(4).fill(0).map(() => `
             <div class="skeleton-card">
                 <div class="skeleton-img"></div>
                 <div class="skeleton-body">
                     <div class="skeleton-line"></div>
                     <div class="skeleton-line short"></div>
                 </div>
-            </div>
-        `).join('');
+            </div>`).join('');
     }
 
-    // ── RENDER: EMPTY STATE ─────────────────────────────────────────
     function renderEmpty(msg = 'No pets match your filters.') {
         document.getElementById('petGrid').innerHTML = `
             <div class="empty-state">
@@ -999,34 +950,24 @@
             </div>`;
     }
 
-    // ── RENDER: PET CARDS ───────────────────────────────────────────
     function renderPetGrid(pets) {
         const grid = document.getElementById('petGrid');
-
-        if (!pets || pets.length === 0) {
-            renderEmpty();
-            return;
-        }
+        if (!pets || pets.length === 0) { renderEmpty(); return; }
 
         grid.innerHTML = pets.map(p => {
             const isReserved = p.status === 'reserved';
             const isAdopted  = p.status === 'adopted';
             const disabled   = isReserved || isAdopted;
 
-            // Status badge
             const badge = isReserved
                 ? `<span class="status-badge reserved">Reserved for ${p.reserved_days} day${p.reserved_days != 1 ? 's' : ''}</span>`
-                : isAdopted
-                ? `<span class="status-badge adopted">Adopted</span>`
-                : '';
+                : isAdopted ? `<span class="status-badge adopted">Adopted</span>` : '';
 
-            // Reserve button label & handler
             const btnLabel   = isReserved ? 'Already Reserved' : isAdopted ? 'Adopted' : 'Reserve';
             const btnOnclick = disabled
                 ? `onclick="event.stopPropagation();"`
                 : `onclick="openReserveModal(this); event.stopPropagation();"`;
 
-            // Encode data attributes safely
             const info = `${capitalize(p.gender)}, ${p.age} yr${p.age != 1 ? 's' : ''} old`;
 
             return `
@@ -1038,9 +979,9 @@
                  data-status="${escAttr(p.status)}"
                  data-reserved-days="${escAttr(p.reserved_days || 0)}"
                  onclick="window.location.href='pet_profile.html?id=${encodeURIComponent(p.id)}'">
-                <img src="image/${encodeURIComponent(p.name.toLowerCase())}.png"
+                <img src="adopt/${encodeURIComponent(p.name.toLowerCase())}.png"
                      alt="${escAttr(p.name)}"
-                     onerror="this.src='image/placeholder.png'">
+                     onerror="this.src='adopt/placeholder.png'">
                 <div class="card-body">
                     <div class="card-name-row">
                         <span>${escHtml(p.name)}</span>
@@ -1061,13 +1002,11 @@
             </div>`;
         }).join('');
 
-        // Re-apply saved hearts after rendering
         applySavedHearts();
     }
 
-    // ── RESTORE SAVED HEARTS ────────────────────────────────────────
     function applySavedHearts() {
-        fetch(`php/get_saved.php?user_id=${USER_ID}`)
+        fetch('php/get_saved.php?item_type=pet')
             .then(r => r.json())
             .then(data => {
                 if (!data.success) return;
@@ -1079,6 +1018,69 @@
             .catch(() => {});
     }
 
+    // ── HEART TOGGLE ────────────────────────────────────────────────
+    function toggleHeart(btn) {
+        const card    = btn.closest('.pet-card');
+        const petId   = card.dataset.id;
+        const isLiked = btn.classList.contains('liked');
+
+        if (!isLiked) {
+            // SAVE → update UI, call backend, then redirect
+            btn.classList.add('liked');
+            btn.classList.add('saving');
+
+            fetch('php/toggle_save.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'save', item_id: petId, item_type: 'pet' })
+            })
+            .then(r => r.json())
+            .then(data => {
+                btn.classList.remove('saving');
+                if (data.success) {
+                    showToast('Saved! Redirecting… ❤️');
+                    setTimeout(() => window.location.href = 'save.html', 900);
+                } else {
+                    btn.classList.remove('liked');
+                    showToast('Could not save. Please try again.');
+                }
+            })
+            .catch(() => {
+                btn.classList.remove('saving');
+                // Demo fallback: still redirect
+                showToast('Saved! Redirecting… ❤️');
+                setTimeout(() => window.location.href = 'save.html', 900);
+            });
+
+        } else {
+            // UNSAVE → show confirm modal first
+            showUnsaveConfirm(() => {
+                btn.classList.remove('liked');
+                fetch('php/toggle_save.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'unsave', item_id: petId, item_type: 'pet' })
+                })
+                .then(r => r.json())
+                .then(data => { if (!data.success) { btn.classList.add('liked'); showToast('Could not remove.'); } else { showToast('Removed from saves.'); } })
+                .catch(() => showToast('Removed from saves.'));
+            });
+        }
+    }
+
+    // ── UNSAVE CONFIRM MODAL ─────────────────────────────────────────
+    function showUnsaveConfirm(onConfirm) {
+        const overlay = document.getElementById('unsaveOverlay');
+        overlay.classList.add('open');
+        document.getElementById('unsaveYesBtn').onclick = () => {
+            overlay.classList.remove('open');
+            onConfirm();
+        };
+        document.getElementById('unsaveNoBtn').onclick = () => {
+            overlay.classList.remove('open');
+        };
+    }
+
     // ── CATEGORY TABS ───────────────────────────────────────────────
     function filterCategory(type, clickedBtn) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1087,24 +1089,17 @@
         fetchAndRenderPets();
     }
 
-    // ── FILTER SIDEBAR COLLAPSE ─────────────────────────────────────
     function toggleFilter(id) {
         const items = document.getElementById('filter-' + id);
         const btn   = document.getElementById('toggle-' + id);
-        if (items.style.display === 'none') {
-            items.style.display = 'block';
-            btn.textContent = '−';
-        } else {
-            items.style.display = 'none';
-            btn.textContent = '+';
-        }
+        if (items.style.display === 'none') { items.style.display = 'block'; btn.textContent = '−'; }
+        else { items.style.display = 'none'; btn.textContent = '+'; }
     }
 
-    // ── OPEN RESERVATION MODAL ──────────────────────────────────────
+    // ── RESERVATION MODAL ───────────────────────────────────────────
     function openReserveModal(btn) {
-        const card = btn.closest('.pet-card');
-        activeCard = card;
-
+        const card   = btn.closest('.pet-card');
+        activeCard   = card;
         const name   = card.dataset.name || 'Pet';
         const info   = card.dataset.info || '';
         const imgSrc = card.querySelector('img').src;
@@ -1114,21 +1109,17 @@
         document.getElementById('modalPetImg').src = imgSrc;
         document.getElementById('modalPetImg').alt = name;
 
-        // Reset form fields
         document.getElementById('reserveName').value    = '';
         document.getElementById('reserveContact').value = '';
         document.getElementById('reserveNotes').value   = '';
         document.querySelector('input[name="duration"][value="3"]').checked = true;
 
-        // Show form, hide success
-        document.getElementById('modalForm').style.display    = 'block';
+        document.getElementById('modalForm').style.display = 'block';
         document.getElementById('modalSuccess').classList.remove('visible');
-
         document.getElementById('modalOverlay').classList.add('open');
         document.body.style.overflow = 'hidden';
     }
 
-    // ── CLOSE MODAL ─────────────────────────────────────────────────
     function closeModal() {
         document.getElementById('modalOverlay').classList.remove('open');
         document.body.style.overflow = '';
@@ -1139,7 +1130,6 @@
         if (e.target === document.getElementById('modalOverlay')) closeModal();
     }
 
-    // ── SUBMIT RESERVATION ──────────────────────────────────────────
     function submitReservation() {
         const name     = document.getElementById('reserveName').value.trim();
         const contact  = document.getElementById('reserveContact').value.trim();
@@ -1164,68 +1154,27 @@
             if (data.success) onReservationSuccess(petName, duration);
             else showToast(data.message || 'Something went wrong. Please try again.');
         })
-        .catch(() => {
-            // Demo mode — works without backend
-            onReservationSuccess(petName, duration);
-        });
+        .catch(() => onReservationSuccess(petName, duration));
     }
 
     function onReservationSuccess(petName, duration) {
         if (activeCard) {
             activeCard.dataset.status = 'reserved';
-
             const tagsEl   = activeCard.querySelector('.card-tags');
             const existing = tagsEl.querySelector('.status-badge');
             if (existing) existing.remove();
-
             const badge = document.createElement('span');
-            badge.className = 'status-badge reserved';
+            badge.className   = 'status-badge reserved';
             badge.textContent = `Reserved for ${duration} day${duration > 1 ? 's' : ''}`;
             tagsEl.appendChild(badge);
-
             const reserveBtn = activeCard.querySelector('.reserve-btn');
-            if (reserveBtn) {
-                reserveBtn.textContent = 'Already Reserved';
-                reserveBtn.disabled    = true;
-            }
+            if (reserveBtn) { reserveBtn.textContent = 'Already Reserved'; reserveBtn.disabled = true; }
         }
-
         document.getElementById('modalForm').style.display = 'none';
         document.getElementById('successMsg').innerHTML =
             `<strong>${escHtml(petName)}</strong> has been reserved for <strong>${duration} day${duration > 1 ? 's' : ''}</strong>.<br>
              We'll contact you within 24 hours to confirm your visit.`;
         document.getElementById('modalSuccess').classList.add('visible');
-    }
-
-    // ── HEART TOGGLE ────────────────────────────────────────────────
-    function toggleHeart(btn) {
-        const card    = btn.closest('.pet-card');
-        const petId   = card.dataset.id;
-        const isLiked = btn.classList.contains('liked');
-        const action  = isLiked ? 'unsave' : 'save';
-
-        btn.classList.toggle('liked');
-        btn.classList.add('saving');
-
-        fetch('php/toggle_save.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action, pet_id: petId, user_id: USER_ID })
-        })
-        .then(r => r.json())
-        .then(data => {
-            btn.classList.remove('saving');
-            if (data.success) {
-                showToast(action === 'save' ? 'Saved to your list!' : 'Removed from saves.');
-            } else {
-                btn.classList.toggle('liked'); // revert
-                showToast('Something went wrong. Please try again.');
-            }
-        })
-        .catch(() => {
-            btn.classList.remove('saving');
-            showToast(action === 'save' ? 'Saved to your list!' : 'Removed from saves.');
-        });
     }
 
     // ── TOAST ────────────────────────────────────────────────────────
@@ -1239,29 +1188,11 @@
     }
 
     // ── HELPERS ──────────────────────────────────────────────────────
-    function capitalize(str) {
-        if (!str) return '';
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
+    function capitalize(str) { if (!str) return ''; return str.charAt(0).toUpperCase() + str.slice(1); }
+    function escHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    function escAttr(str) { return String(str).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
-    // Escape for HTML content
-    function escHtml(str) {
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
-    }
-
-    // Escape for HTML attribute values
-    function escAttr(str) {
-        return String(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-    }
-
-    // ── KEYBOARD CLOSE ───────────────────────────────────────────────
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') closeModal();
-    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 </script>
 </body>
 </html>

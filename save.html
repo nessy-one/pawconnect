@@ -8,643 +8,315 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #F4F1E6; font-family: 'Poppins', sans-serif; min-height: 100vh; }
+        .container { display: flex; min-height: 100vh; }
 
-        body {
-            background: #F4F1E6;
-            font-family: 'Poppins', sans-serif;
-            min-height: 100vh;
-        }
-
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* ── SIDEBAR ─────────────────────────────────────────────── */
+        /* SIDEBAR */
         .sidebar {
-            width: 220px;
-            flex-shrink: 0;
-            padding: 24px 16px;
-            border-right: 1px solid #ddd;
-            background: #F4F1E6;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow-y: auto;
+            width: 220px; flex-shrink: 0; padding: 24px 16px;
+            border-right: 1px solid #ddd; background: #F4F1E6;
+            display: flex; flex-direction: column; gap: 4px;
+            position: sticky; top: 0; height: 100vh; overflow-y: auto;
         }
-
         .logo-circle {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background-color: #3b8fc4;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            margin-bottom: 20px;
-            flex-shrink: 0;
+            width: 52px; height: 52px; border-radius: 50%;
+            background-color: #3b8fc4; display: flex;
+            align-items: center; justify-content: center;
+            overflow: hidden; margin-bottom: 20px; flex-shrink: 0;
         }
-
-        .logo-circle img {
-            width: 52px;
-            height: 52px;
-            object-fit: cover;
-        }
-
+        .logo-circle img { width: 52px; height: 52px; object-fit: cover; }
         .menu-item {
-            padding: 11px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: #012224;
-            font-size: 13px;
-            font-weight: 500;
+            padding: 11px 14px; border-radius: 8px; cursor: pointer;
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none; color: #012224;
+            font-size: 13px; font-weight: 500;
             transition: background 0.15s, color 0.15s;
         }
-
         .menu-item:hover { background: #e0ddd2; }
         .menu-item.active { background: #AFC4D6; color: #012224; }
         .menu-item i { width: 18px; text-align: center; font-size: 14px; }
+        .sidebar-divider { height: 1px; background: #ddd; margin: 8px 0; }
 
-        .sidebar-divider {
-            height: 1px;
-            background: #ddd;
-            margin: 8px 0;
-        }
-
-        /* ── MAIN ─────────────────────────────────────────────────── */
-        .main {
-            flex: 1;
-            padding: 20px 28px;
-            overflow-y: auto;
-            min-width: 0;
-        }
+        /* MAIN */
+        .main { flex: 1; padding: 20px 28px; overflow-y: auto; min-width: 0; }
 
         /* ── TOPBAR ───────────────────────────────────────────────── */
         .topbar {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 18px;
-            margin-bottom: 20px;
+        display: flex; justify-content: flex-end; align-items: center;
+        gap: 18px; margin-bottom: 20px;
         }
-
-        .topbar a {
-            color: #012224;
-            text-decoration: none;
-            font-size: 18px;
-            transition: opacity 0.15s;
-        }
-
+        .topbar a { color: #012224; text-decoration: none; font-size: 18px; transition: opacity 0.15s; }
         .topbar a:hover { opacity: 0.65; }
 
-        .topbar-user {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #012224;
-        }
-
+        .topbar-user { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: #012224; }
         .topbar-user .avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 15px;
-            color: #555;
-            overflow: hidden;
+        width: 32px; height: 32px;
+        border-radius: 50%;
+        background: #ddd;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 15px; color: #555;
+        overflow: hidden;
+        transition: transform 0.2s;
         }
+        .topbar-user .avatar:hover { transform: scale(1.08); }
+        .topbar-user .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-        .topbar-user .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .page-title { font-size: 22px; font-weight: 700; color: #012224; margin-bottom: 20px; }
 
-        /* ── PAGE TITLE ───────────────────────────────────────────── */
-        .page-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: #012224;
-            margin-bottom: 20px;
-        }
+        .card { background: white; border-radius: 10px; overflow: hidden; }
 
-        /* ── CARD ─────────────────────────────────────────────────── */
-        .card {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        /* ── TOP-LEVEL TABS (PETS / PRODUCTS) ─────────────────────── */
-        .category-tabs {
-            display: flex;
-            border-bottom: 2px solid #ddd;
-        }
-
+        /* TOP TABS */
+        .category-tabs { display: flex; border-bottom: 2px solid #ddd; }
         .category-tab {
-            flex: 1;
-            padding: 14px 0;
-            background: none;
-            border: none;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            font-weight: 700;
-            color: #8A8686;
-            cursor: pointer;
-            position: relative;
-            transition: color 0.15s;
-            letter-spacing: 0.5px;
+            flex: 1; padding: 14px 0; background: none; border: none;
+            font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700;
+            color: #8A8686; cursor: pointer; position: relative; transition: color 0.15s;
         }
-
         .category-tab::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: #012224;
-            transform: scaleX(0);
-            transition: transform 0.2s;
+            content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+            height: 2px; background: #012224; transform: scaleX(0); transition: transform 0.2s;
         }
-
         .category-tab.active { color: #012224; }
         .category-tab.active::after { transform: scaleX(1); }
-        .category-tab:hover { color: #012224; }
 
-        /* ── PANEL ────────────────────────────────────────────────── */
+        /* PANELS */
         .panel { display: none; padding: 20px 24px 24px; }
         .panel.active { display: block; }
 
-        /* ── SUB-FILTER TABS (ALL / DOGS / CATS) ──────────────────── */
-        .filter-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .filter-tabs {
-            display: flex;
-            gap: 6px;
-        }
-
+        .filter-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .filter-tabs { display: flex; gap: 6px; }
         .filter-tab {
-            padding: 6px 16px;
-            background: none;
-            border: 1px solid #ddd;
-            border-radius: 999px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 12px;
-            font-weight: 600;
-            color: #8A8686;
-            cursor: pointer;
+            padding: 6px 16px; background: none; border: 1px solid #ddd;
+            border-radius: 999px; font-family: 'Poppins', sans-serif;
+            font-size: 12px; font-weight: 600; color: #8A8686; cursor: pointer;
             transition: background 0.15s, color 0.15s, border-color 0.15s;
         }
+        .filter-tab.active { background: #4E8DC0; border-color: #4E8DC0; color: #fff; }
+        .filter-tab:hover:not(.active) { background: #f0f0f0; border-color: #bbb; color: #333; }
 
-        .filter-tab.active {
-            background: #4E8DC0;
-            border-color: #4E8DC0;
-            color: #fff;
-        }
-
-        .filter-tab:hover:not(.active) {
-            background: #f0f0f0;
-            border-color: #bbb;
-            color: #333;
-        }
-
-        .select-btn {
-            background: none;
-            border: none;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            font-weight: 500;
-            color: #4E8DC0;
-            cursor: pointer;
-            transition: opacity 0.15s;
-        }
-
-        .select-btn:hover { opacity: 0.7; }
-
-        /* ── PET GRID ─────────────────────────────────────────────── */
-        .pets-grid {
+        /* GRIDS */
+        .pets-grid, .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
             gap: 16px;
         }
 
-        /* ── PET CARD ─────────────────────────────────────────────── */
+        /* PET CARD */
         .pet-card {
-            background: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #eee;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            background: #fff; border-radius: 12px; overflow: hidden;
+            border: 1px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             transition: transform 0.15s, box-shadow 0.15s;
-            animation: fadeIn 0.3s ease both;
+            animation: fadeIn 0.3s ease both; cursor: pointer;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .pet-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 18px rgba(0,0,0,0.11);
-        }
-
+        .pet-card:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,0.11); }
         .pet-card.hidden { display: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        .pet-card img {
-            width: 100%;
-            height: 155px;
-            object-fit: cover;
-            object-position: center;
-            display: block;
+        .pet-card img, .product-card img {
+            width: 100%; height: 155px; object-fit: cover; display: block;
         }
-
-        .pet-card .img-placeholder {
-            width: 100%;
-            height: 155px;
-            background: #e8e4d8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
+        .img-placeholder {
+            width: 100%; height: 155px; background: #e8e4d8;
+            display: flex; align-items: center; justify-content: center; font-size: 36px;
         }
-
-        .pet-card-body {
-            padding: 10px 12px 12px;
-        }
-
-        .pet-card-name-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-
-        .pet-card-name {
-            font-size: 14px;
-            font-weight: 700;
-            color: #012224;
-        }
+        .pet-card-body { padding: 10px 12px 12px; }
+        .pet-card-name-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .pet-card-name { font-size: 14px; font-weight: 700; color: #012224; }
 
         .unsave-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            color: #ccc;
-            font-size: 17px;
-            transition: transform 0.15s, color 0.15s;
-            line-height: 1;
+            background: none; border: none; cursor: pointer; padding: 0;
+            color: #DA8063; font-size: 17px;
+            transition: transform 0.15s, color 0.15s; line-height: 1;
         }
-
-        .unsave-btn:hover { transform: scale(1.2); color: #DA8063; }
-        .unsave-btn.saved { color: #DA8063; }
+        .unsave-btn:hover { transform: scale(1.2); color: #c45a3a; }
 
         .pet-info-tag {
-            display: inline-block;
-            background: #4E8DC0;
-            color: #fff;
-            font-size: 10px;
-            font-weight: 500;
-            padding: 3px 10px;
-            border-radius: 999px;
+            display: inline-block; background: #4E8DC0; color: #fff;
+            font-size: 10px; font-weight: 500; padding: 3px 10px; border-radius: 999px;
         }
-
         .status-badge {
-            display: inline-block;
-            font-size: 10px;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 999px;
-            margin-left: 4px;
+            display: inline-block; font-size: 10px; font-weight: 600;
+            padding: 2px 8px; border-radius: 999px; margin-left: 4px;
         }
-
         .status-badge.reserved { background: #DA8063; color: #fff; }
         .status-badge.adopted  { background: #6b6b2e; color: #fff; }
 
-        /* ── PRODUCT GRID ─────────────────────────────────────────── */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
-            gap: 16px;
-        }
-
+        /* PRODUCT CARD */
         .product-card {
-            background: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #eee;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            background: #fff; border-radius: 12px; overflow: hidden;
+            border: 1px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             transition: transform 0.15s, box-shadow 0.15s;
             animation: fadeIn 0.3s ease both;
         }
+        .product-card:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,0.11); }
+        .product-card img { object-fit: contain; padding: 8px; background: #fff; }
+        .product-card-body { padding: 10px 12px 12px; }
+        .product-card-name-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .product-card-name { font-size: 13px; font-weight: 700; color: #012224; }
+        .product-card-price { font-size: 12px; font-weight: 600; color: #4E8DC0; }
 
-        .product-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 18px rgba(0,0,0,0.11);
-        }
-
-        .product-card img {
-            width: 100%;
-            height: 155px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .product-card .img-placeholder {
-            width: 100%;
-            height: 155px;
-            background: #e8e4d8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-        }
-
-        .product-card-body {
-            padding: 10px 12px 12px;
-        }
-
-        .product-card-name-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 4px;
-        }
-
-        .product-card-name {
-            font-size: 13px;
-            font-weight: 700;
-            color: #012224;
-        }
-
-        .product-card-price {
-            font-size: 12px;
-            font-weight: 600;
-            color: #4E8DC0;
-        }
-
-        .product-unsave-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            color: #DA8063;
-            font-size: 17px;
-            transition: transform 0.15s, color 0.15s;
-            line-height: 1;
-        }
-
-        .product-unsave-btn:hover { transform: scale(1.2); color: #c45a3a; }
-
-        /* ── EMPTY STATE ─────────────────────────────────────────── */
+        /* EMPTY STATE */
         .empty-state {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 50px 20px;
-            text-align: center;
-            color: #8A8686;
+            display: none; flex-direction: column; align-items: center;
+            justify-content: center; padding: 50px 20px;
+            text-align: center; color: #8A8686;
         }
-
         .empty-state.visible { display: flex; }
-
-        .empty-state i {
-            font-size: 44px;
-            color: #ddd;
-            margin-bottom: 14px;
-        }
-
-        .empty-state h3 {
-            font-size: 15px;
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 6px;
-        }
-
+        .empty-state i { font-size: 44px; color: #ddd; margin-bottom: 14px; }
+        .empty-state h3 { font-size: 15px; font-weight: 600; color: #555; margin-bottom: 6px; }
         .empty-state p { font-size: 13px; line-height: 1.6; }
-
         .empty-state a {
-            margin-top: 14px;
-            display: inline-block;
-            padding: 9px 22px;
-            background: #DA8063;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            transition: background 0.15s;
+            margin-top: 14px; display: inline-block; padding: 9px 22px;
+            background: #DA8063; color: #fff; text-decoration: none;
+            border-radius: 8px; font-size: 13px; font-weight: 600; transition: background 0.15s;
         }
-
         .empty-state a:hover { background: #c46a4d; }
 
-        /* ── LOADING ─────────────────────────────────────────────── */
-        .loading-state {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #8A8686;
-            font-size: 13px;
-            padding: 20px 0;
-        }
-
-        .spinner {
-            width: 18px;
-            height: 18px;
-            border: 2px solid #ddd;
-            border-top-color: #DA8063;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-        }
-
+        /* LOADING */
+        .loading-state { display: flex; align-items: center; gap: 10px; color: #8A8686; font-size: 13px; padding: 20px 0; }
+        .spinner { width: 18px; height: 18px; border: 2px solid #ddd; border-top-color: #DA8063; border-radius: 50%; animation: spin 0.7s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ── TOAST ───────────────────────────────────────────────── */
+        /* TOAST */
         .toast {
-            position: fixed;
-            bottom: 28px;
-            left: 50%;
+            position: fixed; bottom: 28px; left: 50%;
             transform: translateX(-50%) translateY(20px);
-            background: #012224;
-            color: #F4F1E6;
-            padding: 10px 22px;
-            border-radius: 8px;
-            font-size: 13px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s, transform 0.3s;
-            z-index: 999;
-            white-space: nowrap;
+            background: #012224; color: #F4F1E6; padding: 10px 22px;
+            border-radius: 8px; font-size: 13px; opacity: 0;
+            pointer-events: none; transition: opacity 0.3s, transform 0.3s;
+            z-index: 999; white-space: nowrap;
         }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
+        /* UNSAVE CONFIRM MODAL */
+        .unsave-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.45); z-index: 400;
+            align-items: center; justify-content: center;
         }
+        .unsave-overlay.open { display: flex; }
+        .unsave-box {
+            background: #F4F1E6; border-radius: 16px; padding: 28px 32px;
+            max-width: 340px; width: 90%; text-align: center;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+            animation: slideUp .22s ease;
+        }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .unsave-emoji { font-size: 32px; margin-bottom: 12px; }
+        .unsave-box h3 { font-size: 16px; font-weight: 700; color: #012224; margin-bottom: 8px; }
+        .unsave-box p  { font-size: 13px; color: #8A8686; margin-bottom: 20px; line-height: 1.6; }
+        .unsave-actions { display: flex; gap: 10px; }
+        .unsave-no {
+            flex: 1; padding: 10px; border-radius: 8px; border: 1.5px solid #ccc;
+            background: #fff; font-family: 'Poppins', sans-serif; font-size: 13px;
+            font-weight: 600; color: #555; cursor: pointer; transition: background 0.15s;
+        }
+        .unsave-no:hover { background: #f0f0f0; }
+        .unsave-yes {
+            flex: 1; padding: 10px; border-radius: 8px; border: none;
+            background: #DA8063; font-family: 'Poppins', sans-serif; font-size: 13px;
+            font-weight: 700; color: #fff; cursor: pointer; transition: background 0.15s;
+        }
+        .unsave-yes:hover { background: #c46a4d; }
     </style>
 </head>
 <body>
 
 <div class="container">
-
-    <!-- ── SIDEBAR ──────────────────────────────────────────────── -->
+    <!-- SIDEBAR -->
     <div class="sidebar">
         <a href="dashboard.html">
             <div class="logo-circle">
                 <img src="image/logo.png" alt="PawConnect Logo">
             </div>
         </a>
-
-        <a href="userprof.html" class="menu-item">
-            <i class="fa-regular fa-user"></i> My Account
-        </a>
-        <a href="addres.html" class="menu-item">
-            <i class="fa-solid fa-location-dot"></i> My Addresses
-        </a>
-        <a href="donation.html" class="menu-item">
-            <i class="fa-solid fa-hand-holding-heart"></i> My Donations
-        </a>
-        <a href="report.html" class="menu-item">
-            <i class="fa-solid fa-bug"></i> My Reports
-        </a>
-        <!-- <a href="reservations.html" class="menu-item">
-            <i class="fa-regular fa-calendar-check"></i> Reservations
-        </a> -->
-        <a href="save.html" class="menu-item active">
-            <i class="fa-regular fa-heart"></i> Saves
-        </a>
-        <a href="notifications.html" class="menu-item">
-            <i class="fa-regular fa-bell"></i> Notifications
-        </a>
-
+        <a href="userprof.html" class="menu-item"><i class="fa-regular fa-user"></i> My Account</a>
+        <a href="donation.html" class="menu-item"><i class="fa-solid fa-hand-holding-heart"></i> My Donations</a>
+        <a href="report.html"   class="menu-item"><i class="fa-solid fa-bug"></i> My Reports</a>
+        <a href="save.html"     class="menu-item active"><i class="fa-regular fa-heart"></i> Saves</a>
+        <a href="notifications.html" class="menu-item"><i class="fa-regular fa-bell"></i> Notifications</a>
         <div class="sidebar-divider"></div>
-
-        <a href="login.html" class="menu-item">
-            <i class="fa-solid fa-right-from-bracket"></i> Log out
-        </a>
+        <a href="login.html" class="menu-item"><i class="fa-solid fa-right-from-bracket"></i> Log out</a>
     </div>
 
-    <!-- ── MAIN ─────────────────────────────────────────────────── -->
+    <!-- MAIN -->
     <div class="main">
-
-        <!-- Topbar -->
         <div class="topbar">
             <a href="notifications.html" title="Notifications"><i class="fa-regular fa-bell"></i></a>
             <a href="save.html" title="Saves"><i class="fa-regular fa-heart"></i></a>
             <div class="topbar-user">
-                <div class="avatar"><i class="fa-regular fa-user"></i></div>
-                <span>User</span>
+                <div class="avatar" id="topbarAvatar">
+                    <i class="fa-regular fa-user" id="topbarIcon"></i>
+                </div>
+                <span id="topbarUsername">User</span>
             </div>
         </div>
 
-        <!-- Page title -->
         <div class="page-title">Saves</div>
 
-        <!-- Card with tabs -->
         <div class="card">
-
-            <!-- Top-level tabs: PETS / PRODUCTS -->
             <div class="category-tabs">
                 <button class="category-tab active" onclick="switchCategory('pets', this)">PETS</button>
-                <button class="category-tab" onclick="switchCategory('products', this)">PRODUCTS</button>
+                <button class="category-tab"        onclick="switchCategory('products', this)">PRODUCTS</button>
             </div>
 
-            <!-- ── PETS PANEL ──────────────────────────────────────── -->
+            <!-- PETS PANEL -->
             <div class="panel active" id="panel-pets">
-
                 <div class="filter-row">
                     <div class="filter-tabs">
                         <button class="filter-tab active" onclick="filterPets('all', this)">ALL</button>
-                        <button class="filter-tab" onclick="filterPets('dog', this)">DOGS</button>
-                        <button class="filter-tab" onclick="filterPets('cat', this)">CATS</button>
+                        <button class="filter-tab"        onclick="filterPets('dog', this)">DOGS</button>
+                        <button class="filter-tab"        onclick="filterPets('cat', this)">CATS</button>
                     </div>
-                    <button class="select-btn">Select</button>
                 </div>
-
-                <!-- Loading -->
-                <div class="loading-state" id="loadingState">
-                    <div class="spinner"></div>
-                    <span>Loading your saved pets…</span>
+                <div class="loading-state" id="loadingPets">
+                    <div class="spinner"></div><span>Loading your saved pets…</span>
                 </div>
-
-                <!-- Grid -->
                 <div class="pets-grid" id="petsGrid"></div>
-
-                <!-- Empty -->
                 <div class="empty-state" id="emptyStatePets">
                     <i class="fa-regular fa-heart"></i>
                     <h3>No saved pets yet</h3>
                     <p>Heart a pet on the adoption page<br>and it will appear here.</p>
-                    <a href="adoption.html">Browse Pets</a>
+                    <a href="adopt.html">Browse Pets</a>
                 </div>
             </div>
 
-            <!-- ── PRODUCTS PANEL ──────────────────────────────────── -->
+            <!-- PRODUCTS PANEL -->
             <div class="panel" id="panel-products">
-
-                <div class="filter-row">
-                    <div style="font-size:13px;color:#8A8686;">Your saved products will appear here.</div>
-                    <button class="select-btn">Select</button>
+                <div class="loading-state" id="loadingProducts">
+                    <div class="spinner"></div><span>Loading your saved products…</span>
                 </div>
-
-                <!-- Grid -->
                 <div class="products-grid" id="productsGrid"></div>
-
-                <!-- Empty -->
-                <div class="empty-state visible" id="emptyStateProducts">
+                <div class="empty-state" id="emptyStateProducts">
                     <i class="fa-regular fa-bookmark"></i>
                     <h3>No saved products yet</h3>
                     <p>Save a product from the shop<br>and it will appear here.</p>
-                    <a href="shop.html">Browse Products</a>
+                    <a href="products.html">Browse Products</a>
                 </div>
             </div>
-
-        </div><!-- /card -->
+        </div>
     </div>
 </div>
 
-<!-- Toast -->
+<!-- UNSAVE CONFIRM MODAL -->
+<div class="unsave-overlay" id="unsaveOverlay">
+    <div class="unsave-box">
+        <div class="unsave-emoji">💔</div>
+        <h3 id="unsaveTitle">Remove from saves?</h3>
+        <p  id="unsaveMsg">This will be removed from your saved list.</p>
+        <div class="unsave-actions">
+            <button class="unsave-no"  id="unsaveNoBtn">Cancel</button>
+            <button class="unsave-yes" id="unsaveYesBtn">Yes, remove</button>
+        </div>
+    </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-    const USER_ID = 1;
-
-    const PET_DATA = {
-        thormund: { name: 'Thormund', info: 'Male, 7 yrs old',   img: 'image/thormund.png', type: 'dog', status: 'available' },
-        ezra:     { name: 'Ezra',     info: 'Female, 2 yrs old', img: 'image/ezra.png',     type: 'dog', status: 'adopted'   },
-        tiktok:   { name: 'Tiktok',   info: 'Male, 2 yrs old',   img: 'image/tiktok.png',   type: 'cat', status: 'available' },
-        dasurv:   { name: 'Dasurv',   info: 'Female, 2 yrs old', img: 'image/dasurv.png',   type: 'cat', status: 'available' },
-    };
-
-    // Product data — replace with your real backend fetch
-    const PRODUCT_DATA = {
-        // example: prod1: { name: 'Dog Harness', price: '₱350', img: 'image/harness.png' },
-    };
-
-    let currentFilter = 'all';
-    let savedPets = [];
-
+    let USER_ID = null;
+    let currentPetFilter = 'all';
+ 
     // ── CATEGORY SWITCH ──────────────────────────────────────────
     function switchCategory(cat, btn) {
         document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
@@ -653,204 +325,229 @@
         document.getElementById('panel-' + cat).classList.add('active');
     }
 
-    // ── LOAD SAVES ───────────────────────────────────────────────
-    window.addEventListener('DOMContentLoaded', loadSaves);
+    // ── INITIAL LOAD ─────────────────────────────────────────────
+    ///window.addEventListener('DOMContentLoaded', () => {
+       // loadSavedPets();
+       // loadSavedProducts();
+   /// });
 
-    function loadSaves() {
-        document.getElementById('loadingState').style.display = 'flex';
-        document.getElementById('petsGrid').innerHTML = '';
+    // ── LOAD SAVED PETS ──────────────────────────────────────────
+    function loadSavedPets() {
+        document.getElementById('loadingPets').style.display = 'flex';
         document.getElementById('emptyStatePets').classList.remove('visible');
+        document.getElementById('petsGrid').innerHTML = '';
 
-        fetch(`get_saved.php?user_id=${USER_ID}`)
+        fetch(`php/get_saved.php?item_type=pet`)
             .then(r => r.json())
             .then(data => {
-                document.getElementById('loadingState').style.display = 'none';
-                if (data.success && data.saved.length > 0) {
-                    savedPets = data.saved;
-                    renderPets(savedPets);
-                } else {
-                    showEmptyPets();
+                document.getElementById('loadingPets').style.display = 'none';
+                if (!data.success || data.saved.length === 0) {
+                    showEmptyPets(); return;
                 }
+                // Fetch full pet details for each saved ID
+                return Promise.all(
+                    data.saved.map(id =>
+                        fetch(`php/get-pet.php?id=${id}`)
+                            .then(r => r.json())
+                            .then(d => d.success ? d.pet : null)
+                            .catch(() => null)
+                    )
+                );
+            })
+            .then(pets => {
+                if (!pets) return;
+                const valid = pets.filter(Boolean);
+                if (valid.length === 0) { showEmptyPets(); return; }
+                valid.forEach((pet, i) => renderPetCard(pet, i));
+                applyPetFilter(currentPetFilter);
             })
             .catch(() => {
-                document.getElementById('loadingState').style.display = 'none';
-                savedPets = ['thormund', 'ezra'];
-                renderPets(savedPets);
+                document.getElementById('loadingPets').style.display = 'none';
+                showEmptyPets();
             });
-
-        // Load products (demo: empty)
-        renderProducts(Object.keys(PRODUCT_DATA));
     }
 
-    // ── RENDER PETS ──────────────────────────────────────────────
-    function renderPets(petIds) {
-        const grid = document.getElementById('petsGrid');
-        grid.innerHTML = '';
+    function renderPetCard(pet, index) {
+        const grid   = document.getElementById('petsGrid');
+        const imgSrc = `adopt/${pet.name.toLowerCase()}.png`;
+        const type   = pet.species || pet.type || 'dog'; // use whatever field your DB returns
 
-        petIds.forEach((petId, index) => {
-            const pet = PET_DATA[petId];
-            if (!pet) return;
+        let badgeHtml = '';
+        if (pet.status === 'reserved') badgeHtml = `<span class="status-badge reserved">Reserved</span>`;
+        else if (pet.status === 'adopted') badgeHtml = `<span class="status-badge adopted">Adopted</span>`;
 
-            let badgeHtml = '';
-            if (pet.status === 'reserved') badgeHtml = `<span class="status-badge reserved">Reserved</span>`;
-            else if (pet.status === 'adopted') badgeHtml = `<span class="status-badge adopted">Adopted</span>`;
-
-            const card = document.createElement('div');
-            card.className = 'pet-card';
-            card.dataset.id   = petId;
-            card.dataset.type = pet.type;
-            card.style.animationDelay = `${index * 0.06}s`;
-            card.innerHTML = `
-                <img src="${pet.img}" alt="${pet.name}"
-                     onerror="this.outerHTML='<div class=\\'img-placeholder\\'>🐾</div>'">
-                <div class="pet-card-body">
-                    <div class="pet-card-name-row">
-                        <span class="pet-card-name">${pet.name}</span>
-                        <button class="unsave-btn saved" title="Remove from saves"
-                                onclick="unsavePet('${petId}', this)">
-                            <i class="fa-solid fa-heart"></i>
-                        </button>
-                    </div>
-                    <div>
-                        <span class="pet-info-tag">${pet.info}</span>
-                        ${badgeHtml}
-                    </div>
-                </div>`;
-            grid.appendChild(card);
+        const card = document.createElement('div');
+        card.className     = 'pet-card';
+        card.dataset.id    = pet.id;
+        card.dataset.type  = type;
+        card.style.animationDelay = `${index * 0.06}s`;
+        card.innerHTML = `
+            <img src="${imgSrc}" alt="${pet.name}"
+                 onerror="this.outerHTML='<div class=\\'img-placeholder\\'>🐾</div>'">
+            <div class="pet-card-body">
+                <div class="pet-card-name-row">
+                    <span class="pet-card-name">${pet.name}</span>
+                    <button class="unsave-btn" title="Remove from saves"
+                            onclick="unsaveItem(event, ${pet.id}, 'pet', this)">
+                        <i class="fa-solid fa-heart"></i>
+                    </button>
+                </div>
+                <div>
+                    <span class="pet-info-tag">${capitalize(pet.gender)}, ${pet.age} yr${pet.age != 1 ? 's' : ''}</span>
+                    ${badgeHtml}
+                </div>
+            </div>`;
+        // Click card → go to pet profile
+        card.addEventListener('click', e => {
+            if (e.target.closest('.unsave-btn')) return;
+            window.location.href = `pet_profile.html?id=${pet.id}`;
         });
-
-        applyFilter(currentFilter);
+        grid.appendChild(card);
     }
 
-    // ── RENDER PRODUCTS ──────────────────────────────────────────
-    function renderProducts(productIds) {
-        const grid = document.getElementById('productsGrid');
-        grid.innerHTML = '';
-
-        if (productIds.length === 0) {
-            document.getElementById('emptyStateProducts').classList.add('visible');
-            return;
-        }
-
+    // ── LOAD SAVED PRODUCTS ──────────────────────────────────────
+    function loadSavedProducts() {
+        document.getElementById('loadingProducts').style.display = 'flex';
         document.getElementById('emptyStateProducts').classList.remove('visible');
+        document.getElementById('productsGrid').innerHTML = '';
 
-        productIds.forEach((prodId, index) => {
-            const prod = PRODUCT_DATA[prodId];
-            if (!prod) return;
-
-            const card = document.createElement('div');
-            card.className = 'product-card';
-            card.style.animationDelay = `${index * 0.06}s`;
-            card.innerHTML = `
-                <img src="${prod.img}" alt="${prod.name}"
-                     onerror="this.outerHTML='<div class=\\'img-placeholder\\'>🛍️</div>'">
-                <div class="product-card-body">
-                    <div class="product-card-name-row">
-                        <span class="product-card-name">${prod.name}</span>
-                        <button class="product-unsave-btn" title="Remove from saves"
-                                onclick="unsaveProduct('${prodId}', this)">
-                            <i class="fa-solid fa-heart"></i>
-                        </button>
-                    </div>
-                    <div class="product-card-price">${prod.price}</div>
-                </div>`;
-            grid.appendChild(card);
-        });
+        fetch(`php/get_saved.php?item_type=product`)
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('loadingProducts').style.display = 'none';
+                if (!data.success || data.saved.length === 0) {
+                    document.getElementById('emptyStateProducts').classList.add('visible'); return;
+                }
+                return Promise.all(
+                    data.saved.map(id =>
+                        fetch(`php/get_products.php?id=${id}`)
+                            .then(r => r.json())
+                            .then(d => {
+                                // get_products.php returns an array; find the matching product
+                                const list = Array.isArray(d) ? d : (d.products || []);
+                                return list.find(p => String(p.id) === String(id)) || null;
+                            })
+                            .catch(() => null)
+                    )
+                );
+            })
+            .then(products => {
+                if (!products) return;
+                const valid = products.filter(Boolean);
+                if (valid.length === 0) {
+                    document.getElementById('emptyStateProducts').classList.add('visible'); return;
+                }
+                valid.forEach((prod, i) => renderProductCard(prod, i));
+            })
+            .catch(() => {
+                document.getElementById('loadingProducts').style.display = 'none';
+                document.getElementById('emptyStateProducts').classList.add('visible');
+            });
     }
 
-    // ── UNSAVE PET ───────────────────────────────────────────────
-    function unsavePet(petId, btn) {
-        btn.style.opacity = '0.4';
-        btn.disabled = true;
+    function renderProductCard(prod, index) {
+        const grid  = document.getElementById('productsGrid');
+        const price = '₱' + parseFloat(prod.price).toLocaleString();
 
-        fetch('toggle_save.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'unsave', pet_id: petId, user_id: USER_ID })
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) removePetCard(petId);
-            else { btn.style.opacity = '1'; btn.disabled = false; showToast('Could not remove. Try again.'); }
-        })
-        .catch(() => removePetCard(petId));
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.dataset.id = prod.id;
+        card.style.animationDelay = `${index * 0.06}s`;
+        card.innerHTML = `
+            <img src="product/${prod.image}" alt="${prod.name}"
+                 onerror="this.outerHTML='<div class=\\'img-placeholder\\'>🛍️</div>'">
+            <div class="product-card-body">
+                <div class="product-card-name-row">
+                    <span class="product-card-name">${prod.name}</span>
+                    <button class="unsave-btn" title="Remove from saves"
+                            onclick="unsaveItem(event, ${prod.id}, 'product', this)">
+                        <i class="fa-solid fa-heart"></i>
+                    </button>
+                </div>
+                <div class="product-card-price">${price}</div>
+            </div>`;
+        grid.appendChild(card);
     }
 
-    function removePetCard(petId) {
-        const card = document.querySelector(`.pet-card[data-id="${petId}"]`);
-        if (card) {
-            card.style.transition = 'opacity 0.2s, transform 0.2s';
-            card.style.opacity = '0';
-            card.style.transform = 'scale(0.9)';
-            setTimeout(() => {
-                card.remove();
-                savedPets = savedPets.filter(id => id !== petId);
-                checkEmptyPets();
-            }, 200);
+    // ── UNIFIED UNSAVE ───────────────────────────────────────────
+    function unsaveItem(event, itemId, itemType, btn) {
+        event.stopPropagation();
+        const label = itemType === 'pet' ? 'pet' : 'product';
+
+        document.getElementById('unsaveTitle').textContent = `Remove this ${label}?`;
+        document.getElementById('unsaveMsg').textContent   = `This ${label} will be removed from your saved list.`;
+
+        const overlay = document.getElementById('unsaveOverlay');
+        overlay.classList.add('open');
+
+        document.getElementById('unsaveYesBtn').onclick = () => {
+            overlay.classList.remove('open');
+            const card = btn.closest('.pet-card, .product-card');
+            if (card) {
+                card.style.transition = 'opacity 0.2s, transform 0.2s';
+                card.style.opacity    = '0';
+                card.style.transform  = 'scale(0.9)';
+                setTimeout(() => {
+                    card.remove();
+                    checkEmptyState(itemType);
+                }, 200);
+            }
+            fetch('php/toggle_save.php', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({ action: 'unsave', item_id: itemId, item_type: itemType })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (!data.success) showToast('Could not remove. Please try again.');
+                else showToast('Removed from saves.');
+            })
+            .catch(() => showToast('Removed from saves.'));
+        };
+
+        document.getElementById('unsaveNoBtn').onclick = () => overlay.classList.remove('open');
+    }
+
+    function checkEmptyState(itemType) {
+        if (itemType === 'pet') {
+            const remaining = document.querySelectorAll('#petsGrid .pet-card').length;
+            if (remaining === 0) showEmptyPets();
+        } else {
+            const remaining = document.querySelectorAll('#productsGrid .product-card').length;
+            if (remaining === 0) document.getElementById('emptyStateProducts').classList.add('visible');
         }
-        showToast('Removed from saves.');
     }
 
-    // ── UNSAVE PRODUCT ───────────────────────────────────────────
-    function unsaveProduct(prodId, btn) {
-        const card = btn.closest('.product-card');
-        if (card) {
-            card.style.transition = 'opacity 0.2s, transform 0.2s';
-            card.style.opacity = '0';
-            card.style.transform = 'scale(0.9)';
-            setTimeout(() => {
-                card.remove();
-                if (document.querySelectorAll('.product-card').length === 0)
-                    document.getElementById('emptyStateProducts').classList.add('visible');
-            }, 200);
-        }
-        showToast('Removed from saves.');
-    }
-
-    // ── FILTER (ALL / DOGS / CATS) ───────────────────────────────
+    // ── PET FILTER ───────────────────────────────────────────────
     function filterPets(type, btn) {
         document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
         btn.classList.add('active');
-        currentFilter = type;
-        applyFilter(type);
+        currentPetFilter = type;
+        applyPetFilter(type);
     }
 
-    function applyFilter(type) {
-        const cards = document.querySelectorAll('.pet-card');
+    function applyPetFilter(type) {
         let visible = 0;
-        cards.forEach(card => {
+        document.querySelectorAll('#petsGrid .pet-card').forEach(card => {
             const show = type === 'all' || card.dataset.type === type;
             card.classList.toggle('hidden', !show);
             if (show) visible++;
         });
-
-        if (visible === 0 && savedPets.length > 0) {
-            const es = document.getElementById('emptyStatePets');
-            es.classList.add('visible');
-            es.querySelector('h3').textContent = `No saved ${type}s yet`;
-            es.querySelector('p').textContent  = `Heart a ${type} on the adoption page and it will show here.`;
-            es.querySelector('a').style.display = 'none';
-        } else {
-            checkEmptyPets();
-        }
-    }
-
-    function checkEmptyPets() {
-        const remaining = document.querySelectorAll('.pet-card:not(.hidden)').length;
-        if (remaining === 0) showEmptyPets();
-        else document.getElementById('emptyStatePets').classList.remove('visible');
+        const es = document.getElementById('emptyStatePets');
+        if (visible === 0) es.classList.add('visible');
+        else es.classList.remove('visible');
     }
 
     function showEmptyPets() {
-        const es = document.getElementById('emptyStatePets');
-        es.classList.add('visible');
-        es.querySelector('h3').textContent = 'No saved pets yet';
-        es.querySelector('p').innerHTML   = 'Heart a pet on the adoption page<br>and it will appear here.';
-        const link = es.querySelector('a');
-        if (link) link.style.display = 'inline-block';
+        document.getElementById('emptyStatePets').classList.add('visible');
     }
 
-    // ── TOAST ────────────────────────────────────────────────────
+    // ── HELPERS ──────────────────────────────────────────────────
+    function capitalize(str) {
+        if (!str) return '';
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
     let toastTimer;
     function showToast(msg) {
         const toast = document.getElementById('toast');
@@ -859,7 +556,48 @@
         clearTimeout(toastTimer);
         toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
     }
-</script>
 
+    (async function () {
+        const API = 'php/userprof.php';
+        try {
+            const res  = await fetch(`${API}?action=get`);
+            const data = await res.json();
+
+            if (data.success) {
+                const u = data.user;
+                USER_ID = parseInt(u.id);
+
+                const nameEl = document.getElementById('topbarUsername');
+                if (nameEl) nameEl.textContent = u.username || 'User';
+
+                const avatarEl = document.getElementById('topbarAvatar');
+                if (avatarEl) {
+                    if (u.photo) {
+                        avatarEl.innerHTML = '';
+                        const img = document.createElement('img');
+                        img.src = u.photo;
+                        img.alt = 'avatar';
+                        img.onerror = () => {
+                            avatarEl.innerHTML = '<i class="fa-regular fa-user"></i>';
+                        };
+                        avatarEl.appendChild(img);
+                    } else {
+                        avatarEl.innerHTML = '<i class="fa-regular fa-user"></i>';
+                    }
+                }
+            } else {
+                // Not logged in via session — fall back to hardcoded user 1 for dev
+                USER_ID = 1;
+            }
+        } catch (err) {
+            console.warn('Could not fetch user profile, using USER_ID=1 fallback.', err);
+            USER_ID = 1;
+        }
+
+        // Always load saves after USER_ID is set
+        loadSavedPets();
+        loadSavedProducts();
+    })();
+</script>
 </body>
 </html>

@@ -30,10 +30,11 @@ if (!empty($_GET['type']) && in_array($_GET['type'], ['cat', 'dog'])) {
     $filterType   = $_GET['type'];
 }
 
-// ── SEARCH filter ────────────────────────────────────────────────
+// ── SEARCH filter — checks name, breed, shelter, AND location ────
 if (!empty($_GET['search'])) {
-    $conditions[] = "name LIKE ?";
-    $params[]     = '%' . $_GET['search'] . '%';
+    $t = '%' . $_GET['search'] . '%';
+    $conditions[] = "(name LIKE ? OR breed LIKE ? OR shelter LIKE ? OR location LIKE ?)";
+    array_push($params, $t, $t, $t, $t);
 }
 
 // ── BREED filter ─────────────────────────────────────────────────
@@ -42,13 +43,16 @@ $filterBreeds  = isset($_GET['breed']) ? (array)$_GET['breed'] : [];
 $filterBreeds  = array_filter($filterBreeds, fn($b) => in_array($b, $allowedBreeds));
 
 if (!empty($filterBreeds)) {
-    $placeholders = implode(',', array_fill(0, count($filterBreeds), '?'));
+    // DB stores breeds capitalised: 'Native', 'Mixed' — match accordingly
+    // DB stores breeds capitalised: 'Native', 'Mixed' — match accordingly
+    $mapped       = array_map(fn($b) => ucfirst(strtolower($b)), $filterBreeds);
+    $placeholders = implode(',', array_fill(0, count($mapped), '?'));
     $conditions[] = "breed IN ($placeholders)";
-    foreach ($filterBreeds as $b) $params[] = $b;
+    foreach ($mapped as $b) $params[] = $b;
 }
 
 // ── AGE filter ───────────────────────────────────────────────────
-$allowedAges = ['0-1', '1-3', '3-7', '7+'];
+$allowedAges = ['0-1', '2-3', '4-6', '7+'];
 $filterAges  = isset($_GET['age']) ? (array)$_GET['age'] : [];
 $filterAges  = array_filter($filterAges, fn($a) => in_array($a, $allowedAges));
 
@@ -56,9 +60,9 @@ if (!empty($filterAges)) {
     $ageClauses = [];
     foreach ($filterAges as $range) {
         switch ($range) {
-            case '0-1': $ageClauses[] = "(age >= 0 AND age < 1)"; break;
-            case '1-3': $ageClauses[] = "(age >= 1 AND age < 3)"; break;
-            case '3-7': $ageClauses[] = "(age >= 3 AND age < 7)"; break;
+            case '0-1': $ageClauses[] = "(age >= 0 AND age <= 1)"; break;
+            case '2-3': $ageClauses[] = "(age >= 2 AND age <= 3)"; break;
+            case '4-6': $ageClauses[] = "(age >= 4 AND age <= 6)"; break;
             case '7+':  $ageClauses[] = "(age >= 7)";             break;
         }
     }
@@ -98,14 +102,12 @@ const W_COMPATIBILITY = 0.3;
 const W_PROXIMITY     = 0.2;
 
 // Count how many compatibility filters the user actually set
-// (so we can normalize the compatibility score fairly)
 $totalCompatFilters = 0;
 if ($filterType)                    $totalCompatFilters++;
 if (!empty($filterBreeds))          $totalCompatFilters++;
 if (!empty($filterAges))            $totalCompatFilters++;
 
 foreach ($pets as &$pet) {
-
     // ── 1. URGENCY SCORE (0.0 – 1.0) ────────────────────────────
     $urgencyScore = match(strtolower($pet['urgency'] ?? '')) {
         'urgent' => 1.0,
@@ -136,16 +138,15 @@ foreach ($pets as &$pet) {
             $petAge = (float)$pet['age'];
             foreach ($filterAges as $range) {
                 $hit = match($range) {
-                    '0-1' => $petAge >= 0 && $petAge < 1,
-                    '1-3' => $petAge >= 1 && $petAge < 3,
-                    '3-7' => $petAge >= 3 && $petAge < 7,
+                    '0-1' => $petAge >= 0 && $petAge <= 1,
+                    '2-3' => $petAge >= 2 && $petAge <= 3,
+                    '4-6' => $petAge >= 4 && $petAge <= 6,
                     '7+'  => $petAge >= 7,
                     default => false,
                 };
                 if ($hit) { $matchCount++; break; }
             }
         }
-
         $compatScore = $matchCount / $totalCompatFilters;
     }
 

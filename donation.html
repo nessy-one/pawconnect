@@ -191,9 +191,9 @@ body { background: #F4F1E6; }
     <a href="userprof.html" class="menu-item">
       <i class="fa-regular fa-user"></i> My Account
     </a>
-    <a href="addres.html" class="menu-item">
+    <!-- <a href="addres.html" class="menu-item">
       <i class="fa-solid fa-location-dot"></i> My Addresses
-    </a>
+    </a> -->
     <a href="donation.html" class="menu-item active">
       <i class="fa-solid fa-hand-holding-heart"></i> My Donations
     </a>
@@ -225,8 +225,10 @@ body { background: #F4F1E6; }
       <a href="notifications.html" title="Notifications"><i class="fa-regular fa-bell"></i></a>
       <a href="save.html" title="Saves"><i class="fa-regular fa-heart"></i></a>
       <div class="topbar-user">
-        <div class="avatar"><i class="fa-regular fa-user"></i></div>
-        <span>User</span>
+        <div class="avatar" id="topbarAvatar">
+          <i class="fa-regular fa-user" id="topbarIcon"></i>
+        </div>
+        <span id="topbarUsername">User</span>
       </div>
     </div>
 
@@ -234,7 +236,7 @@ body { background: #F4F1E6; }
     <div class="card">
       <div class="card-header">
         <h2>My Donations</h2>
-        <button class="btn">DONATE NOW</button>
+        <button class="btn" onclick="window.location.href='donate.html'">DONATE NOW</button>
       </div>
 
       <div class="pic">
@@ -246,5 +248,39 @@ body { background: #F4F1E6; }
   </div>
 </div>
 
+<script>
+  (async function () {
+    const API = 'php/userprof.php';
+    try {
+      const res  = await fetch(`${API}?action=get`);
+      const data = await res.json();
+      if (!data.success) return;
+
+      const u = data.user;
+
+      const nameEl = document.getElementById('topbarUsername');
+      if (nameEl) nameEl.textContent = u.username || 'User';
+
+      const avatarEl = document.getElementById('topbarAvatar');
+      if (!avatarEl) return;
+
+      if (u.photo) {
+        avatarEl.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = u.photo;
+        img.alt = 'avatar';
+        img.onerror = () => {
+          avatarEl.innerHTML = '<i class="fa-regular fa-user"></i>';
+        };
+        avatarEl.appendChild(img);
+      } else {
+        avatarEl.innerHTML = '<i class="fa-regular fa-user"></i>';
+      }
+
+    } catch (err) {
+      console.warn('Could not sync avatar.', err);
+    }
+  })();
+</script>
 </body>
 </html>

@@ -27,30 +27,22 @@ body { background:#F4F1E6; }
   align-items: center;
   justify-content: flex-end;
   overflow: hidden;
-}
+} 
 
 .logo-img {
   position: absolute;
-  top: 0;
-  left: 55%;
+  top: -50px;
+  left: 50%;
+  max-width: 600px;
   transform: translateX(-50%);
-  width: 500px;
   z-index: 2;
-}
-
-.image::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 70% 60% at 50% 100%, #e8d9b8 0%, transparent 70%);
-  z-index: 0;
 }
 
 .dog-img {
   position: relative;
   z-index: 1;
   width: 78%;
-  max-width: 480px;
+  max-width: 530px;
   display: block;
   margin-bottom: -6px;
   object-fit: contain;
@@ -208,6 +200,12 @@ select:focus {
   box-shadow: 0 2px 8px rgba(0,0,0,.06);
 }
 
+/* Google brand colors */
+.social .fa-google { color: #4285F4; }
+ 
+/* Facebook brand color */
+.social .fa-facebook { color: #1877F2; }
+
 /* ── FOOTER ── */
 .footer {
   text-align: center;
@@ -231,7 +229,7 @@ select:focus {
   <!-- LEFT IMAGE -->
   <div class="image">
     <img src="form-image/logo.png" class="logo-img" alt="PawConnect">
-    <img src="form-image/dog2.png" class="dog-img" alt="Puppy">
+    <img src="form-image/dog.png" class="dog-img" alt="Puppy">
   </div>
 
   <!-- VISUAL DIVIDER -->
@@ -272,14 +270,6 @@ select:focus {
           </span>
         </div>
 
-        <!-- <div class="input-group">
-          <select name="role" required>
-            <option value="">Select Role</option>
-            <option value="pet_owner">Pet Owner</option>
-            <option value="business_owner">Business Owner</option>
-          </select>
-        </div> -->
-
         <button class="btn" type="submit">SIGN UP</button>
 
       </form>
@@ -298,17 +288,40 @@ select:focus {
 </div>
 
 <script>
-function togglePassword(id, el) {
-  const input = document.getElementById(id);
-  const icon = el.querySelector("i");
-  if (input.type === "password") {
-    input.type = "text";
-    icon.classList.replace("fa-eye", "fa-eye-slash");
-  } else {
-    input.type = "password";
-    icon.classList.replace("fa-eye-slash", "fa-eye");
+  function togglePassword(id, el) {
+    const input = document.getElementById(id);
+    const icon = el.querySelector("i");
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.replace("fa-eye", "fa-eye-slash");
+    } else {
+      input.type = "password";
+      icon.classList.replace("fa-eye-slash", "fa-eye");
+    }
   }
-}
+
+  // Popup logic
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("registered") !== "1") return;
+
+    const overlay = document.createElement("div");
+    overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:9999;";
+
+    overlay.innerHTML = `
+      <div style="background:#fff;border-radius:16px;padding:32px 36px;text-align:center;min-width:260px;font-family:'Poppins',sans-serif;">
+        <div style="font-size:36px;margin-bottom:10px;"></div>
+        <p style="font-size:16px;font-weight:600;color:#333;margin:0 0 6px;">You're all set!</p>
+        <p style="font-size:13px;color:#888;margin:0 0 20px;">Your account has been created.</p>
+        <button id="popup-btn" style="padding:10px 28px;background:#4E8DC0;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">Sign in</button>
+      </div>`;
+
+    document.body.appendChild(overlay);
+
+    document.getElementById("popup-btn").onclick = function () {
+      window.location.href = "login.html";
+    };
+  })();
 </script>
 </body>
 </html>

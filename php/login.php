@@ -1,4 +1,5 @@
 <?php
+// login.php
 session_start();
 include "db.php";
 
@@ -10,18 +11,25 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $username);
 $stmt->execute();
 $result = $stmt->get_result();
-
+ 
 if ($result->num_rows == 1) {
     $user = $result->fetch_assoc();
 
     if (password_verify($password, $user['password'])) {
-        $_SESSION['user'] = $username;
-        header("Location: ../dashboard.html");
-        exit();
+
+    $_SESSION['user'] = $username;
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['role'] = $user['role'];
+
+    if ($user['role'] == 'admin') {
+        header("Location: ../admin/admin.html");
     } else {
-        echo "Wrong password";
+        header("Location: ../dashboard.html");
     }
+    exit();
+}
 } else {
-    echo "User not found";
+    header("Location: ../login.html?error=user_not_found");
+    exit();
 }
 ?>

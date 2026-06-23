@@ -305,7 +305,6 @@
     font-family: 'Poppins', sans-serif;
   }
 
-  /* Delete Confirm */
   .confirm-modal {
     background: white;
     border-radius: 10px;
@@ -580,7 +579,64 @@
   });
 
   render();
-</script>
 
+  function () {
+  const base = (function () {
+    const scripts = document.querySelectorAll('script[src]');
+    for (const s of scripts) {
+      if (s.src.includes('userstate.js')) {
+        // go up from js/ to the project root, then into php/
+        return s.src.replace(/js\/userstate\.js.*$/, 'php/');
+      }
+    }
+    return 'php/'; // fallback
+  })();
+
+  function applyUser(username, photoUrl) {
+    // ── Username ──────────────────────────────────────────────
+    const nameEl = document.getElementById('topbarUsername');
+    if (nameEl) nameEl.textContent = username || 'User';
+
+    // ── Avatar ───────────────────────────────────────────────
+    const av = document.getElementById('topbarAvatar');
+    if (!av) return;
+
+    if (photoUrl) {
+      const img = document.createElement('img');
+      img.alt   = username || 'avatar';
+      img.src   = photoUrl;
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+      img.onerror = () => {
+        av.innerHTML = '<i class="fa-regular fa-user"></i>';
+      };
+      av.innerHTML = '';
+      av.appendChild(img);
+    } else {
+      av.innerHTML = '<i class="fa-regular fa-user"></i>';
+    }
+  }
+
+  async function loadUserState() {
+    try {
+      const res  = await fetch(base + 'userprof.php?action=get');
+      const text = await res.text();
+      let data;
+      try { data = JSON.parse(text); } catch (e) { return; }
+      if (data.success && data.user) {
+        applyUser(data.user.username, data.user.photo || null);
+      }
+    } catch (e) {
+      // Silently fail — topbar just shows default icon
+    }
+  }
+
+  // Run after DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadUserState);
+  } else {
+    loadUserState();
+  }
+}();
+</script>
 </body>
 </html>

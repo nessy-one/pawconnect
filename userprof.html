@@ -31,274 +31,209 @@ body { background: #F4F1E6; }
 }
 
 .logo-circle {
-  width: 52px;
-  height: 52px;
+  width: 52px; height: 52px;
   border-radius: 50%;
   background-color: #3b8fc4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   overflow: hidden;
   margin-bottom: 20px;
   flex-shrink: 0;
 }
-
-.logo-circle img {
-  width: 52px;
-  height: 52px;
-  object-fit: cover;
-}
+.logo-circle img { width: 52px; height: 52px; object-fit: cover; }
 
 .menu-item {
   padding: 11px 14px;
   border-radius: 8px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  display: flex; align-items: center; gap: 10px;
   text-decoration: none;
   color: #012224;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 13px; font-weight: 500;
   transition: background 0.15s, color 0.15s;
 }
-
 .menu-item:hover { background: #e0ddd2; }
 .menu-item.active { background: #AFC4D6; color: #012224; }
 .menu-item i { width: 18px; text-align: center; font-size: 14px; }
 
-.sidebar-divider {
-  height: 1px;
-  background: #ddd;
-  margin: 8px 0;
-}
+.sidebar-divider { height: 1px; background: #ddd; margin: 8px 0; }
 
 /* ── MAIN ─────────────────────────────────────────────────── */
 .main { flex: 1; padding: 20px 28px; overflow-y: auto; }
 
 /* ── TOPBAR ───────────────────────────────────────────────── */
 .topbar {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 20px;
+  display: flex; justify-content: flex-end; align-items: center;
+  gap: 18px; margin-bottom: 20px;
 }
-
-.topbar a {
-  color: #012224;
-  text-decoration: none;
-  font-size: 18px;
-  transition: opacity 0.15s;
-}
-
+.topbar a { color: #012224; text-decoration: none; font-size: 18px; transition: opacity 0.15s; }
 .topbar a:hover { opacity: 0.65; }
 
-.topbar-user {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #012224;
-}
-
+.topbar-user { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: #012224; }
 .topbar-user .avatar {
-  width: 32px;
-  height: 32px;
+  width: 32px; height: 32px;
   border-radius: 50%;
   background: #ddd;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 15px;
-  color: #555;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; color: #555;
   overflow: hidden;
+  transition: transform 0.2s;
 }
-
-.topbar-user .avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.topbar-user .avatar:hover { transform: scale(1.08); }
+.topbar-user .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
 /* ── CARD ─────────────────────────────────────────────────── */
-.card {
-  background: #fff;
-  padding: 24px;
-  border-radius: 10px;
-  display: flex;
-  gap: 30px;
-}
+.card { background: #fff; padding: 24px; border-radius: 10px; display: flex; gap: 30px; }
 
 /* ── FORM SECTION ─────────────────────────────────────────── */
 .form-section { flex: 2; }
+.form-section h2 { font-size: 18px; font-weight: 600; color: #012224; margin-bottom: 20px; }
 
-.form-section h2 {
-  font-size: 18px;
-  font-weight: 600;
-  color: #012224;
-  margin-bottom: 20px;
-}
-
-.form-group {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  width: 140px;
-  font-size: 13.5px;
-  color: #333;
-  flex-shrink: 0;
-}
-
+.form-group { display: flex; align-items: center; margin-bottom: 15px; }
+.form-group label { width: 140px; font-size: 13.5px; color: #333; flex-shrink: 0; }
 .form-group input[type="text"],
 .form-group input[type="email"] {
-  flex: 1;
-  padding: 9px 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-family: 'Poppins', sans-serif;
-  font-size: 13px;
+  flex: 1; padding: 9px 10px;
+  border: 1px solid #ccc; border-radius: 6px;
+  font-family: 'Poppins', sans-serif; font-size: 13px;
   transition: border-color 0.15s;
 }
-
 .form-group input[type="text"]:focus,
-.form-group input[type="email"]:focus {
-  outline: none;
-  border-color: #4E8DC0;
-}
+.form-group input[type="email"]:focus { outline: none; border-color: #4E8DC0; }
 
-.gender {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
+.gender { display: flex; gap: 10px; flex-wrap: wrap; }
 .gender label {
-  width: auto;
-  border: 1px solid #ccc;
-  padding: 7px 15px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  width: auto; border: 1px solid #ccc; padding: 7px 15px;
+  border-radius: 20px; cursor: pointer; font-size: 13px;
+  display: flex; align-items: center; gap: 6px;
   transition: background 0.15s, border-color 0.15s;
 }
-
 .gender label:hover { background: #f0f0f0; }
-
 .gender input[type="radio"] { accent-color: #4E8DC0; }
 
 .btn {
-  margin-top: 20px;
-  padding: 9px 20px;
-  background: #4E8DC0;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-family: 'Poppins', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
+  margin-top: 20px; padding: 9px 20px;
+  background: #4E8DC0; color: white; border: none; border-radius: 6px;
+  cursor: pointer; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;
   transition: background 0.15s;
 }
-
 .btn:hover { background: #3a7aad; }
+.btn:disabled { background: #9ab8d0; cursor: not-allowed; }
 
 /* ── IMAGE SECTION ────────────────────────────────────────── */
 .image-section {
-  flex: 1;
-  border-left: 1px solid #ccc;
-  padding-left: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 10px;
+  flex: 1; border-left: 1px solid #ccc; padding-left: 30px;
+  display: flex; flex-direction: column; align-items: center; padding-top: 10px;
 }
 
+/* Profile picture circle — hover reveals overlay controls */
 .profile-pic {
-  width: 120px;
-  height: 120px;
-  background: #ddd;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40px;
-  color: #888;
-  overflow: hidden;
-  margin-bottom: 16px;
+  width: 120px; height: 120px;
+  background: #ddd; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px; color: #888; overflow: hidden; margin-bottom: 16px;
+  position: relative;
+  cursor: pointer;
 }
-
 .profile-pic img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100%; height: 100%; object-fit: cover;
+  display: none;
+  transition: filter 0.2s;
 }
+.profile-pic:hover img { filter: brightness(0.75); }
+
+/* Hover edit-icon overlay */
+.pic-hover-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.35);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.profile-pic:hover .pic-hover-overlay { opacity: 1; }
+.pic-hover-overlay i { font-size: 22px; color: #fff; }
+
+/* Spinner overlay while uploading */
+.loading-overlay {
+  position: absolute; inset: 0;
+  background: rgba(255,255,255,0.75);
+  display: none; align-items: center; justify-content: center;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.loading-overlay.active { display: flex; }
+.loading-overlay i { font-size: 22px; color: #4E8DC0; animation: spin 0.9s linear infinite; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Hidden real file input */
+#photoFileInput { display: none; }
 
 .upload-btn {
-  padding: 8px 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  cursor: pointer;
-  background: #f5f5f5;
-  font-size: 13px;
-  font-family: 'Poppins', sans-serif;
-  transition: background 0.15s;
+  padding: 8px 16px; border: 1px solid #ccc; border-radius: 6px;
+  cursor: pointer; background: #f5f5f5; font-size: 13px;
+  font-family: 'Poppins', sans-serif; transition: background 0.15s, border-color 0.15s;
+  user-select: none;
+  display: flex; align-items: center; gap: 6px;
 }
+.upload-btn:hover { background: #e8e8e8; border-color: #aaa; }
 
-.upload-btn:hover { background: #e8e8e8; }
-
-.remove {
-  margin-top: 10px;
-  font-size: 12px;
-  color: gray;
-  cursor: pointer;
-  text-decoration: underline;
+.remove-btn {
+  margin-top: 10px; font-size: 12px; color: #888;
+  cursor: pointer; text-decoration: underline;
+  display: none;
+  background: none; border: none; font-family: 'Poppins', sans-serif;
+  transition: color 0.15s;
 }
+.remove-btn:hover { color: #c0392b; }
 
-.remove:hover { color: #c0392b; }
+.img-hint {
+  margin-top: 10px; font-size: 11px; color: #aaa; text-align: center; line-height: 1.6;
+}
 
 /* ── POPUP ────────────────────────────────────────────────── */
 .popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.3);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 200;
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.25);
+  display: none; align-items: center; justify-content: center; z-index: 200;
 }
-
 .popup-box {
-  background: white;
-  padding: 25px 40px;
-  border-radius: 10px;
-  text-align: center;
-  animation: pop 0.3s ease;
+  background: white; padding: 25px 40px; border-radius: 12px;
+  text-align: center; animation: pop 0.25s ease;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
 }
-
-.popup-box i {
-  font-size: 40px;
-  color: #4E8DC0;
-  margin-bottom: 10px;
-  display: block;
-}
-
+.popup-box i { font-size: 38px; color: #4E8DC0; margin-bottom: 10px; display: block; }
 .popup-box p { font-size: 14px; color: #333; }
 
 @keyframes pop {
-  from { transform: scale(0.7); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from { transform: scale(0.75); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
 }
+
+/* ── CONFIRM DIALOG ───────────────────────────────────────── */
+.confirm-popup {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.3);
+  display: none; align-items: center; justify-content: center; z-index: 300;
+}
+.confirm-box {
+  background: white; padding: 28px 36px; border-radius: 12px;
+  text-align: center; min-width: 280px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+  animation: pop 0.25s ease;
+}
+.confirm-box p { font-size: 14px; color: #333; margin-bottom: 20px; }
+.confirm-actions { display: flex; gap: 10px; justify-content: center; }
+.confirm-actions button {
+  padding: 8px 22px; border-radius: 6px; border: none;
+  font-family: 'Poppins', sans-serif; font-size: 13px; cursor: pointer;
+  transition: background 0.15s;
+}
+.confirm-yes { background: #DA8063; color: white; }
+.confirm-yes:hover { background: #c06a50; }
+.confirm-no  { background: #eee; color: #333; }
+.confirm-no:hover  { background: #ddd; }
 </style>
 </head>
 
@@ -309,25 +244,22 @@ body { background: #F4F1E6; }
   <div class="sidebar">
     <a href="dashboard.html">
       <div class="logo-circle">
-        <img src="image/logo.png" alt="PawConnect Logo">
+        <img src="image/logo.png" alt="PawConnect Logo" onerror="this.style.display='none'">
       </div>
     </a>
 
     <a href="profile.html" class="menu-item active">
       <i class="fa-regular fa-user"></i> My Account
     </a>
-    <a href="addres.html" class="menu-item">
+    <!-- <a href="addres.html" class="menu-item">
       <i class="fa-solid fa-location-dot"></i> My Addresses
-    </a>
+    </a> -->
     <a href="donation.html" class="menu-item">
       <i class="fa-solid fa-hand-holding-heart"></i> My Donations
     </a>
     <a href="report.html" class="menu-item">
       <i class="fa-solid fa-bug"></i> My Reports
     </a>
-    <!-- <a href="reservations.html" class="menu-item">
-      <i class="fa-regular fa-calendar-check"></i> Reservations
-    </a> -->
     <a href="save.html" class="menu-item">
       <i class="fa-regular fa-heart"></i> Saves
     </a>
@@ -350,8 +282,10 @@ body { background: #F4F1E6; }
       <a href="notifications.html" title="Notifications"><i class="fa-regular fa-bell"></i></a>
       <a href="save.html" title="Saves"><i class="fa-regular fa-heart"></i></a>
       <div class="topbar-user">
-        <div class="avatar"><i class="fa-regular fa-user"></i></div>
-        <span>User</span>
+        <div class="avatar" id="topbarAvatar">
+          <i class="fa-regular fa-user" id="topbarIcon"></i>
+        </div>
+        <span id="topbarUsername">User</span>
       </div>
     </div>
 
@@ -362,82 +296,314 @@ body { background: #F4F1E6; }
 
         <div class="form-group">
           <label>Username</label>
-          <input type="text" placeholder="Username">
+          <input type="text" id="inputUsername" placeholder="Username">
         </div>
 
         <div class="form-group">
           <label>Name</label>
-          <input type="text" placeholder="Name">
+          <input type="text" id="inputName" placeholder="Name">
         </div>
 
         <div class="form-group">
           <label>Email</label>
-          <input type="email" placeholder="Email">
+          <input type="email" id="inputEmail" placeholder="Email">
         </div>
 
         <div class="form-group">
           <label>Mobile Number</label>
-          <input type="text" placeholder="+">
+          <input type="text" id="inputMobile" placeholder="+">
         </div>
 
         <div class="form-group">
           <label>Gender</label>
           <div class="gender">
-            <label><input type="radio" name="gender"> Female</label>
-            <label><input type="radio" name="gender"> Male</label>
-            <label><input type="radio" name="gender"> Other</label>
+            <label><input type="radio" name="gender" value="Female"> Female</label>
+            <label><input type="radio" name="gender" value="Male"> Male</label>
+            <label><input type="radio" name="gender" value="Other"> Other</label>
           </div>
         </div>
 
-        <button class="btn" onclick="saveChanges()">SAVE CHANGES</button>
+        <button class="btn" id="saveBtn" onclick="saveChanges()">SAVE CHANGES</button>
       </div>
 
       <!-- IMAGE SECTION -->
       <div class="image-section">
-        <div class="profile-pic">
-          <i class="fa-regular fa-user"></i>
+
+        <!-- Clicking the circle also triggers file pick -->
+        <div class="profile-pic" id="profilePicContainer" onclick="document.getElementById('photoFileInput').click()">
+          <i class="fa-regular fa-user" id="profilePlaceholderIcon"></i>
+          <img id="profilePicImg" src="" alt="Profile">
+          <!-- Hover overlay -->
+          <div class="pic-hover-overlay">
+            <i class="fa-solid fa-camera"></i>
+          </div>
+          <!-- Spinner -->
+          <div class="loading-overlay" id="photoLoadingOverlay">
+            <i class="fa-solid fa-spinner"></i>
+          </div>
         </div>
-        <div class="upload-btn">Select image</div>
-        <div class="remove">Remove</div>
+
+        <!-- Hidden file input -->
+        <input type="file" id="photoFileInput" accept="image/jpeg,image/png,image/gif,image/webp">
+
+        <div class="upload-btn" onclick="document.getElementById('photoFileInput').click()">
+          <i class="fa-solid fa-arrow-up-from-bracket" style="font-size:12px;"></i>
+          Select image
+        </div>
+
+        <button class="remove-btn" id="removePhotoBtn" onclick="confirmRemovePhoto()">
+          Remove photo
+        </button>
+
+        <p class="img-hint">JPEG, PNG, GIF or WEBP<br>Max 5 MB</p>
       </div>
     </div>
 
   </div>
 </div>
 
-<!-- POPUP -->
+<!-- SUCCESS / ERROR POPUP -->
 <div id="popup" class="popup">
   <div class="popup-box">
-    <i class="fa-solid fa-circle-check"></i>
-    <p>Changes saved successfully!</p>
+    <i id="popupIcon" class="fa-solid fa-circle-check"></i>
+    <p id="popupText">Changes saved successfully!</p>
+  </div>
+</div>
+
+<!-- CONFIRM REMOVE POPUP -->
+<div id="confirmPopup" class="confirm-popup">
+  <div class="confirm-box">
+    <p>Remove your profile photo?</p>
+    <div class="confirm-actions">
+      <button class="confirm-yes" onclick="doRemovePhoto()">Remove</button>
+      <button class="confirm-no"  onclick="closeConfirm()">Cancel</button>
+    </div>
   </div>
 </div>
 
 <script>
-function saveChanges() {
-  const username = document.querySelector('input[placeholder="Username"]').value;
-  const name     = document.querySelector('input[placeholder="Name"]').value;
-  const email    = document.querySelector('input[placeholder="Email"]').value;
-  const mobile   = document.querySelector('input[placeholder="+"]').value;
-  const gender   = document.querySelector('input[name="gender"]:checked');
+  // ── CONFIG ────────────────────────────────────────────────
+  const API = 'php/userprof.php';
 
-  const popup     = document.getElementById("popup");
-  const popupText = popup.querySelector("p");
-  const popupIcon = popup.querySelector("i");
+  // ── HELPERS ───────────────────────────────────────────────
+  function showPopup(message, isError = false) {
+    const popup     = document.getElementById('popup');
+    const popupText = document.getElementById('popupText');
+    const popupIcon = document.getElementById('popupIcon');
 
-  if (!username || !name || !email || !mobile || !gender) {
-    popupText.textContent  = "Please fill in all fields!";
-    popupIcon.className    = "fa-solid fa-circle-exclamation";
-    popupIcon.style.color  = "#DA8063";
-  } else {
-    popupText.textContent  = "Changes saved successfully!";
-    popupIcon.className    = "fa-solid fa-circle-check";
-    popupIcon.style.color  = "#4E8DC0";
+    popupText.textContent = message;
+    if (isError) {
+      popupIcon.className   = 'fa-solid fa-circle-exclamation';
+      popupIcon.style.color = '#DA8063';
+    } else {
+      popupIcon.className   = 'fa-solid fa-circle-check';
+      popupIcon.style.color = '#4E8DC0';
+    }
+    popup.style.display = 'flex';
+    setTimeout(() => { popup.style.display = 'none'; }, 2200);
   }
 
-  popup.style.display = "flex";
-  setTimeout(() => { popup.style.display = "none"; }, 1500);
-}
+  /**
+   * Central function that keeps BOTH the large profile pic
+   * AND the topbar avatar in sync.
+   * Pass a data-URL / remote URL, or null to clear.
+   */
+  function setProfilePhoto(url) {
+    const img         = document.getElementById('profilePicImg');
+    const placeholder = document.getElementById('profilePlaceholderIcon');
+    const removeBtn   = document.getElementById('removePhotoBtn');
+    const topbarAv    = document.getElementById('topbarAvatar');
+
+    if (url) {
+      // Show image; if it fails to load (broken URL), fall back to placeholder
+      img.onerror = () => {
+        img.style.display         = 'none';
+        placeholder.style.display = '';
+        removeBtn.style.display   = 'none';
+      };
+      img.src                   = url;
+      img.style.display         = 'block';
+      placeholder.style.display = 'none';
+      removeBtn.style.display   = 'block';
+
+      // Topbar avatar
+      topbarAv.innerHTML = '';
+      const avImg = document.createElement('img');
+      avImg.src   = url;
+      avImg.alt   = 'avatar';
+      avImg.onerror = () => { topbarAv.innerHTML = '<i class="fa-regular fa-user"></i>'; };
+      topbarAv.appendChild(avImg);
+    } else {
+      img.style.display         = 'none';
+      img.src                   = '';
+      placeholder.style.display = '';
+      removeBtn.style.display   = 'none';
+      topbarAv.innerHTML = '<i class="fa-regular fa-user" id="topbarIcon"></i>';
+    }
+  }
+
+  function setPhotoLoading(on) {
+    document.getElementById('photoLoadingOverlay').classList.toggle('active', on);
+    // Disable circle click while loading
+    document.getElementById('profilePicContainer').style.pointerEvents = on ? 'none' : '';
+  }
+
+  // ── CONFIRM DIALOG ────────────────────────────────────────
+  function confirmRemovePhoto() {
+    document.getElementById('confirmPopup').style.display = 'flex';
+  }
+  function closeConfirm() {
+    document.getElementById('confirmPopup').style.display = 'none';
+  }
+
+  // ── LOAD PROFILE ON PAGE LOAD ─────────────────────────────
+  async function loadProfile() {
+    try {
+      const res  = await fetch(`${API}?action=get`);
+      const text = await res.text();
+      let data;
+      try { data = JSON.parse(text); }
+      catch(e) { showPopup('Server error (load): ' + text.substring(0, 120), true); return; }
+
+      if (!data.success) { showPopup(data.message || 'Failed to load profile.', true); return; }
+
+      const u = data.user;
+      document.getElementById('inputUsername').value        = u.username || '';
+      document.getElementById('inputName').value            = u.name     || '';
+      document.getElementById('inputEmail').value           = u.email    || '';
+      document.getElementById('inputMobile').value          = u.mobile   || '';
+      document.getElementById('topbarUsername').textContent = u.username || 'User';
+
+      if (u.gender) {
+        document.querySelectorAll('input[name="gender"]')
+          .forEach(r => { r.checked = (r.value === u.gender); });
+      }
+      setProfilePhoto(u.photo || null);
+    } catch (err) {
+      showPopup('Could not reach server. Is Apache/PHP running?', true);
+    }
+  }
+
+  // ── SAVE CHANGES ─────────────────────────────────────────
+  async function saveChanges() {
+    const username = document.getElementById('inputUsername').value.trim();
+    const name     = document.getElementById('inputName').value.trim();
+    const email    = document.getElementById('inputEmail').value.trim();
+    const mobile   = document.getElementById('inputMobile').value.trim();
+    const genderEl = document.querySelector('input[name="gender"]:checked');
+    const gender   = genderEl ? genderEl.value : '';
+
+    if (!username || !name || !email) {
+      showPopup('Username, name, and email are required!', true); return;
+    }
+
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.disabled = true; saveBtn.textContent = 'Saving…';
+
+    try {
+      const res  = await fetch(`${API}?action=update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, name, email, mobile, gender }),
+      });
+      const text = await res.text();
+      let data;
+      try { data = JSON.parse(text); }
+      catch(e) { showPopup('Server error (save): ' + text.substring(0, 120), true); return; }
+
+      if (data.success) {
+        document.getElementById('topbarUsername').textContent = username;
+        showPopup('Changes saved successfully!');
+      } else {
+        showPopup(data.message || 'Failed to save changes.', true);
+      }
+    } catch (err) {
+      showPopup('Could not reach server. Is Apache/PHP running?', true);
+    } finally {
+      saveBtn.disabled = false; saveBtn.textContent = 'SAVE CHANGES';
+    }
+  }
+
+  // ── PHOTO UPLOAD ──────────────────────────────────────────
+  document.getElementById('photoFileInput').addEventListener('change', async function () {
+    const file = this.files[0];
+    if (!file) return;
+
+    const allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowed.includes(file.type)) {
+      showPopup('Only JPEG, PNG, GIF, or WEBP images are allowed.', true);
+      this.value = '';
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      showPopup('Image must be smaller than 5 MB.', true);
+      this.value = '';
+      return;
+    }
+
+    // ── Instant local preview BEFORE hitting the server ──
+    const reader = new FileReader();
+    reader.onload = (e) => setProfilePhoto(e.target.result);
+    reader.readAsDataURL(file);
+
+    setPhotoLoading(true);
+
+    const formData = new FormData();
+    formData.append('action', 'upload_photo');
+    formData.append('photo', file);
+
+    try {
+      const res  = await fetch(API, { method: 'POST', body: formData });
+      const text = await res.text();
+      let data;
+      try { data = JSON.parse(text); }
+      catch(e) { setProfilePhoto(null); showPopup('Server error (photo): ' + text.substring(0, 120), true); return; }
+
+      if (data.success) {
+        // Keep the local data-URL preview already shown — no flicker.
+        // Store the server URL on the img as a data attribute for future reloads.
+        document.getElementById('profilePicImg').dataset.serverUrl = data.photo;
+        showPopup('Profile photo updated!');
+      } else {
+        setProfilePhoto(null);
+        showPopup(data.message || 'Photo upload failed.', true);
+      }
+    } catch (err) {
+      showPopup('Could not reach server. Is Apache/PHP running?', true);
+    } finally {
+      setPhotoLoading(false);
+      this.value = '';
+    }
+  });
+
+  // ── REMOVE PHOTO (called after confirm) ──────────────────
+  async function doRemovePhoto() {
+    closeConfirm();
+    setPhotoLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('action', 'remove_photo');
+
+      const res  = await fetch(API, { method: 'POST', body: formData });
+      const data = await res.json();
+
+      if (data.success) {
+        setProfilePhoto(null);   // clears both avatar + large pic
+        showPopup('Profile photo removed.');
+      } else {
+        showPopup(data.message || 'Could not remove photo.', true);
+      }
+    } catch (err) {
+      console.error(err);
+      showPopup('Could not connect to server.', true);
+    } finally {
+      setPhotoLoading(false);
+    }
+  }
+
+  // ── INIT ──────────────────────────────────────────────────
+  loadProfile();
 </script>
 
 </body>

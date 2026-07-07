@@ -22,7 +22,7 @@ if ($result->num_rows == 1) {
     $_SESSION['role'] = $user['role'];
 
     if ($user['role'] == 'admin') {
-        header("Location: ../admin/admin.html");
+        header("Location: ../admin/admin_dashboard.php");
     } else {
         header("Location: ../dashboard.html");
     }

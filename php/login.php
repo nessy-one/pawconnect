@@ -11,24 +11,29 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $username);
 $stmt->execute();
 $result = $stmt->get_result();
- 
+
 if ($result->num_rows == 1) {
     $user = $result->fetch_assoc();
 
     if (password_verify($password, $user['password'])) {
 
-    $_SESSION['user'] = $username;
-    $_SESSION['user_id'] = $user['id'];
-    $_SESSION['role'] = $user['role'];
+        $_SESSION['user'] = $username;
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['role'] = $user['role'];
 
-    if ($user['role'] == 'admin') {
-        header("Location: ../admin/admin_dashboard.php");
+        if ($user['role'] == 'admin') {
+            header("Location: ../admin/admin_dashboard.php");
+        } else {
+            header("Location: ../dashboard.html");
+        }
+        exit();
     } else {
-        header("Location: ../dashboard.html");
+        // password didn't match
+        header("Location: ../login.html?error=wrong_password");
+        exit();
     }
-    exit();
-}
 } else {
+    // no user with that username
     header("Location: ../login.html?error=user_not_found");
     exit();
 }

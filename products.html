@@ -249,20 +249,58 @@
             border-radius: 20px;
             width: 100%;
             max-width: 420px;
-            overflow: hidden;
+            max-height: 88vh;
+            overflow-y: auto;
             box-shadow: 0 12px 48px rgba(0,0,0,0.25);
             animation: slideUp .22s ease;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0,0,0,.15) transparent;
         }
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        .modal-img { width: 100%; height: 260px; object-fit: contain; display: block; background: #ffffff; padding: 16px; }
-        .modal-body { padding: 22px 24px 28px; }
+        .modal-img { width: 100%; height: 240px; object-fit: contain; display: block; background: #ffffff; padding: 16px; }
+        .modal-body { padding: 22px 24px 24px; }
         .modal-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
-        .modal-name { font-size: 22px; font-weight: 700; color: var(--dark); }
-        .modal-price { font-size: 20px; color: var(--salmon); font-weight: 700; margin-bottom: 10px; }
-        .modal-tag { display: inline-block; background: var(--blue); color: #fff; font-size: 11px; padding: 3px 12px; border-radius: 999px; margin-bottom: 12px; }
-        .modal-desc { font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 20px; }
-        .modal-actions { display: flex; }
+        .modal-name { font-size: 21px; font-weight: 700; color: var(--dark); line-height: 1.25; }
+        .modal-price { font-size: 19px; color: var(--salmon); font-weight: 700; margin-bottom: 10px; }
+        .modal-tag { display: inline-block; background: var(--blue); color: #fff; font-size: 11px; font-weight: 600; letter-spacing: .3px; padding: 4px 13px; border-radius: 999px; margin-bottom: 14px; }
+        .modal-desc { font-size: 13.5px; color: #5b5b5b; line-height: 1.7; margin-bottom: 22px; }
+
+        /* ── SIMILAR PRODUCTS ── */
+        .modal-similar { margin-top: 4px; padding-top: 18px; border-top: 1px solid rgba(0,0,0,0.08); }
+        .modal-similar-label {
+            font-size: 11px; font-weight: 700; letter-spacing: 2px;
+            color: var(--gray); text-transform: uppercase; margin-bottom: 10px;
+        }
+        .similar-list {
+            display: flex; flex-direction: column;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1.5px solid rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .similar-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            transition: background .15s;
+        }
+        .similar-item:last-child { border-bottom: none; }
+        .similar-item:hover { background: rgba(78,141,192,.08); }
+        .similar-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: var(--salmon); flex-shrink: 0;
+        }
+        .similar-name {
+            flex: 1; font-size: 12.5px; font-weight: 600; color: var(--dark);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .similar-price {
+            font-size: 12.5px; font-weight: 700; color: var(--salmon); flex-shrink: 0;
+        }
+
+        .modal-actions { display: flex; margin-top: 20px; }
 
         .btn-close-modal {
             background: #e5e0d0; color: #444;
@@ -432,7 +470,7 @@
             <div class="modal-price" id="modalPrice"></div>
             <span class="modal-tag" id="modalTag"></span>
             <div class="modal-desc" id="modalDesc"></div>
-            <div id="modalSimilar" style="margin-top:16px;"></div>
+            <div id="modalSimilar"></div>
             <div class="modal-actions">
                 <button class="btn-close-modal" onclick="document.getElementById('modalOverlay').classList.remove('open')">Close</button>
             </div>
@@ -622,39 +660,75 @@
     });
 
     // ── OPEN PRODUCT MODAL ──────────────────────────────────────────
-    function openModal(card) {
-        const img = card.querySelector('.card-img-wrap img');
-        document.getElementById('modalImg').src           = img.src;
-        document.getElementById('modalImg').alt           = img.alt;
-        document.getElementById('modalName').textContent  = img.dataset.name;
-        document.getElementById('modalPrice').textContent = img.dataset.price;
-        const cat = img.dataset.category;
+    // Accepts either a .pet-card element (from the grid) or a plain
+    // product data object (from a "Similar Products" click).
+    function openModal(source) {
+        let data;
+        if (source instanceof HTMLElement) {
+            const img = source.querySelector('.card-img-wrap img');
+            data = {
+                id:          source.dataset.id,
+                name:        img.dataset.name,
+                price:       img.dataset.price,      // already formatted, e.g. "₱ 200"
+                category:    img.dataset.category,
+                description: img.dataset.desc,
+                image:       img.getAttribute('src')
+            };
+        } else {
+            data = {
+                id:          source.id,
+                name:        source.name,
+                price:       '₱ ' + parseFloat(source.price).toLocaleString(),
+                category:    source.category,
+                description: source.description || '',
+                image:       source.image ? `product/${source.image}` : ''
+            };
+        }
+        renderModal(data);
+    }
+
+    function renderModal(data) {
+        document.getElementById('modalImg').src           = data.image;
+        document.getElementById('modalImg').alt           = data.name;
+        document.getElementById('modalName').textContent  = data.name;
+        document.getElementById('modalPrice').textContent = data.price;
+        const cat = (data.category || '').toString();
         document.getElementById('modalTag').textContent   = cat.charAt(0).toUpperCase() + cat.slice(1);
-        document.getElementById('modalDesc').textContent  = img.dataset.desc;
+        document.getElementById('modalDesc').textContent  = data.description;
         document.getElementById('modalSimilar').innerHTML = '';
         document.getElementById('modalOverlay').classList.add('open');
+        // reset scroll position so a long similar-products list from the
+        // previous product doesn't leave the new modal scrolled down
+        document.getElementById('modal').scrollTop = 0;
 
-        const productId = card.dataset.id;
+        loadSimilar(data.id);
+    }
+
+    function loadSimilar(productId) {
         fetch(`php/recommend.php?module=products&user_id=${USER_ID}&product_id=${productId}`)
             .then(r => r.json())
             .then(data => {
                 if (!data.success || !data.recommendations.length) return;
                 const container = document.getElementById('modalSimilar');
                 container.innerHTML = `
-                    <p style="font-size:11px;font-weight:700;letter-spacing:2px;
-                            color:#8A8686;text-transform:uppercase;margin-bottom:10px;">
-                        Similar Products
-                    </p>
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                        ${data.recommendations.map(p => `
-                            <div style="font-size:12px;background:#F4F1E6;border-radius:8px;
-                                        padding:6px 12px;cursor:pointer;border:1.5px solid #e0dbd0;
-                                        transition:background 0.15s;"
-                                onmouseover="this.style.background='#DA8063';this.style.color='#fff'"
-                                onmouseout="this.style.background='#F4F1E6';this.style.color='inherit'">
-                                ${p.name} — ₱${parseFloat(p.price).toFixed(2)}
-                            </div>`).join('')}
+                    <div class="modal-similar">
+                        <p class="modal-similar-label">Similar Products</p>
+                        <div class="similar-list">
+                            ${data.recommendations.map(p => `
+                                <div class="similar-item" data-product='${JSON.stringify(p).replace(/'/g, "&apos;")}'>
+                                    <span class="similar-dot"></span>
+                                    <span class="similar-name">${p.name}</span>
+                                    <span class="similar-price">₱${parseFloat(p.price).toFixed(2)}</span>
+                                </div>`).join('')}
+                        </div>
                     </div>`;
+
+                container.querySelectorAll('.similar-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const product = JSON.parse(item.dataset.product);
+                        openModal(product);
+                    });
+                });
             })
             .catch(() => {});
     }

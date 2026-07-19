@@ -24,7 +24,7 @@ if (!empty($_GET['category']) && $_GET['category'] !== 'all') {
     $conditions[] = "category = ?";
     $params[]     = $_GET['category'];
 }
-
+ 
 // ── SEARCH filter — now checks name, category, AND description ───
 if (!empty($_GET['search'])) {
     $t = '%' . $_GET['search'] . '%';

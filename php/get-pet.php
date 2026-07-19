@@ -7,7 +7,7 @@ $user = "root";
 $pass = "123456";
 $db   = "pawconnect";
 $charset = 'utf8mb4';
- 
+  
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db;charset=$charset", $user, $pass, [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,

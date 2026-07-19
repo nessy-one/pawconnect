@@ -33,8 +33,8 @@ if (!empty($_GET['type']) && in_array($_GET['type'], ['cat', 'dog'])) {
 // ── SEARCH filter — checks name, breed, shelter, AND location ────
 if (!empty($_GET['search'])) {
     $t = '%' . $_GET['search'] . '%';
-    $conditions[] = "(name LIKE ? OR breed LIKE ? OR shelter LIKE ? OR location LIKE ?)";
-    array_push($params, $t, $t, $t, $t);
+    $conditions[] = "(name LIKE ? OR breed LIKE ? OR shelter LIKE ? OR location LIKE ? OR type LIKE ?)";
+    array_push($params, $t, $t, $t, $t, $t);
 }
 
 // ── BREED filter ─────────────────────────────────────────────────
@@ -55,7 +55,7 @@ if (!empty($filterBreeds)) {
 $allowedAges = ['0-1', '2-3', '4-6', '7+'];
 $filterAges  = isset($_GET['age']) ? (array)$_GET['age'] : [];
 $filterAges  = array_filter($filterAges, fn($a) => in_array($a, $allowedAges));
-
+ 
 if (!empty($filterAges)) {
     $ageClauses = [];
     foreach ($filterAges as $range) {

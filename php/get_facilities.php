@@ -27,7 +27,7 @@ function haversine($lat1, $lon1, $lat2, $lon2) {
             sin($dLon / 2) * sin($dLon / 2);
     return $earth_radius * 2 * atan2(sqrt($a), sqrt(1 - $a));
 }
-
+ 
 // Build query — filter by type if not "All"
 // supports optional search sent from the search bar
 $conditions = [];

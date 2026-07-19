@@ -83,7 +83,33 @@ body {
   display: flex; align-items: center; justify-content: space-between;
   position: sticky; top: 0; z-index: 10; flex-shrink: 0;
 }
-.topbar-left h1 { font-size: 16px; font-weight: 600; color: #012224; }
+
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.topbar-brand { display: flex; align-items: center; gap: 9px; }
+.topbar-mark { 
+  width: 30px; 
+  height: 30px; 
+  border-radius: 50%; 
+  background: #4E8DC0; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  color: #fff; 
+  font-size: 15px; 
+  flex-shrink: 0; 
+  overflow: hidden; 
+}
+.topbar-mark img { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+  border-radius: 50%; 
+}
+
+.topbar-brand-name { font-size: 14.5px; font-weight: 700; color: #012224; letter-spacing: -.01em; }
+.topbar-divider { width: 1px; height: 20px; background: rgba(1,34,36,0.14); }
+.topbar-admin-badge { display: flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: #2b5f8a; background: rgba(78,141,192,0.14); padding: 4px 10px; border-radius: 20px; }
+.topbar-crumb { font-size: 12.5px; color: rgba(1,34,36,0.45); font-weight: 500; }
 .topbar-right { display: flex; align-items: center; gap: 14px; position: relative; }
 .topbar-icon { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid rgba(1,34,36,0.15); display: flex; align-items: center; justify-content: center; cursor: pointer; background: transparent; transition: background .15s; position: relative; }
 .topbar-icon:hover { background: rgba(78,141,192,0.1); }
@@ -348,7 +374,16 @@ body {
   <!-- Topbar -->
   <div class="topbar">
     <div class="topbar-left">
-      <h1 id="topbar-title">Dashboard Analytics</h1>
+      <div class="topbar-brand">
+        <div class="topbar-mark">
+          <img src="admin-img/logo.png" alt="PawConnect logo"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <i class="ti ti-paw" style="display:none"></i>
+        </div>
+        <span class="topbar-brand-name">PawConnect</span>
+      </div>
+      <div class="topbar-divider"></div>
+      <span class="topbar-crumb" id="topbar-title">Dashboard</span>
     </div>
     <div class="topbar-right">
       <!-- Notification Bell -->

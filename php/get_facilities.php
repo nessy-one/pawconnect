@@ -1,12 +1,13 @@
 <?php
-ini_set('display_errors', 1);
+//get_facilities.php
+ini_set('display_errors', '0');
 error_reporting(E_ALL);
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
 require __DIR__ . '/db.php';
-
+ 
 // Validate input
 if (!isset($_POST['latitude']) || !isset($_POST['longitude'])) {
     echo json_encode(['error' => 'Missing coordinates']);
@@ -33,7 +34,8 @@ function haversine($lat1, $lon1, $lat2, $lon2) {
 $conditions = [];
 $bindParams = [];
 $bindTypes  = "";
- 
+
+$conditions[] = "status = 'active'";
 if ($filter !== 'All') {
     $conditions[] = "LOWER(type) = LOWER(?)";
     $bindParams[] = $filter;
@@ -46,9 +48,6 @@ if (!empty($_POST['search'])) {
     $conditions[] = "(name LIKE ? OR address LIKE ? OR description LIKE ?)";
     array_push($bindParams, $t, $t, $t);
     $bindTypes   .= "sss";
-    // $bindParams[] = $searchTerm;
-    // $bindParams[] = $searchTerm;
-    // $bindTypes   .= "ss";
 }
 
 $sql = "SELECT * FROM facility";

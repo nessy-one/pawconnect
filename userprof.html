@@ -18,16 +18,24 @@ body { background: #F4F1E6; }
 .sidebar {
   width: 220px;
   flex-shrink: 0;
-  padding: 24px 16px;
+  padding: 0 16px 24px;
   border-right: 1px solid #ddd;
   background: #F4F1E6;
   display: flex;
   flex-direction: column;
-  gap: 4px;
   position: sticky;
   top: 0;
   height: 100vh;
   overflow-y: auto;
+}
+
+.sidebar-logo {
+  padding: 20px 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 12px;
 }
 
 .logo-circle {
@@ -36,10 +44,17 @@ body { background: #F4F1E6; }
   background-color: #3b8fc4;
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
-  margin-bottom: 20px;
   flex-shrink: 0;
 }
 .logo-circle img { width: 52px; height: 52px; object-fit: cover; }
+
+/* Nav items wrapper — grows to fill space so footer sticks to bottom */
+.sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
 .menu-item {
   padding: 11px 14px;
@@ -55,7 +70,12 @@ body { background: #F4F1E6; }
 .menu-item.active { background: #AFC4D6; color: #012224; }
 .menu-item i { width: 18px; text-align: center; font-size: 14px; }
 
-.sidebar-divider { height: 1px; background: #ddd; margin: 8px 0; }
+/* Footer block — logout button, with a divider line above it (matches admin side) */
+.sidebar-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #ddd;
+}
 
 /* ── MAIN ─────────────────────────────────────────────────── */
 .main { flex: 1; padding: 20px 28px; overflow-y: auto; }
@@ -234,6 +254,13 @@ body { background: #F4F1E6; }
 .confirm-yes:hover { background: #c06a50; }
 .confirm-no  { background: #eee; color: #333; }
 .confirm-no:hover  { background: #ddd; }
+
+.logout-icon-circle {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: rgba(78,141,192,0.15); color: #4E8DC0;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px auto; font-size: 20px;
+}
 </style>
 </head>
 
@@ -242,36 +269,41 @@ body { background: #F4F1E6; }
 
   <!-- SIDEBAR -->
   <div class="sidebar">
-    <a href="dashboard.html">
-      <div class="logo-circle">
-        <img src="image/logo.png" alt="PawConnect Logo" onerror="this.style.display='none'">
-      </div>
-    </a>
 
-    <a href="profile.html" class="menu-item active">
-      <i class="fa-regular fa-user"></i> My Account
-    </a>
-    <!-- <a href="addres.html" class="menu-item">
-      <i class="fa-solid fa-location-dot"></i> My Addresses
-    </a> -->
-    <a href="donation.html" class="menu-item">
-      <i class="fa-solid fa-hand-holding-heart"></i> My Donations
-    </a>
-    <a href="report.html" class="menu-item">
-      <i class="fa-solid fa-bug"></i> My Reports
-    </a>
-    <a href="save.html" class="menu-item">
-      <i class="fa-regular fa-heart"></i> Saves
-    </a>
-    <a href="notifications.html" class="menu-item">
-      <i class="fa-regular fa-bell"></i> Notifications
-    </a>
+    <!-- Logo, centered, divider below -->
+    <div class="sidebar-logo">
+      <a href="dashboard.html">
+        <div class="logo-circle">
+          <img src="image/logo.png" alt="PawConnect Logo" onerror="this.style.display='none'">
+        </div>
+      </a>
+    </div>
 
-    <div class="sidebar-divider"></div>
+    <!-- Nav links -->
+    <div class="sidebar-nav">
+      <a href="profile.html" class="menu-item active">
+        <i class="fa-regular fa-user"></i> My Account
+      </a>
+      <a href="donation.html" class="menu-item">
+        <i class="fa-solid fa-hand-holding-heart"></i> My Donations
+      </a>
+      <a href="report.html" class="menu-item">
+        <i class="fa-solid fa-bug"></i> Reports &amp; Feedback
+      </a>
+      <a href="save.html" class="menu-item">
+        <i class="fa-regular fa-heart"></i> Saves
+      </a>
+      <a href="notifications.html" class="menu-item">
+        <i class="fa-regular fa-bell"></i> Notifications
+      </a>
+    </div>
 
-    <a href="php/logout.php" class="menu-item">
-      <i class="fa-solid fa-right-from-bracket"></i> Log out
-    </a>
+    <!-- Logout, pinned to bottom, divider above -->
+    <div class="sidebar-footer">
+      <a href="php/logout.php" class="menu-item" onclick="event.preventDefault(); confirmLogout();">
+        <i class="fa-solid fa-right-from-bracket"></i> Log out
+      </a>
+    </div>
   </div>
 
   <!-- MAIN -->
@@ -381,6 +413,19 @@ body { background: #F4F1E6; }
   </div>
 </div>
 
+<!-- CONFIRM LOGOUT POPUP -->
+<div id="logoutConfirmPopup" class="confirm-popup">
+  <div class="confirm-box">
+    <div class="logout-icon-circle"><i class="fa-solid fa-power-off"></i></div>
+    <p style="font-weight:600;font-size:16px;margin-bottom:4px;">Log out of PawConnect?</p>
+    <p style="color:#888;font-size:12.5px;margin-bottom:18px;">You'll need to sign back in to access your account.</p>
+    <div class="confirm-actions">
+      <button class="confirm-no" onclick="closeLogoutConfirm()">Cancel</button>
+      <button class="confirm-yes" style="background:#4E8DC0" onclick="doLogout()">Log out</button>
+    </div>
+  </div>
+</div>
+
 <script>
   // ── CONFIG ────────────────────────────────────────────────
   const API = 'php/userprof.php';
@@ -407,7 +452,7 @@ body { background: #F4F1E6; }
    * Central function that keeps BOTH the large profile pic
    * AND the topbar avatar in sync.
    * Pass a data-URL / remote URL, or null to clear.
-   */
+   */ 
   function setProfilePhoto(url) {
     const img         = document.getElementById('profilePicImg');
     const placeholder = document.getElementById('profilePlaceholderIcon');
@@ -454,6 +499,17 @@ body { background: #F4F1E6; }
   }
   function closeConfirm() {
     document.getElementById('confirmPopup').style.display = 'none';
+  }
+
+  // ── LOGOUT CONFIRM ────────────────────────────────────────
+  function confirmLogout() {
+    document.getElementById('logoutConfirmPopup').style.display = 'flex';
+  }
+  function closeLogoutConfirm() {
+    document.getElementById('logoutConfirmPopup').style.display = 'none';
+  }
+  function doLogout() {
+    window.location.href = 'php/logout.php';
   }
 
   // ── LOAD PROFILE ON PAGE LOAD ─────────────────────────────
@@ -605,6 +661,5 @@ body { background: #F4F1E6; }
   // ── INIT ──────────────────────────────────────────────────
   loadProfile();
 </script>
-
 </body>
 </html>

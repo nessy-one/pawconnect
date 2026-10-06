@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PawConnect</title>
-
+<!-- notifications.html -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -19,16 +19,24 @@ body { background: #F4F1E6; }
 .sidebar {
   width: 220px;
   flex-shrink: 0;
-  padding: 24px 16px;
+  padding: 0 16px 24px;
   border-right: 1px solid #ddd;
   background: #F4F1E6;
   display: flex;
   flex-direction: column;
-  gap: 4px;
   position: sticky;
   top: 0;
   height: 100vh;
   overflow-y: auto;
+}
+
+.sidebar-logo {
+  padding: 20px 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 12px;
 }
 
 .logo-circle {
@@ -40,7 +48,6 @@ body { background: #F4F1E6; }
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin-bottom: 20px;
   flex-shrink: 0;
 }
 
@@ -48,6 +55,13 @@ body { background: #F4F1E6; }
   width: 52px;
   height: 52px;
   object-fit: cover;
+}
+
+.sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .menu-item {
@@ -62,16 +76,28 @@ body { background: #F4F1E6; }
   font-size: 13px;
   font-weight: 500;
   transition: background 0.15s, color 0.15s;
+  position: relative;
 }
 
 .menu-item:hover { background: #e0ddd2; }
 .menu-item.active { background: #AFC4D6; color: #012224; }
 .menu-item i { width: 18px; text-align: center; font-size: 14px; }
 
-.sidebar-divider {
-  height: 1px;
-  background: #ddd;
-  margin: 8px 0;
+.sidebar-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #ddd;
+}
+
+.menu-badge {
+  margin-left: auto;
+  background: #d64545;
+  color: white;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 10px;
+  display: none;
 }
 
 /* ── MAIN ─────────────────────────────────────────────────── */
@@ -91,9 +117,27 @@ body { background: #F4F1E6; }
   text-decoration: none;
   font-size: 18px;
   transition: opacity 0.15s;
+  position: relative;
 }
 
 .topbar a:hover { opacity: 0.65; }
+
+.topbar-bell-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #d64545;
+  color: white;
+  font-size: 9.5px;
+  font-weight: 700;
+  min-width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+}
 
 .topbar-user {
   display: flex;
@@ -130,14 +174,171 @@ body { background: #F4F1E6; }
   border-radius: 10px;
 }
 
-.card h2 {
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.card-head h2 {
   font-size: 18px;
   font-weight: 600;
   color: #012224;
-  margin-bottom: 20px;
 }
 
-/* ── EMPTY STATE ──────────────────────────────────────────── */
+.mark-all-btn {
+  background: none;
+  border: 1px solid #AFC4D6;
+  color: #012224;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.mark-all-btn:hover { background: #eef3f7; }
+.mark-all-btn:disabled { opacity: 0.5; cursor: default; }
+
+/* ── FILTER TABS ──────────────────────────────────────────── */
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.filter-tab {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #012224;
+  background: #F4F1E6;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.15s;
+}
+
+.filter-tab:hover { background: #e9e5d8; }
+.filter-tab.active { background: #AFC4D6; }
+
+/* ── NOTIFICATION LIST ────────────────────────────────────── */
+.notif-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notif-item {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #eee;
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  position: relative;
+}
+
+.notif-item:hover { background: #fafafa; }
+
+.notif-item.unread {
+  background: #F0F6FA;
+  border-color: #cfe0ec;
+}
+
+.notif-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: white;
+}
+
+.notif-icon.vaccination { background: #3b8fc4; }
+.notif-icon.event { background: #d68f3b; }
+.notif-icon.community { background: #5aa06b; }
+.notif-icon.general { background: #8a8a8a; }
+.notif-icon.adoption_approved { background: #5aa06b; }
+.notif-icon.adoption_denied { background: #b5533c; }
+
+.notif-body { flex: 1; min-width: 0; }
+
+.notif-top-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.notif-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #012224;
+}
+
+.notif-time {
+  font-size: 11px;
+  color: #888;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.notif-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #4E8DC0;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.notif-action:hover { background: #3a7aad; }
+
+.notif-message {
+  font-size: 13px;
+  color: #444;
+  margin-top: 4px;
+  line-height: 1.45;
+}
+
+.notif-meta {
+  margin-top: 8px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 11.5px;
+  color: #3b8fc4;
+  font-weight: 500;
+}
+
+.notif-meta span { display: flex; align-items: center; gap: 5px; }
+
+.unread-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #3b8fc4;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+/* ── EMPTY / LOADING STATE ────────────────────────────────── */
 .pic {
   text-align: center;
   margin-top: 40px;
@@ -153,6 +354,39 @@ body { background: #F4F1E6; }
   font-size: 13.5px;
   color: #666;
 }
+
+.confirm-popup {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.3);
+  display: none; align-items: center; justify-content: center; z-index: 300;
+}
+.confirm-box {
+  background: white; padding: 28px 36px; border-radius: 12px;
+  text-align: center; min-width: 280px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+  animation: pop 0.25s ease;
+}
+@keyframes pop {
+  from { transform: scale(0.75); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+.confirm-box p { font-size: 14px; color: #333; margin-bottom: 20px; }
+.confirm-actions { display: flex; gap: 10px; justify-content: center; }
+.confirm-actions button {
+  padding: 8px 22px; border-radius: 6px; border: none;
+  font-family: 'Poppins', sans-serif; font-size: 13px; cursor: pointer;
+  transition: background 0.15s;
+}
+.confirm-yes { background: #4E8DC0; color: white; }
+.confirm-yes:hover { background: #3a7aad; }
+.confirm-no  { background: #eee; color: #333; }
+.confirm-no:hover  { background: #ddd; }
+.logout-icon-circle {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: rgba(78,141,192,0.15); color: #4E8DC0;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px auto; font-size: 20px;
+}
 </style>
 </head>
 
@@ -161,39 +395,42 @@ body { background: #F4F1E6; }
 
   <!-- SIDEBAR -->
   <div class="sidebar">
-    <a href="dashboard.html">
-      <div class="logo-circle">
-        <img src="image/logo.png" alt="PawConnect Logo">
-      </div>
-    </a>
 
-    <a href="userprof.html" class="menu-item">
-      <i class="fa-regular fa-user"></i> My Account
-    </a>
-    <!-- <a href="addres.html" class="menu-item">
-      <i class="fa-solid fa-location-dot"></i> My Addresses
-    </a> -->
-    <a href="donation.html" class="menu-item">
-      <i class="fa-solid fa-hand-holding-heart"></i> My Donations
-    </a>
-    <a href="report.html" class="menu-item">
-      <i class="fa-solid fa-bug"></i> My Reports
-    </a>
-    <!-- <a href="reservations.html" class="menu-item">
-      <i class="fa-regular fa-calendar-check"></i> Reservations
-    </a> -->
-    <a href="save.html" class="menu-item">
-      <i class="fa-regular fa-heart"></i> Saves
-    </a>
-    <a href="notifications.html" class="menu-item active">
-      <i class="fa-regular fa-bell"></i> Notifications
-    </a>
+    <!-- Logo, centered, divider below -->
+    <div class="sidebar-logo">
+      <a href="dashboard.html">
+        <div class="logo-circle">
+          <img src="image/logo.png" alt="PawConnect Logo">
+        </div>
+      </a>
+    </div>
 
-    <div class="sidebar-divider"></div>
+    <!-- Nav links -->
+    <div class="sidebar-nav">
+      <a href="userprof.html" class="menu-item">
+        <i class="fa-regular fa-user"></i> My Account
+      </a>
+      <a href="donation.html" class="menu-item">
+        <i class="fa-solid fa-hand-holding-heart"></i> My Donations
+      </a>
+      <a href="report.html" class="menu-item">
+        <i class="fa-solid fa-bug"></i> Reports &amp; Feedback
+      </a>
+      <a href="save.html" class="menu-item">
+        <i class="fa-regular fa-heart"></i> Saves
+      </a>
+      <a href="notifications.html" class="menu-item active">
+        <i class="fa-regular fa-bell"></i> Notifications
+        <span class="menu-badge" id="sidebarBadge">0</span>
+      </a>
+    </div>
 
-    <a href="php/logout.php" class="menu-item">
-      <i class="fa-solid fa-right-from-bracket"></i> Log out
-    </a>
+    <!-- Logout, pinned to bottom, divider above -->
+    <div class="sidebar-footer">
+      <a href="php/logout.php" class="menu-item" onclick="event.preventDefault(); confirmLogout();">
+        <i class="fa-solid fa-right-from-bracket"></i> Log out
+      </a>
+    </div>
   </div>
 
   <!-- MAIN -->
@@ -201,7 +438,10 @@ body { background: #F4F1E6; }
 
     <!-- TOPBAR -->
     <div class="topbar">
-      <a href="notifications.html" title="Notifications"><i class="fa-regular fa-bell"></i></a>
+      <a href="notifications.html" title="Notifications">
+        <i class="fa-regular fa-bell"></i>
+        <span class="topbar-bell-badge" id="topbarBellBadge">0</span>
+      </a>
       <a href="save.html" title="Saves"><i class="fa-regular fa-heart"></i></a>
       <div class="topbar-user">
         <div class="avatar" id="topbarAvatar">
@@ -213,17 +453,224 @@ body { background: #F4F1E6; }
 
     <!-- CARD -->
     <div class="card">
-      <h2>Notifications</h2>
-      <div class="pic">
+      <div class="card-head">
+        <h2>Notifications</h2>
+        <button class="mark-all-btn" id="markAllBtn">Mark all as read</button>
+      </div>
+
+      <div class="filter-tabs" id="filterTabs">
+        <div class="filter-tab active" data-type="all">All</div>
+        <div class="filter-tab" data-type="vaccination">Vaccination Drives</div>
+        <div class="filter-tab" data-type="event">Pet Care Events</div>
+        <div class="filter-tab" data-type="community">Community</div>
+        <div class="filter-tab" data-type="adoption">Adoption</div>
+      </div>
+
+      <div id="notifList" class="notif-list"></div>
+
+      <div class="pic" id="emptyState" style="display:none;">
         <img src="image/cat.png" alt="No notifications">
         <p>You will be able to read notifications that we send you here.</p>
       </div>
     </div>
+  </div>
+</div>
 
+<div id="logoutConfirmPopup" class="confirm-popup">
+  <div class="confirm-box">
+    <div class="logout-icon-circle"><i class="fa-solid fa-power-off"></i></div>
+    <p style="font-weight:600;font-size:16px;margin-bottom:4px;">Log out of PawConnect?</p>
+    <p style="color:#888;font-size:12.5px;margin-bottom:18px;">You'll need to sign back in to access your account.</p>
+    <div class="confirm-actions">
+      <button class="confirm-no" onclick="closeLogoutConfirm()">Cancel</button>
+      <button class="confirm-yes" onclick="doLogout()">Log out</button>
+    </div>
   </div>
 </div>
 
 <script>
+  const NOTIF_API = 'php/notifications.php';
+  let allNotifications = [];
+  let currentFilter = 'all';
+
+  const TYPE_ICON = {
+    vaccination: 'fa-syringe',
+    event: 'fa-paw',
+    community: 'fa-people-group',
+    adoption_approved: 'fa-circle-check',
+    adoption_denied: 'fa-circle-xmark',
+    general: 'fa-bell'
+  };
+
+  const TYPE_LABEL = {
+    vaccination: 'Vaccination Drive',
+    event: 'Pet Care Event',
+    community: 'Community Activity',
+    adoption_approved: 'Adoption Approved',
+    adoption_denied: 'Adoption Denied',
+    general: 'Announcement'
+  };
+
+  function timeAgo(dateStr) {
+    const then = new Date(dateStr.replace(' ', 'T'));
+    const diffMs = Date.now() - then.getTime();
+    const mins = Math.floor(diffMs / 60000);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return `${mins}m ago`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs}h ago`;
+    const days = Math.floor(hrs / 24);
+    if (days < 7) return `${days}d ago`;
+    return then.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function formatEventDate(dateStr) {
+    const d = new Date(dateStr.replace(' ', 'T'));
+    return d.toLocaleString(undefined, {
+      month: 'short', day: 'numeric', year: 'numeric',
+      hour: 'numeric', minute: '2-digit'
+    });
+  }
+
+  function updateBadges() {
+    const unreadCount = allNotifications.filter(n => !n.is_read).length;
+    const sidebarBadge = document.getElementById('sidebarBadge');
+    const bellBadge = document.getElementById('topbarBellBadge');
+    const markAllBtn = document.getElementById('markAllBtn');
+
+    if (unreadCount > 0) {
+      sidebarBadge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+      sidebarBadge.style.display = 'inline-block';
+      bellBadge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+      bellBadge.style.display = 'flex';
+      markAllBtn.disabled = false;
+    } else {
+      sidebarBadge.style.display = 'none';
+      bellBadge.style.display = 'none';
+      markAllBtn.disabled = true;
+    }
+  }
+
+  function renderList() {
+    const list = document.getElementById('notifList');
+    const emptyState = document.getElementById('emptyState');
+
+    const filtered = currentFilter === 'all'
+      ? allNotifications
+      : currentFilter === 'adoption'
+      ? allNotifications.filter(n => n.type === 'adoption_approved' || n.type === 'adoption_denied')
+      : allNotifications.filter(n => n.type === currentFilter);
+
+    if (filtered.length === 0) {
+      list.innerHTML = '';
+      emptyState.style.display = 'block';
+      return;
+    }
+    emptyState.style.display = 'none';
+
+    list.innerHTML = filtered.map(n => {
+      const icon = TYPE_ICON[n.type] || TYPE_ICON.general;
+      const label = TYPE_LABEL[n.type] || TYPE_LABEL.general;
+      const unreadClass = n.is_read ? '' : 'unread';
+
+      let meta = '';
+      if (n.event_date) {
+        meta += `<span><i class="fa-regular fa-calendar"></i> ${formatEventDate(n.event_date)}</span>`;
+      }
+      if (n.location) {
+        meta += `<span><i class="fa-solid fa-location-dot"></i> ${escapeHtml(n.location)}</span>`;
+      }
+
+      return `
+        <div class="notif-item ${unreadClass}" data-id="${n.id}">
+          ${n.is_read ? '' : '<div class="unread-dot"></div>'}
+          <div class="notif-icon ${n.type}"><i class="fa-solid ${icon}"></i></div>
+          <div class="notif-body">
+            <div class="notif-top-row">
+              <span class="notif-title">${escapeHtml(n.title)} <span style="font-weight:400;color:#999;">· ${label}</span></span>
+              <span class="notif-time">${timeAgo(n.created_at)}</span>
+            </div>
+            <div class="notif-message">${escapeHtml(n.message)}</div>
+            ${meta ? `<div class="notif-meta">${meta}</div>` : ''}
+            ${n.type === 'adoption_approved' ? `<a class="notif-action" href="report.html?feedback=1"><i class="fa-regular fa-star"></i> Rate your experience</a>` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    list.querySelectorAll('.notif-item').forEach(el => {
+      el.addEventListener('click', () => markAsRead(el.dataset.id, el));
+    });
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+  }
+
+  async function markAsRead(id, el) {
+    const notif = allNotifications.find(n => String(n.id) === String(id));
+    if (!notif || notif.is_read) return;
+
+    notif.is_read = true;
+    el.classList.remove('unread');
+    const dot = el.querySelector('.unread-dot');
+    if (dot) dot.remove();
+    updateBadges();
+
+    try {
+      const body = new URLSearchParams({ action: 'mark_read', notification_id: id });
+      await fetch(NOTIF_API, { method: 'POST', body });
+    } catch (err) {
+      console.warn('Could not mark notification as read.', err);
+    }
+  }
+
+  async function markAllAsRead() {
+    if (allNotifications.every(n => n.is_read)) return;
+    allNotifications.forEach(n => n.is_read = true);
+    renderList();
+    updateBadges();
+
+    try {
+      const body = new URLSearchParams({ action: 'mark_all_read' });
+      await fetch(NOTIF_API, { method: 'POST', body });
+    } catch (err) {
+      console.warn('Could not mark all as read.', err);
+    }
+  }
+
+  async function loadNotifications() {
+    try {
+      const res = await fetch(`${NOTIF_API}?action=get`);
+      const data = await res.json();
+      if (data.success) {
+        allNotifications = data.notifications;
+      } else {
+        allNotifications = [];
+      }
+    } catch (err) {
+      console.warn('Could not load notifications.', err);
+      allNotifications = [];
+    }
+    renderList();
+    updateBadges();
+  }
+
+  document.getElementById('markAllBtn').addEventListener('click', markAllAsRead);
+
+  document.getElementById('filterTabs').addEventListener('click', (e) => {
+    const tab = e.target.closest('.filter-tab');
+    if (!tab) return;
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentFilter = tab.dataset.type;
+    renderList();
+  });
+
+  loadNotifications();
+
   (async function () {
     const API = 'php/userprof.php';
     try {
@@ -256,6 +703,17 @@ body { background: #F4F1E6; }
       console.warn('Could not sync avatar.', err);
     }
   })();
+
+  // ── LOGOUT CONFIRM ────────────────────────────────────────
+  function confirmLogout() {
+    document.getElementById('logoutConfirmPopup').style.display = 'flex';
+  }
+  function closeLogoutConfirm() {
+    document.getElementById('logoutConfirmPopup').style.display = 'none';
+  }
+  function doLogout() {
+    window.location.href = 'php/logout.php';
+  }
 </script>
 </body>
 </html>

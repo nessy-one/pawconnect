@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- pet_profile.html -->
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -88,7 +90,6 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         .state-box p { font-size: 14px; color: #8A8686; }
-        .state-box .err-emoji { font-size: 48px; }
 
         /* ── FAQ ── */
         .faq-section { margin-top: 55px; }
@@ -190,6 +191,23 @@
             letter-spacing: 1px;
         }
 
+        .rfid-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+        }
+        .rfid-badge svg {
+            width: 22px; height: 22px;
+            stroke: #4E8DC0;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .rfid-badge.small svg {
+            width: 14px; height: 14px;
+        }
         .heart-btn {
             background: none; border: none; cursor: pointer;
             padding: 6px;
@@ -307,15 +325,32 @@
             display: flex; align-items: center; justify-content: space-between;
         }
         .modal-header h2 { font-family: 'Cherry Bomb One', cursive; font-size: 22px; color: #fff; font-weight: 400; }
+        .modal-header h2.poppins-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 0;
+        }
         .modal-close { background: none; border: none; cursor: pointer; color: #fff; font-size: 22px; line-height: 1; padding: 0; opacity: 0.85; transition: opacity 0.15s; }
         .modal-close:hover { opacity: 1; }
         .modal-pet-info { display: flex; align-items: center; gap: 16px; padding: 20px 24px 16px; border-bottom: 1px solid #ddd; }
         .modal-pet-img { width: 72px; height: 72px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background: #ddd; }
         .modal-pet-details h3 { font-size: 17px; font-weight: 700; color: #012224; }
         .modal-pet-details p  { font-size: 12px; color: #666; margin-top: 2px; }
+
         .modal-body { padding: 20px 24px; }
-        .modal-body label { display: block; font-size: 12px; font-weight: 600; color: #012224; margin-bottom: 5px; margin-top: 14px; }
+
+        .modal-body label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #012224;
+            margin-bottom: 5px;
+            margin-top: 14px;
+        }
+
         .modal-body label:first-child { margin-top: 0; }
+        
         .modal-body input, .modal-body select, .modal-body textarea {
             width: 100%; padding: 9px 12px; border-radius: 8px;
             border: 1.5px solid #ccc; background: #fff;
@@ -324,11 +359,50 @@
         }
         .modal-body input:focus, .modal-body select:focus, .modal-body textarea:focus { border-color: #DA8063; }
         .modal-body textarea { resize: vertical; min-height: 72px; }
-        .duration-group { display: flex; gap: 8px; flex-wrap: wrap; }
-        .duration-pill { display: flex; align-items: center; gap: 5px; cursor: pointer; }
-        .duration-pill input[type="radio"] { display: none; }
-        .duration-pill span { display: inline-block; padding: 6px 14px; border-radius: 999px; border: 1.5px solid #ccc; font-size: 12px; font-weight: 600; color: #555; background: #fff; transition: all 0.15s; cursor: pointer; }
-        .duration-pill input[type="radio"]:checked + span { background: #DA8063; border-color: #DA8063; color: #fff; }
+        .duration-group {
+            display: grid !important;
+            grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+            gap: 8px !important;
+            width: 100%;
+        }
+
+        .duration-pill {
+            position: relative;
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            width: 100%;
+            height: 36px;
+            margin: 0 !important;
+            padding: 0 4px;
+            border-radius: 999px;
+            border: 1.5px solid #ccc;
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+            background: #fff;
+            transition: all 0.15s;
+            cursor: pointer;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1;
+        }
+
+        .duration-pill input[type="radio"] {
+            position: absolute;
+            width: 1px; height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .duration-pill.selected,
+        .duration-pill:has(input:checked) { background: #DA8063; border-color: #DA8063; color: #fff; }
+        .duration-pill:hover { border-color: #DA8063; }
+        
         .modal-notice { background: #fff8f0; border: 1.5px solid #DA8063; border-radius: 8px; padding: 10px 14px; margin-top: 16px; font-size: 12px; color: #7a4020; line-height: 1.6; }
         .modal-notice strong { color: #DA8063; }
         .modal-footer { padding: 0 24px 24px; display: flex; gap: 10px; }
@@ -338,7 +412,6 @@
         .btn-confirm:hover { background: #c46a4d; }
         .modal-success { display: none; flex-direction: column; align-items: center; text-align: center; padding: 40px 30px; }
         .modal-success.visible { display: flex; }
-        .success-paw { font-size: 56px; margin-bottom: 16px; animation: bounce 0.5s ease; }
         @keyframes bounce { 0% { transform: scale(0.5); opacity:0; } 70% { transform: scale(1.1); } 100% { transform: scale(1); opacity:1; } }
         .modal-success h3 { font-family: 'Cherry Bomb One', cursive; font-size: 24px; color: #DA8063; margin-bottom: 8px; }
         .modal-success p { font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 24px; }
@@ -367,7 +440,6 @@
             animation: slideUp .22s ease;
         }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .unsave-emoji { font-size: 32px; margin-bottom: 12px; }
         .unsave-box h3 { font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700; color: #012224; margin-bottom: 8px; }
         .unsave-box p  { font-size: 13px; color: #8A8686; margin-bottom: 20px; line-height: 1.6; }
         .unsave-actions { display: flex; gap: 10px; }
@@ -477,7 +549,7 @@
 <div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
     <div class="modal">
         <div class="modal-header">
-            <h2>Reserve a Pet 🐾</h2>
+            <h2>Reserve a Pet</h2>
             <button class="modal-close" onclick="closeModal()">✕</button>
         </div>
         <div id="modalForm">
@@ -515,7 +587,6 @@
             </div>
         </div>
         <div class="modal-success" id="modalSuccess">
-            <div class="success-paw">🐾</div>
             <h3>Reservation Confirmed!</h3>
             <p id="successMsg">Your reservation has been submitted.<br>We'll contact you within 24 hours to confirm.</p>
             <button class="btn-done" onclick="closeModal()">Done</button>
@@ -523,10 +594,33 @@
     </div>
 </div>
 
+<!-- MORE INFO MODAL -->
+<div class="modal-overlay" id="infoModalOverlay" onclick="handleInfoOverlayClick(event)">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="infoModalTitle" class="poppins-title">More Information</h2>
+            <button class="modal-close" onclick="closeInfoModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div style="margin-bottom:20px">
+                <h3 style="font-size:14px;font-weight:700;color:#012224;margin-bottom:10px;">Medical Information</h3>
+                <div id="infoMedicalBody" style="font-size:13px;color:#444;line-height:1.8"></div>
+            </div>
+            <div class="divider"></div>
+            <div style="margin-top:20px">
+                <h3 style="font-size:14px;font-weight:700;color:#012224;margin-bottom:10px;">RFID Tag Details</h3>
+                <div id="infoChipBody" style="font-size:13px;color:#444;line-height:1.8"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" style="flex:1" onclick="closeInfoModal()">Close</button>
+        </div>
+    </div>
+</div>
+
 <!-- UNSAVE CONFIRM MODAL -->
 <div class="unsave-overlay" id="unsaveOverlay">
     <div class="unsave-box">
-        <div class="unsave-emoji">💔</div>
         <h3>Remove from saves?</h3>
         <p>This pet will be removed from your saved list.</p>
         <div class="unsave-actions">
@@ -539,7 +633,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-    const USER_ID = 1;
+//    const USER_ID = 1;
     let currentPet = null;
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -561,7 +655,7 @@
                 currentPet = data.pet;
                 renderProfile(data.pet);
                 checkIfSaved(petId);
-                fetch(`php/recommend.php?module=pets&user_id=${USER_ID}&pet_id=${petId}`)
+                fetch(`php/recommend.php?module=pets&pet_id=${petId}`)
                     .then(r => r.json())
                     .then(data => {
                         if (!data.success || !data.recommendations.length) return;
@@ -574,7 +668,7 @@
 
     // ── CHECK IF ALREADY SAVED ──────────────────────────────────────
     function checkIfSaved(petId) {
-        fetch(`php/get_saved.php?user_id=${USER_ID}&item_type=pet`)
+        fetch('php/get_saved.php?item_type=pet')
             .then(r => r.json())
             .then(data => {
                 if (!data.success) return;
@@ -590,18 +684,22 @@
         const imgSrc    = `adopt/${p.name.toLowerCase()}.png`;
         const imgBefore = `adopt/${p.name.toLowerCase()}_before.png`;
 
+        const daysLeft = p.reserved_days_remaining ?? p.reserved_days;
         const statusTag = p.status === 'reserved'
-            ? `<span class="tag status-reserved">Reserved for ${p.reserved_days} day${p.reserved_days > 1 ? 's' : ''}</span>`
-            : p.status === 'adopted'
-            ? `<span class="tag status-adopted">Adopted</span>`
+            ? `<span class="tag status-reserved">Reserved · ${daysLeft} day${daysLeft != 1 ? 's' : ''} left</span>`
             : '';
 
         const urgencyTag = p.urgency && p.urgency.toLowerCase() === 'urgent'
             ? `<span class="tag urgency-urgent">Urgent Care</span>`
             : '';
 
+        const rfidBadge = p.chip_uid ? `
+            <span class="rfid-badge" title="Microchipped">
+                <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 11h2v2H7zM11 11h2v2h-2zM15 11h2v2h-2z"/></svg>
+            </span>` : '';
+
         const reserveBtn = p.status === 'available'
-            ? `<button class="btn-reserve" onclick="openModal()">🐾 Reserve ${p.name}</button>`
+            ? `<button class="btn-reserve" onclick="openModal()">Reserve ${p.name}</button>`
             : `<button class="btn-reserve" disabled>${p.status === 'reserved' ? 'Already Reserved' : 'Not Available'}</button>`;
 
         document.getElementById('content').innerHTML = `
@@ -621,7 +719,7 @@
 
                 <div class="info-col">
                     <div class="pet-name-row">
-                        <div class="pet-name">${p.name.toUpperCase()}</div>
+                        <div class="pet-name">${p.name.toUpperCase()} ${rfidBadge}</div>
                         <button class="heart-btn" id="heartBtn" onclick="toggleHeart()">
                             <svg viewBox="0 0 24 24">
                                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
@@ -650,10 +748,10 @@
                     <p class="story-text">${p.story || 'No story available yet.'}</p>
 
                     <div class="actions">
-                        <button class="btn-info" onclick="showToast('More info coming soon!')">
+                        <button class="btn-info" onclick="openInfoModal()">
                             Click to view more information
                         </button>
-                        <button class="btn-support" onclick="showToast('❤️ Thank you for your support!')">
+                        <button class="btn-support" onclick="showToast('Thank you for your support!')">
                             Support ${p.name}
                         </button>
                         ${reserveBtn}
@@ -666,16 +764,72 @@
         currentPet.imgSrc = imgSrc;
     }
 
+    // escHtml is used in renderRecommendations() too but was never defined — adding it here
+    function escHtml(str) {
+        return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function openInfoModal() {
+        if (!currentPet) return;
+        document.getElementById('infoModalTitle').textContent = `${currentPet.name} — More Information`;
+
+        // Adjust these keys to match your actual `pet` table columns
+        const medicalFields = [
+            { key: 'medical_notes',   label: 'Medical Notes' },
+            { key: 'vaccinated',      label: 'Vaccinated' },
+            { key: 'dewormed',        label: 'Dewormed' },
+            { key: 'neutered',        label: 'Neutered / Spayed' },
+            { key: 'health_status',   label: 'Health Status' },
+        ];
+        let medicalHtml = '';
+        medicalFields.forEach(f => {
+            const val = currentPet[f.key];
+            if (val === undefined || val === null || val === '') return;
+            let display = val;
+            if (val === 1 || val === '1' || val === true)  display = 'Yes';
+            if (val === 0 || val === '0' || val === false) display = 'No';
+            medicalHtml += `<p style="margin-bottom:8px"><strong>${f.label}:</strong> ${escHtml(String(display))}</p>`;
+        });
+        document.getElementById('infoMedicalBody').innerHTML = medicalHtml ||
+            '<p style="color:#8A8686">No medical information on file yet.</p>';
+
+        let chipHtml = '';
+        if (currentPet.chip_uid) {
+            chipHtml += `<p style="margin-bottom:8px"><strong>Chip UID:</strong> ${escHtml(currentPet.chip_uid)}</p>`;
+            if (currentPet.chip_registered_at) {
+                const d = new Date(currentPet.chip_registered_at.replace(' ', 'T'));
+                const label = isNaN(d) ? currentPet.chip_registered_at
+                    : d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                chipHtml += `<p style="margin-bottom:8px"><strong>Registered:</strong> ${escHtml(label)}</p>`;
+            }
+        } else {
+            chipHtml = '<p style="color:#8A8686">This animal does not have a registered microchip yet.</p>';
+        }
+        document.getElementById('infoChipBody').innerHTML = chipHtml;
+
+        document.getElementById('infoModalOverlay').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeInfoModal() {
+        document.getElementById('infoModalOverlay').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    function handleInfoOverlayClick(e) {
+        if (e.target === document.getElementById('infoModalOverlay')) closeInfoModal();
+    }
+
     function renderRecommendations(pets) {
         const section = document.createElement('div');
         section.style.marginTop = '48px';
         section.innerHTML = `
-            <div class="faq-header" style="background:#4E8DC0;">You May Also Like</div>
+            <div class="faq-header" style="background:#4E8DC0;">YOU MAY ALSO LIKE</div>
             <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
                         gap:16px;margin-top:16px;">
                 ${pets.map(p => `
                     <div onclick="window.location.href='pet_profile.html?id=${p.id}'"
-                        style="background:#fff;border-radius:12px;overflow:hidden;
+                        style="background:#F4F1E6;border-radius:12px;overflow:hidden;
                                 box-shadow:0 2px 8px rgba(0,0,0,0.08);cursor:pointer;
                                 transition:transform 0.15s;"
                         onmouseover="this.style.transform='translateY(-3px)'"
@@ -683,14 +837,16 @@
                         <img src="adopt/${p.name.toLowerCase()}.png"
                             onerror="this.src='adopt/placeholder.png'"
                             style="width:100%;height:160px;object-fit:cover;display:block;">
-                            <div style="padding:10px 12px;">
+                        <div style="padding:10px 12px;">
                             <div style="font-weight:600;font-size:14px;color:#012224;">
-                                ${escHtml(p.name)}
+                                ${escHtml(p.name)} ${p.chip_uid ? `<span class="rfid-badge small" title="Microchipped"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 11h2v2H7zM11 11h2v2h-2zM15 11h2v2h-2z"/></svg></span>` : ''}
                             </div>
                             <div style="font-size:12px;color:#8A8686;">
                                 ${escHtml(p.breed)} · ${p.age} yrs
                             </div>
                         </div>
+                        
+
                     </div>`).join('')}
             </div>`;
         document.querySelector('.faq-section').before(section);
@@ -699,7 +855,6 @@
     function showError(msg) {
         document.getElementById('content').innerHTML = `
             <div class="state-box">
-                <span class="err-emoji">🐾</span>
                 <p>${msg}</p>
                 <a href="adopt.html" style="color:#DA8063;font-weight:600;font-size:13px;">← Back to listings</a>
             </div>`;
@@ -721,13 +876,13 @@
             fetch('php/toggle_save.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'save', item_id: currentPet.id, item_type: 'pet', user_id: USER_ID })
+                body: JSON.stringify({ action: 'save', item_id: currentPet.id, item_type: 'pet' })
             })
             .then(r => r.json())
             .then(data => {
                 btn.classList.remove('saving');
                 if (data.success) {
-                    showToast('Saved! Redirecting… ❤️');
+                    showToast('Saved! Redirecting…');
                     setTimeout(() => window.location.href = 'save.html', 900);
                 } else {
                     btn.classList.remove('liked');
@@ -736,7 +891,7 @@
             })
             .catch(() => {
                 btn.classList.remove('saving');
-                showToast('Saved! Redirecting… ❤️');
+                showToast('Saved! Redirecting…');
                 setTimeout(() => window.location.href = 'save.html', 900);
             });
 
@@ -747,7 +902,7 @@
                 fetch('php/toggle_save.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'unsave', item_id: currentPet.id, item_type: 'pet', user_id: USER_ID })
+                    body: JSON.stringify({ action: 'unsave', item_id: currentPet.id, item_type: 'pet' })
                 })
                 .then(r => r.json())
                 .then(data => {
@@ -794,6 +949,8 @@
         document.body.style.overflow = '';
     }
 
+    
+
     function handleOverlayClick(e) {
         if (e.target === document.getElementById('modalOverlay')) closeModal();
     }
@@ -812,14 +969,18 @@
         fetch('php/reserve_pet.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_id: USER_ID, pet_id: currentPet.id, name, contact, visit_date: date, duration, notes })
+            body: JSON.stringify({ pet_id: currentPet.id, name, contact, visit_date: date, duration, notes })
         })
         .then(r => r.json())
         .then(data => {
             if (data.success) onReservationSuccess(duration);
             else showToast(data.message || 'Something went wrong.');
         })
-        .catch(() => onReservationSuccess(duration));
+        //.catch(() => onReservationSuccess(duration));   ------------- pinalitan q din hihi
+        .catch(err => {
+            console.error('Reservation failed:', err);
+            showToast('Could not reach the server. Please try again.');
+        });
     }
 
     function onReservationSuccess(duration) {
@@ -842,7 +1003,9 @@
         toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
     }
 
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeModal(); closeInfoModal(); }
+});
 </script>
 </body>
 </html>

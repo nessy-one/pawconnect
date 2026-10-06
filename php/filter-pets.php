@@ -1,12 +1,16 @@
 <?php
+//filter-pets.php
+
 ob_start();
 error_reporting(0);
 header('Content-Type: application/json');
 
-$host = "localhost";
-$user = "root";
-$pass = "123456";
-$db   = "pawconnect";
+// $host = "localhost";
+// $user = "root";
+// $pass = "123456";
+// $db   = "pawconnect";
+
+require __DIR__ . '/db.php';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass, [
@@ -19,10 +23,19 @@ try {
     exit;
 }
 
+// ── EXPIRE OLD RESERVATIONS FIRST ─────────────────────────────────
+// Flip any pet whose reserved_at + reserved_days window has passed back
+// to available, before building the listing. (Shared helper — see db.php.)
+expireOldReservations($pdo);
+
 $conditions = [];
 $params     = [];
 
-// ── TYPE filter ──────────────────────────────────────────────────
+// ── EXCLUDE MEDICAL-CARE PETS ─────────────────────────────────────
+// Pets flagged 'needs_treatment' (awaiting a private vet request) or 'under_vet_care' (an approved medical case already exists) are not part of the normal adoption pool — they only show up on the Private Vet side. See admin_medical_cases.php / private_vet_api.php.
+$conditions[] = "p.status NOT IN ('needs_treatment', 'under_vet_care')";
+
+// ── TYPE filter 
 $filterType = '';
 if (!empty($_GET['type']) && in_array($_GET['type'], ['cat', 'dog'])) {
     $conditions[] = "type = ?";
@@ -30,22 +43,25 @@ if (!empty($_GET['type']) && in_array($_GET['type'], ['cat', 'dog'])) {
     $filterType   = $_GET['type'];
 }
 
-// ── SEARCH filter — checks name, breed, shelter, AND location ────
+// ── SEARCH filter — checks name, breed, shelter, AND location 
 if (!empty($_GET['search'])) {
     $t = '%' . $_GET['search'] . '%';
     $conditions[] = "(name LIKE ? OR breed LIKE ? OR shelter LIKE ? OR location LIKE ? OR type LIKE ?)";
     array_push($params, $t, $t, $t, $t, $t);
 }
 
-// ── BREED filter ─────────────────────────────────────────────────
-$allowedBreeds = ['native', 'mixed', 'purebred'];
+// ── BREED filter 
+// $allowedBreeds = ['local', 'mixed', 'purebred'];
+$breedMap = ['local' => 'Native', 'mixed' => 'Mixed', 'purebred' => 'Purebred'];
+
 $filterBreeds  = isset($_GET['breed']) ? (array)$_GET['breed'] : [];
-$filterBreeds  = array_filter($filterBreeds, fn($b) => in_array($b, $allowedBreeds));
+// $filterBreeds  = array_filter($filterBreeds, fn($b) => in_array($b, $allowedBreeds));
+$mapped = array_map(fn($b) => $breedMap[$b] ?? ucfirst($b), $filterBreeds);
+
+// for priority, either change the checkbox value in adopt.html to "urgent", or map pwd -> urgent server-side:
+$priorityMap = ['pwd' => 'urgent', 'normal' => 'normal'];
 
 if (!empty($filterBreeds)) {
-    // DB stores breeds capitalised: 'Native', 'Mixed' — match accordingly
-    // DB stores breeds capitalised: 'Native', 'Mixed' — match accordingly
-    $mapped       = array_map(fn($b) => ucfirst(strtolower($b)), $filterBreeds);
     $placeholders = implode(',', array_fill(0, count($mapped), '?'));
     $conditions[] = "breed IN ($placeholders)";
     foreach ($mapped as $b) $params[] = $b;
@@ -70,14 +86,19 @@ if (!empty($filterAges)) {
 }
 
 // ── PRIORITY filter ──────────────────────────────────────────────
-$allowedPriorities = ['urgent', 'normal'];
+$allowedPriorities = ['pwd', 'normal'];
 $filterPriorities  = isset($_GET['priority']) ? (array)$_GET['priority'] : [];
 $filterPriorities  = array_filter($filterPriorities, fn($p) => in_array($p, $allowedPriorities));
 
 if (!empty($filterPriorities)) {
-    $placeholders = implode(',', array_fill(0, count($filterPriorities), '?'));
+    // FIX: the checkbox sends 'pwd'/'normal', but pet.urgency stores
+    // 'urgent'/'normal'. This used to bind the raw 'pwd' value straight
+    // into the query, which never matched anything — the PWD filter
+    // silently returned zero pets. Map through $priorityMap first.
+    $mappedPriorities = array_map(fn($p) => $priorityMap[$p] ?? $p, $filterPriorities);
+    $placeholders = implode(',', array_fill(0, count($mappedPriorities), '?'));
     $conditions[] = "urgency IN ($placeholders)";
-    foreach ($filterPriorities as $p) $params[] = $p;
+    foreach ($mappedPriorities as $p) $params[] = $p;
 }
 
 // ── LOCATION (optional) ──────────────────────────────────────────
@@ -85,11 +106,14 @@ if (!empty($filterPriorities)) {
 $userLocation = !empty($_GET['location']) ? strtolower(trim($_GET['location'])) : '';
 
 // ── BUILD & RUN QUERY ────────────────────────────────────────────
-$sql = "SELECT * FROM pet";
+$sql = "SELECT p.*, rt.chip_uid AS chip_uid,
+            GREATEST(0, DATEDIFF(DATE_ADD(p.reserved_at, INTERVAL p.reserved_days DAY), NOW())) AS reserved_days_remaining
+        FROM pet p
+        LEFT JOIN rfid_tags rt ON rt.pet_id = p.id AND rt.status = 'active'";
 if ($conditions) {
     $sql .= " WHERE " . implode(" AND ", $conditions);
 }
-$sql .= " ORDER BY id ASC";
+$sql .= " ORDER BY p.id ASC";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
@@ -164,17 +188,28 @@ foreach ($pets as &$pet) {
                           : 0.0;
     }
 
-    // ── FINAL WEIGHTED SCORE ─────────────────────────────────────
+    // ── FINAL WEIGHTED SCORE 
     $pet['score'] = round(
         ($urgencyScore    * W_URGENCY)       +
         ($compatScore     * W_COMPATIBILITY) +
         ($proximityScore  * W_PROXIMITY),
         4
     );
+
+    // ── DAYS REMAINING (for accurate "Reserved for X days") ─ dinelete q din basta tanginang thesis to
+    // if ($pet['status'] === 'reserved' && !empty($pet['reserved_at']) && !empty($pet['reserved_days'])) {
+    //     $expiresAt = new DateTime($pet['reserved_at']);
+    //     $expiresAt->modify('+' . intval($pet['reserved_days']) . ' days');
+    //     $now = new DateTime();
+    //     $daysLeft = (int)ceil(($expiresAt->getTimestamp() - $now->getTimestamp()) / 86400);
+    //     $pet['reserved_days_remaining'] = max(0, $daysLeft);
+    // } else {
+    //     $pet['reserved_days_remaining'] = null;
+    // }
 }
 unset($pet); // break reference
 
-// ── SORT BY SCORE DESCENDING ─────────────────────────────────────
+// ── SORT BY SCORE DESCENDING 
 usort($pets, fn($a, $b) => $b['score'] <=> $a['score']);
 
 ob_end_clean();

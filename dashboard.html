@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PawConnect - Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -13,6 +14,7 @@
             --salmon-dark: #c46a4e;
             --blue: #4E8DC0;
             --blue-dark: #3b7aad;
+            --darker-blue: #053053;
             --cream: #F4F1E6;
             --cream-dark: #e8e4d4;
             --dark: #012224;
@@ -75,12 +77,32 @@
             display: flex; align-items: center; justify-content: center;
             text-decoration: none;
             transition: opacity 0.15s, transform 0.15s;
-        }
+            position: relative;
+            padding: 2px;
+        } 
         .nav a:hover { opacity: 0.75; transform: scale(1.1); }
         .nav svg {
             width: 24px; height: 24px;
-            stroke: var(--dark); fill: none;
+            stroke: var(--darker-blue); fill: none;
             stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+        }
+
+        .topbar-bell-badge {
+            position: absolute;
+            top: -6px;
+            right: -7px;
+            background: #c23b3b;
+            color: white;
+            font-size: 10px;
+            font-weight: 500;
+            min-width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 0 3px;
+            line-height: 1;
         }
 
         /* ── CONTENT ── */
@@ -318,13 +340,14 @@
         .mobile-nav.open { display: flex; }
         .mobile-nav a {
             display: flex; align-items: center; gap: 10px;
-            text-decoration: none; color: var(--dark);
+            text-decoration: none; color: var(--darker-blue);
             font-size: 14px; font-weight: 500; transition: opacity .15s;
+            position: relative;
         }
         .mobile-nav a:hover { opacity: 0.75; }
         .mobile-nav svg {
             width: 20px; height: 20px;
-            stroke: var(--dark); fill: none;
+            stroke: var(--blue-dark); fill: none;
             stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
             flex-shrink: 0;
         }
@@ -431,6 +454,7 @@
             </a>
             <a href="notifications.html" title="Notifications">
                 <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                <span class="topbar-bell-badge" id="topbarBellBadgeDesktop">0</span>
             </a>
         </div>
         <div class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
@@ -448,9 +472,9 @@
             <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             Favourites
         </a>
-        <a href="notifications.html">
+        <a href="notifications.html" title="Notifications">
             <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-            Notifications
+            <span class="topbar-bell-badge" id="topbarBellBadge">0</span>
         </a>
     </div>
 
@@ -494,7 +518,7 @@
 
             <!-- header bar -->
             <div class="section-divider">
-                <h2>🐾 HELP US HELP MORE STRAY ANIMALS</h2>
+                <h2><i class="fa-solid fa-paw"></i> HELP US HELP MORE STRAY ANIMALS</h2>
             </div>
 
             <div class="donate-card">
@@ -514,7 +538,7 @@
 
                     <div class="qr-box">
                         <span class="qr-label">Scan to donate</span>
-                        <img src="image/qr.png" alt="QR Code for Donation">
+                        <img src="image/qr.jpg" alt="QR Code for Donation">
                     </div>
 
                     <div class="donate-img">
@@ -603,6 +627,31 @@
         const page = detectPage(query);
         window.location.href = `${page}.html?search=${encodeURIComponent(query)}`;
     });
+    // ── NOTIFICATION BADGE ───────────────────────────────────────────
+   // ── NOTIFICATION BADGE ───────────────────────────────────────────
+    async function loadUnreadBadge() {
+        try {
+            const res = await fetch('php/notifications.php?action=unread_count');
+            const data = await res.json();
+            if (!data.success) return;
+
+            const badges = document.querySelectorAll('.topbar-bell-badge');
+            badges.forEach(badge => {
+                if (data.count > 0) {
+                    badge.textContent = data.count > 9 ? '9+' : data.count;
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            });
+        } catch (err) {
+            console.warn('Could not load unread notification count.', err);
+        }
+    }
+
+    loadUnreadBadge();
+
+    loadUnreadBadge();
 </script>
 </body>
 </html>

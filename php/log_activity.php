@@ -1,10 +1,16 @@
 <?php
+
 header('Content-Type: application/json');
 
-$host = "localhost";
-$user = "root";
-$pass = "123456";
-$db   = "pawconnect";
+// $host = "localhost";
+// $user = "root";
+// $pass = "123456";
+// $db   = "pawconnect";
+
+session_start();
+$userId = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : 0;
+
+require __DIR__ . '/db.php';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass, [
@@ -17,7 +23,7 @@ try {
 }
 
 $body      = json_decode(file_get_contents('php://input'), true);
-$userId    = isset($body['user_id'])    ? (int)$body['user_id']          : 0;
+// $userId    = isset($body['user_id'])    ? (int)$body['user_id']          : 0;
 $itemType  = isset($body['item_type'])  ? trim($body['item_type'])        : '';
 $searchTerm = isset($body['search_term']) ? trim($body['search_term'])   : '';
 

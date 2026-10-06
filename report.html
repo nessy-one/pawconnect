@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PawConnect</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<title>PawConnect — Reports &amp; Feedback</title>
+<!-- report.html -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
@@ -19,16 +19,24 @@ body { background: #F4F1E6; }
 .sidebar {
   width: 220px;
   flex-shrink: 0;
-  padding: 24px 16px;
+  padding: 0 16px 24px;
   border-right: 1px solid #ddd;
   background: #F4F1E6;
   display: flex;
   flex-direction: column;
-  gap: 4px;
   position: sticky;
   top: 0;
   height: 100vh;
   overflow-y: auto;
+}
+
+.sidebar-logo {
+  padding: 20px 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 12px;
 }
 
 .logo-circle {
@@ -40,7 +48,6 @@ body { background: #F4F1E6; }
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin-bottom: 20px;
   flex-shrink: 0;
 }
 
@@ -48,6 +55,13 @@ body { background: #F4F1E6; }
   width: 52px;
   height: 52px;
   object-fit: cover;
+}
+
+.sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .menu-item {
@@ -68,10 +82,10 @@ body { background: #F4F1E6; }
 .menu-item.active { background: #AFC4D6; color: #012224; }
 .menu-item i { width: 18px; text-align: center; font-size: 14px; }
 
-.sidebar-divider {
-  height: 1px;
-  background: #ddd;
-  margin: 8px 0;
+.sidebar-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #ddd;
 }
 
 /* ── MAIN ─────────────────────────────────────────────────── */
@@ -134,7 +148,9 @@ body { background: #F4F1E6; }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .card-header h2 {
@@ -142,6 +158,8 @@ body { background: #F4F1E6; }
   font-weight: 600;
   color: #012224;
 }
+
+.header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
 .btn {
   background: #4E8DC0;
@@ -154,9 +172,54 @@ body { background: #F4F1E6; }
   font-size: 13px;
   font-weight: 500;
   transition: background 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .btn:hover { background: #3a7aad; }
+
+.btn-outline {
+  background: #fff;
+  color: #4E8DC0;
+  border: 1.5px solid #4E8DC0;
+}
+.btn-outline:hover { background: rgba(78,141,192,0.08); }
+
+.btn-ghost {
+  background: #fff;
+  border: 1px solid rgba(1,34,36,0.15);
+  color: #012224;
+}
+.btn-ghost:hover { background: #F4F1E6; }
+
+/* ── TABS ─────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: 2px;
+  background: rgba(1,34,36,0.06);
+  border-radius: 10px;
+  padding: 3px;
+  margin-bottom: 18px;
+  width: fit-content;
+}
+.tab {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  color: rgba(1,34,36,0.5);
+  transition: background .15s, color .15s;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tab.active { background: #fff; color: #012224; box-shadow: 0 1px 4px rgba(1,34,36,0.1); }
+.tab-badge {
+  background: rgba(218,128,99,0.2); color: #8f2800;
+  font-size: 10px; font-weight: 600; padding: 1px 7px; border-radius: 10px;
+}
 
 /* ── EMPTY STATE ──────────────────────────────────────────── */
 .pic {
@@ -165,7 +228,7 @@ body { background: #F4F1E6; }
 }
 
 .pic img {
-  height: 250px;
+  height: 200px;
   width: auto;
   margin-bottom: 15px;
 }
@@ -174,6 +237,133 @@ body { background: #F4F1E6; }
   font-size: 13.5px;
   color: #666;
 }
+
+/* ── TABLE ────────────────────────────────────────────────── */
+.tbl-wrap { overflow-x: auto; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.tbl th {
+  padding: 10px 14px; text-align: left; font-size: 10px; font-weight: 600;
+  color: rgba(1,34,36,0.4); background: #F4F1E6; border-bottom: 1px solid rgba(1,34,36,0.08);
+  text-transform: uppercase; letter-spacing: .06em;
+}
+.tbl td { padding: 12px 14px; border-bottom: 1px solid rgba(1,34,36,0.06); color: #012224; vertical-align: middle; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr.clickable { cursor: pointer; }
+.tbl tr.clickable:hover td { background: #faf9f4; }
+
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+.badge.open, .badge.pending { background: rgba(218,128,99,0.15); color: #a04820; }
+.badge.resolved, .badge.approved, .badge.found { background: rgba(180,177,86,0.2); color: #6b6812; }
+.badge.dismissed, .badge.rejected { background: rgba(1,34,36,0.07); color: rgba(1,34,36,0.5); }
+.badge.missing { background: rgba(218,128,99,0.2); color: #8f2800; }
+
+.report-thumbs { display: flex; gap: 6px; }
+.report-thumb { width: 34px; height: 34px; border-radius: 8px; object-fit: cover; cursor: pointer; border: 1px solid rgba(1,34,36,0.1); transition: transform .15s; }
+.report-thumb:hover { transform: scale(1.08); }
+.report-thumb-more { width: 34px; height: 34px; border-radius: 8px; background: rgba(1,34,36,0.08); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: rgba(1,34,36,0.5); }
+
+/* ── MODAL ────────────────────────────────────────────────── */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(1,34,36,0.45); align-items: flex-start; justify-content: center; padding: 40px 20px; z-index: 300; overflow-y: auto; }
+.overlay.open { display: flex; }
+.modal { background: #fff; border: 1px solid rgba(1,34,36,0.1); border-radius: 16px; width: 100%; max-width: 540px; overflow: hidden; margin: auto; }
+.modal-head { padding: 18px 20px; border-bottom: 1px solid rgba(1,34,36,0.08); display: flex; align-items: center; justify-content: space-between; }
+.modal-head h3 { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 9px; color: #012224; }
+.modal-close { background: none; border: none; cursor: pointer; font-size: 18px; color: rgba(1,34,36,0.45); transition: color .15s; }
+.modal-close:hover { color: #012224; }
+.modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; }
+.modal-foot { padding: 14px 20px; border-top: 1px solid rgba(1,34,36,0.08); display: flex; gap: 8px; justify-content: flex-end; }
+.modal-section { margin-bottom: 18px; }
+.modal-section:last-child { margin-bottom: 0; }
+.modal-section-title { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: rgba(1,34,36,0.4); font-weight: 600; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(1,34,36,0.07); }
+.info-row { display: flex; align-items: flex-start; gap: 10px; padding: 5px 0; }
+.info-label { width: 130px; min-width: 130px; font-size: 12px; color: rgba(1,34,36,0.5); display: flex; align-items: center; gap: 5px; }
+.info-val { font-size: 13px; color: #012224; flex: 1; line-height: 1.5; }
+
+.fb-target { display: flex; gap: 8px; }
+.fb-target button { flex: 1; padding: 10px; border: 1.5px solid rgba(1,34,36,0.15); background: #fff; border-radius: 8px; font-family: inherit; font-size: 13px; font-weight: 500; color: #012224; cursor: pointer; transition: all .15s; }
+.fb-target button.active { border-color: #4E8DC0; background: rgba(78,141,192,0.1); color: #2a5f82; }
+.fb-stars { font-size: 30px; letter-spacing: 4px; margin: 4px 0 2px; user-select: none; }
+.fb-stars span { color: rgba(1,34,36,0.15); cursor: pointer; transition: color .1s; }
+.fb-stars span.on { color: #DA8063; }
+.form-group { margin-bottom: 14px; position: relative; }
+.form-group label { display: block; font-size: 12px; font-weight: 500; color: rgba(1,34,36,0.6); margin-bottom: 5px; }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%; padding: 10px 13px; border: 1px solid rgba(1,34,36,0.15); border-radius: 9px;
+  font-size: 13px; font-family: 'Poppins', inherit; color: #012224; background: #fff; outline: none;
+  transition: border-color .15s;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { border-color: #4E8DC0; }
+.form-group textarea { resize: vertical; min-height: 80px; }
+
+.note-banner { background: rgba(246,197,180,0.45); border: 1px solid #F6C5B4; border-radius: 9px; padding: 11px 14px; font-size: 12px; color: #7a3520; display: flex; align-items: flex-start; gap: 8px; margin-bottom: 16px; }
+.note-banner i { font-size: 15px; margin-top: 1px; flex-shrink: 0; }
+
+.evidence-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.evidence-gallery img { width: 100%; height: 90px; object-fit: cover; border-radius: 10px; cursor: pointer; border: 1px solid rgba(1,34,36,0.1); transition: opacity .15s; }
+.evidence-gallery img:hover { opacity: .85; }
+
+.lightbox-overlay { display: none; position: fixed; inset: 0; background: rgba(1,34,36,0.85); z-index: 500; align-items: center; justify-content: center; padding: 40px; }
+.lightbox-overlay.open { display: flex; }
+.lightbox-overlay img { max-width: 90vw; max-height: 85vh; border-radius: 10px; }
+.lightbox-close { position: absolute; top: 20px; right: 28px; color: #fff; font-size: 26px; cursor: pointer; background: none; border: none; }
+
+.confirm-popup {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.3);
+  display: none; align-items: center; justify-content: center; z-index: 300;
+}
+.confirm-box {
+  background: white; padding: 28px 36px; border-radius: 12px;
+  text-align: center; min-width: 280px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+  animation: pop 0.25s ease;
+}
+@keyframes pop {
+  from { transform: scale(0.75); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+.confirm-box p { font-size: 14px; color: #333; margin-bottom: 20px; }
+.confirm-actions { display: flex; gap: 10px; justify-content: center; }
+.confirm-actions button {
+  padding: 8px 22px; border-radius: 6px; border: none;
+  font-family: 'Poppins', sans-serif; font-size: 13px; cursor: pointer;
+  transition: background 0.15s;
+}
+.confirm-yes { background: #4E8DC0; color: white; }
+.confirm-yes:hover { background: #3a7aad; }
+.confirm-no  { background: #eee; color: #333; }
+.confirm-no:hover  { background: #ddd; }
+.logout-icon-circle {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: rgba(78,141,192,0.15); color: #4E8DC0;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px auto; font-size: 20px;
+}
+
+/* ── TOAST ────────────────────────────────────────────────── */
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: #012224; color: #fff;
+  padding: 12px 20px; border-radius: 10px;
+  font-size: 13px; font-weight: 500;
+  display: flex; align-items: center; gap: 9px;
+  box-shadow: 0 4px 16px rgba(1,34,36,0.2);
+  z-index: 9999;
+  transform: translateY(80px); opacity: 0;
+  transition: all .3s ease;
+  pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success i { color: #B4B156; }
+.toast.error i { color: #DA8063; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(1,34,36,0.15); border-radius: 3px; }
 </style>
 </head>
 <body>
@@ -182,39 +372,41 @@ body { background: #F4F1E6; }
 
   <!-- SIDEBAR -->
   <div class="sidebar">
-    <a href="dashboard.html">
-      <div class="logo-circle">
-        <img src="image/logo.png" alt="PawConnect Logo">
-      </div>
-    </a>
 
-    <a href="userprof.html" class="menu-item">
-      <i class="fa-regular fa-user"></i> My Account
-    </a>
-    <!-- <a href="addres.html" class="menu-item">
-      <i class="fa-solid fa-location-dot"></i> My Addresses
-    </a> -->
-    <a href="donation.html" class="menu-item">
-      <i class="fa-solid fa-hand-holding-heart"></i> My Donations
-    </a>
-    <a href="report.html" class="menu-item active">
-      <i class="fa-solid fa-bug"></i> My Reports
-    </a>
-    <!-- <a href="reservations.html" class="menu-item">
-      <i class="fa-regular fa-calendar-check"></i> Reservations
-    </a> -->
-    <a href="save.html" class="menu-item">
-      <i class="fa-regular fa-heart"></i> Saves
-    </a>
-    <a href="notifications.html" class="menu-item">
-      <i class="fa-regular fa-bell"></i> Notifications
-    </a>
+    <!-- Logo, centered, divider below -->
+    <div class="sidebar-logo">
+      <a href="dashboard.html">
+        <div class="logo-circle">
+          <img src="image/logo.png" alt="PawConnect Logo">
+        </div>
+      </a>
+    </div>
 
-    <div class="sidebar-divider"></div>
+    <!-- Nav links -->
+    <div class="sidebar-nav">
+      <a href="userprof.html" class="menu-item">
+        <i class="fa-regular fa-user"></i> My Account
+      </a>
+      <a href="donation.html" class="menu-item">
+        <i class="fa-solid fa-hand-holding-heart"></i> My Donations
+      </a>
+      <a href="report.html" class="menu-item active">
+        <i class="fa-solid fa-bug"></i> Reports &amp; Feedback
+      </a>
+      <a href="save.html" class="menu-item">
+        <i class="fa-regular fa-heart"></i> Saves
+      </a>
+      <a href="notifications.html" class="menu-item">
+        <i class="fa-regular fa-bell"></i> Notifications
+      </a>
+    </div>
 
-    <a href="php/logout.php" class="menu-item">
-      <i class="fa-solid fa-right-from-bracket"></i> Log out
-    </a>
+    <!-- Logout, pinned to bottom, divider above -->
+    <div class="sidebar-footer">
+      <a href="php/logout.php" class="menu-item" onclick="event.preventDefault(); confirmLogout();">
+        <i class="fa-solid fa-right-from-bracket"></i> Log out
+      </a>
+    </div>
   </div>
 
   <!-- MAIN -->
@@ -235,20 +427,525 @@ body { background: #F4F1E6; }
     <!-- CARD -->
     <div class="card">
       <div class="card-header">
-        <h2>My Reports</h2>
-        <button class="btn" onclick="window.location.href='missing.html'">REPORT NOW</button>
+        <h2>Reports &amp; Feedback</h2>
+        <div class="header-actions">
+          <button class="btn btn-outline" onclick="openFeedbackModal()"><i class="fa-regular fa-star"></i> Leave feedback</button>
+          <button class="btn btn-outline" onclick="openReportEntityModal()"><i class="fa-solid fa-triangle-exclamation"></i> Report a user or business</button>
+          <button class="btn" onclick="window.location.href='missing.html'"><i class="fa-solid fa-paw"></i> Report missing/found pet</button>
+        </div>
       </div>
 
-      <div class="pic">
-        <img src="image/cat.png" alt="No reports">
-        <p>You will be able to see all the missing/found animals you reported here.</p>
+      <div class="tabs">
+        <div class="tab active" id="tab-btn-missing" onclick="switchReportTab('missing')">
+          Missing / Found <span class="tab-badge" id="missing-tab-badge" style="display:none">0</span>
+        </div>
+        <div class="tab" id="tab-btn-entity" onclick="switchReportTab('entity')">
+          Users &amp; Businesses <span class="tab-badge" id="entity-tab-badge" style="display:none">0</span>
+        </div>
+        <div class="tab" id="tab-btn-feedback" onclick="switchReportTab('feedback')">
+          My Feedback <span class="tab-badge" id="fb-tab-badge" style="display:none">0</span>
+        </div>
       </div>
+
+      <!-- MISSING / FOUND PET REPORTS -->
+      <div id="tab-missing">
+        <div id="missing-loading" class="pic">
+          <p style="color:rgba(1,34,36,0.4)">Loading your reports…</p>
+        </div>
+        <div id="missing-empty" class="pic" style="display:none">
+          <img src="image/cat.png" alt="No reports">
+          <p>You will be able to see all the missing/found animals you reported here.</p>
+        </div>
+        <div id="missing-content" class="tbl-wrap" style="display:none">
+          <table class="tbl">
+            <thead><tr><th>Pet</th><th>Type</th><th>Last seen / found at</th><th>Date filed</th><th>Status</th><th></th></tr></thead>
+            <tbody id="missing-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ENTITY (USER / BUSINESS) REPORTS -->
+      <div id="tab-entity" style="display:none">
+        <div id="entity-loading" class="pic">
+          <p style="color:rgba(1,34,36,0.4)">Loading your reports…</p>
+        </div>
+        <div id="entity-empty" class="pic" style="display:none">
+          <img src="image/cat.png" alt="No reports">
+          <p>Reports you file against users or businesses will show up here.</p>
+        </div>
+        <div id="entity-content" class="tbl-wrap" style="display:none">
+          <table class="tbl">
+            <thead><tr><th>Reported</th><th>Reason</th><th>Date filed</th><th>Status</th><th></th></tr></thead>
+            <tbody id="entity-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MY FEEDBACK -->
+      <div id="tab-feedback" style="display:none">
+        <div id="fb-loading" class="pic">
+          <p style="color:rgba(1,34,36,0.4)">Loading your feedback…</p>
+        </div>
+        <div id="fb-empty" class="pic" style="display:none">
+          <img src="image/cat.png" alt="No feedback">
+          <p>Feedback you leave for facilities or PawConnect will show up here.</p>
+        </div>
+        <div id="fb-content" class="tbl-wrap" style="display:none">
+          <table class="tbl">
+            <thead><tr><th>About</th><th>Rating</th><th>Comment</th><th>Date</th></tr></thead>
+            <tbody id="fb-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
 
   </div>
 </div>
 
+<!-- Report a user/business modal -->
+<div class="overlay" id="reportEntityModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3><i class="fa-solid fa-triangle-exclamation" style="color:#DA8063"></i> Report a user or business</h3>
+      <button class="modal-close" onclick="closeModal('reportEntityModal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="note-banner"><i class="fa-solid fa-circle-info"></i> Our team reviews every report. False or malicious reports may result in action against your own account.</div>
+
+      <div class="form-group">
+        <label>Who are you reporting?</label>
+        <input type="text" id="rem-entity-name" placeholder="Username or business/facility name">
+      </div>
+
+      <div class="form-group">
+        <label>Reason</label>
+        <select id="rem-reason">
+          <option value="Harassment or abusive behavior">Harassment or abusive behavior</option>
+          <option value="Scam or fraud">Scam or fraud</option>
+          <option value="Fake listing or profile">Fake listing or profile</option>
+          <option value="Animal cruelty or neglect">Animal cruelty or neglect</option>
+          <option value="Inappropriate content">Inappropriate content</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="rem-desc" placeholder="Tell us what happened, with as much detail as you can…"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Evidence photos (optional)</label>
+        <input type="file" id="rem-files" accept="image/*" multiple>
+      </div>
+      <div id="rem-preview" class="evidence-gallery" style="margin-top:10px"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('reportEntityModal')">Cancel</button>
+      <button class="btn" onclick="submitEntityReport()"><i class="fa-solid fa-paper-plane"></i> Submit report</button>
+    </div>
+  </div>
+</div>
+
+<!-- Leave feedback modal -->
+<div class="overlay" id="feedbackModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3><i class="fa-regular fa-star" style="color:#DA8063"></i> Leave feedback</h3>
+      <button class="modal-close" onclick="closeModal('feedbackModal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>What is your feedback about?</label>
+        <div class="fb-target">
+          <button type="button" id="fb-t-app" class="active" onclick="setFbTarget('app')"> PawConnect</button>
+          <button type="button" id="fb-t-facility" onclick="setFbTarget('facility')"> A facility</button>
+        </div>
+      </div>
+      <div class="form-group" id="fb-facility-group" style="display:none">
+        <label>Which facility?</label>
+        <select id="fb-facility"></select>
+      </div>
+      <div class="form-group">
+        <label>Your rating</label>
+        <div class="fb-stars" id="fb-stars">
+          <span data-v="1">&#9733;</span><span data-v="2">&#9733;</span><span data-v="3">&#9733;</span><span data-v="4">&#9733;</span><span data-v="5">&#9733;</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Comment (optional)</label>
+        <textarea id="fb-comment" placeholder="Tell us about your experience..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('feedbackModal')">Cancel</button>
+      <button class="btn" id="fb-submit" onclick="submitFeedback()"><i class="fa-solid fa-paper-plane"></i> Submit feedback</button>
+    </div>
+  </div>
+</div>
+
+<!-- Entity report detail modal -->
+<div class="overlay" id="entityDetailModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3><i class="fa-solid fa-flag" style="color:#DA8063"></i> Report detail</h3>
+      <button class="modal-close" onclick="closeModal('entityDetailModal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="info-row"><div class="info-label"><i class="fa-solid fa-user"></i> Reported</div><div class="info-val" id="edm-entity"></div></div>
+        <div class="info-row"><div class="info-label"><i class="fa-solid fa-tag"></i> Reason</div><div class="info-val" id="edm-reason"></div></div>
+        <div class="info-row"><div class="info-label"><i class="fa-solid fa-calendar"></i> Date filed</div><div class="info-val" id="edm-date"></div></div>
+        <div class="info-row"><div class="info-label"><i class="fa-solid fa-circle-info"></i> Status</div><div class="info-val" id="edm-status"></div></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Description</div>
+        <div style="font-size:13px;color:rgba(1,34,36,0.7);line-height:1.65" id="edm-desc"></div>
+      </div>
+      <div class="modal-section" id="edm-evidence-section" style="display:none">
+        <div class="modal-section-title">Evidence photos</div>
+        <div class="evidence-gallery" id="edm-evidence"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('entityDetailModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Missing/found report detail modal -->
+<div class="overlay" id="missingDetailModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3><i class="fa-solid fa-paw" style="color:#4E8DC0"></i> Report detail</h3>
+      <button class="modal-close" onclick="closeModal('missingDetailModal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="info-row"><div class="info-label"><i class="fa-solid fa-paw"></i> Pet</div><div class="info-val" id="mdm-pet"></div></div>
+        <div class="info-row"><div class="info-label"><i class="fa-solid fa-tag"></i> Type</div><div class="info-val" id="mdm-type"></div></div>
+        <div class="info-row"><div class="info-label"><i class="fa-solid fa-location-dot"></i> Location</div><div class="info-val" id="mdm-location"></div></div>
+        <div class="info-row"><div class="info-label"><i class="fa-solid fa-calendar"></i> Date filed</div><div class="info-val" id="mdm-date"></div></div>
+        <div class="info-row"><div class="info-label"><i class="fa-solid fa-circle-info"></i> Status</div><div class="info-val" id="mdm-status"></div></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Description</div>
+        <div style="font-size:13px;color:rgba(1,34,36,0.7);line-height:1.65" id="mdm-desc"></div>
+      </div>
+      <div class="modal-section" id="mdm-evidence-section" style="display:none">
+        <div class="modal-section-title">Photos</div>
+        <div class="evidence-gallery" id="mdm-evidence"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('missingDetailModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Image Lightbox -->
+<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox(event)"><i class="fa-solid fa-xmark"></i></button>
+  <img id="lightbox-img" src="" alt="Evidence photo">
+</div>
+
+<div id="logoutConfirmPopup" class="confirm-popup">
+  <div class="confirm-box">
+    <div class="logout-icon-circle"><i class="fa-solid fa-power-off"></i></div>
+    <p style="font-weight:600;font-size:16px;margin-bottom:4px;">Log out of PawConnect?</p>
+    <p style="color:#888;font-size:12.5px;margin-bottom:18px;">You'll need to sign back in to access your account.</p>
+    <div class="confirm-actions">
+      <button class="confirm-no" onclick="closeLogoutConfirm()">Cancel</button>
+      <button class="confirm-yes" onclick="doLogout()">Log out</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <i class="fa-solid fa-circle-check"></i>
+  <span id="toast-msg">Action completed.</span>
+</div>
+
 <script>
+  /* ──────────────────────────────────────────────────────────
+     NOTE ON BACKEND ENDPOINTS
+     - Missing/found reports the user filed are fetched from
+       php/missing.php?action=list_mine
+       NOTE: missing.php must implement a `list_mine` action
+       (filtered by the logged-in user_id) for this to work.
+     - Entity (user/business) reports:
+         list:           php/reports.php?action=list_mine
+         create:         php/reports.php?action=create   (multipart/form-data)
+     Expected create payload (multipart/form-data, NOT JSON):
+       entity_name   = whatever the user typed (free text, unvalidated
+                        against any real user/facility record)
+       reason        = string
+       description   = string
+       images[]      = 0..n image files
+     Expected list_mine response shape:
+       { success: true, reports: [ { id, entity_name, reason,
+         description, images: [...], status, created_at } ] }
+  ────────────────────────────────────────────────────────── */
+  const MISSING_LIST_URL  = 'php/missing.php?action=list_mine';
+  const ENTITY_LIST_URL   = 'php/reports.php?action=list_mine';
+  const ENTITY_CREATE_URL = 'php/reports.php?action=create';
+
+  function esc(str) {
+    return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function formatDateDisplay(raw) {
+    if (!raw) return '—';
+    const d = new Date(String(raw).replace(' ', 'T'));
+    if (isNaN(d)) return raw;
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    const icon = t.querySelector('i');
+    document.getElementById('toast-msg').textContent = msg;
+    t.className = 'toast ' + type;
+    icon.className = type === 'success' ? 'fa-solid fa-circle-check' : 'fa-solid fa-triangle-exclamation';
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  function openModal(id)  { document.getElementById(id).classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+  document.querySelectorAll('.overlay').forEach(ov => {
+    ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); });
+  });
+
+  function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox(e) {
+    if (e) e.stopPropagation();
+    document.getElementById('lightbox').classList.remove('open');
+  }
+
+  /* ── TABS ─────────────────────────────────────────────── */
+  function switchReportTab(which) {
+    ['missing','entity','feedback'].forEach(t => {
+      document.getElementById('tab-btn-' + t).classList.toggle('active', which === t);
+      document.getElementById('tab-' + t).style.display = which === t ? 'block' : 'none';
+    });
+  }
+
+  /* ── MISSING / FOUND REPORTS ─────────────────────────────
+     Expected per-item fields (adjust the render below to match
+     your actual API response):
+       id, pet_name, report_type ('missing' | 'found'),
+       location, description, status, created_at, images: []
+  ────────────────────────────────────────────────────────── */
+  let missingReports = [];
+
+  function loadMissingReports() {
+    fetch(MISSING_LIST_URL)
+      .then(r => r.json())
+      .then(data => {
+        if (!data.success) { renderMissingEmpty(); return; }
+        missingReports = data.reports || [];
+        renderMissingReports();
+      })
+      .catch(() => renderMissingEmpty());
+  }
+
+  function renderMissingEmpty() {
+    document.getElementById('missing-loading').style.display = 'none';
+    document.getElementById('missing-content').style.display = 'none';
+    document.getElementById('missing-empty').style.display = 'block';
+    const badge = document.getElementById('missing-tab-badge');
+    badge.style.display = 'none';
+  }
+
+  function renderMissingReports() {
+    document.getElementById('missing-loading').style.display = 'none';
+    if (!missingReports.length) { renderMissingEmpty(); return; }
+
+    document.getElementById('missing-empty').style.display = 'none';
+    document.getElementById('missing-content').style.display = 'block';
+
+    const badge = document.getElementById('missing-tab-badge');
+    badge.style.display = '';
+    badge.textContent = missingReports.length;
+
+    const tbody = document.getElementById('missing-tbody');
+    tbody.innerHTML = missingReports.map((r, i) => {
+      const type = (r.report_type || 'missing').toLowerCase();
+      const statusLabel = (r.status || 'open');
+      const badgeClass = ['resolved','found','reunited'].includes(statusLabel.toLowerCase()) ? 'resolved'
+        : statusLabel.toLowerCase() === 'dismissed' ? 'dismissed' : 'open';
+      return `
+        <tr class="clickable" onclick="openMissingDetail(${i})">
+          <td><strong>${esc(r.pet_name || 'Unnamed pet')}</strong></td>
+          <td><span class="badge ${type === 'found' ? 'found' : 'missing'}">${esc(type === 'found' ? 'Found' : 'Missing')}</span></td>
+          <td>${esc(r.location || '—')}</td>
+          <td>${formatDateDisplay(r.created_at)}</td>
+          <td><span class="badge ${badgeClass}">${esc(statusLabel)}</span></td>
+          <td><span style="font-size:12px;color:#4E8DC0;font-weight:500">View →</span></td>
+        </tr>`;
+    }).join('');
+  }
+
+  function openMissingDetail(i) {
+    const r = missingReports[i];
+    if (!r) return;
+    document.getElementById('mdm-pet').textContent = r.pet_name || 'Unnamed pet';
+    document.getElementById('mdm-type').textContent = (r.report_type || 'missing').toLowerCase() === 'found' ? 'Found' : 'Missing';
+    document.getElementById('mdm-location').textContent = r.location || '—';
+    document.getElementById('mdm-date').textContent = formatDateDisplay(r.created_at);
+    document.getElementById('mdm-status').textContent = r.status || 'Open';
+    document.getElementById('mdm-desc').textContent = r.description || '—';
+    const evSection = document.getElementById('mdm-evidence-section');
+    const imgs = r.images || [];
+    if (imgs.length) {
+      document.getElementById('mdm-evidence').innerHTML = imgs.map(src => `<img src="${esc(src)}" onclick="openLightbox('${esc(src)}')" alt="Photo">`).join('');
+      evSection.style.display = '';
+    } else {
+      evSection.style.display = 'none';
+    }
+    openModal('missingDetailModal');
+  }
+
+  /* ── ENTITY (USER / BUSINESS) REPORTS ────────────────────── */
+  let entityReports = [];
+  let remPendingFiles = []; // File objects, submitted via FormData
+
+  function loadEntityReports() {
+    fetch(ENTITY_LIST_URL)
+      .then(r => r.json())
+      .then(data => {
+        if (!data.success) { renderEntityEmpty(); return; }
+        entityReports = data.reports || [];
+        renderEntityReports();
+      })
+      .catch(() => renderEntityEmpty());
+  }
+
+  function renderEntityEmpty() {
+    document.getElementById('entity-loading').style.display = 'none';
+    document.getElementById('entity-content').style.display = 'none';
+    document.getElementById('entity-empty').style.display = 'block';
+    document.getElementById('entity-tab-badge').style.display = 'none';
+  }
+
+  function renderEntityReports() {
+    document.getElementById('entity-loading').style.display = 'none';
+    if (!entityReports.length) { renderEntityEmpty(); return; }
+
+    document.getElementById('entity-empty').style.display = 'none';
+    document.getElementById('entity-content').style.display = 'block';
+
+    const badge = document.getElementById('entity-tab-badge');
+    badge.style.display = '';
+    badge.textContent = entityReports.length;
+
+    const tbody = document.getElementById('entity-tbody');
+    tbody.innerHTML = entityReports.map((r, i) => {
+      const status = (r.status || 'Open');
+      const badgeClass = status.toLowerCase() === 'resolved' ? 'resolved'
+        : status.toLowerCase() === 'dismissed' ? 'dismissed' : 'open';
+      const imgs = r.images || [];
+      const thumbs = imgs.length
+        ? `<div class="report-thumbs" style="margin-top:4px">${imgs.slice(0,3).map(src => `<img class="report-thumb" src="${esc(src)}" onclick="event.stopPropagation();openLightbox('${esc(src)}')">`).join('')}${imgs.length > 3 ? `<div class="report-thumb-more">+${imgs.length-3}</div>` : ''}</div>`
+        : '';
+      return `
+        <tr class="clickable" onclick="openEntityDetail(${i})">
+          <td><strong>${esc(r.entity_name)}</strong>${thumbs}</td>
+          <td>${esc(r.reason)}</td>
+          <td>${formatDateDisplay(r.created_at)}</td>
+          <td><span class="badge ${badgeClass}">${esc(status)}</span></td>
+          <td><span style="font-size:12px;color:#4E8DC0;font-weight:500">View →</span></td>
+        </tr>`;
+    }).join('');
+  }
+
+  function openEntityDetail(i) {
+    const r = entityReports[i];
+    if (!r) return;
+    document.getElementById('edm-entity').textContent = r.entity_name;
+    document.getElementById('edm-reason').textContent = r.reason;
+    document.getElementById('edm-date').textContent = formatDateDisplay(r.created_at);
+    document.getElementById('edm-status').textContent = r.status || 'Open';
+    document.getElementById('edm-desc').textContent = r.description || '—';
+    const evSection = document.getElementById('edm-evidence-section');
+    const imgs = r.images || [];
+    if (imgs.length) {
+      document.getElementById('edm-evidence').innerHTML = imgs.map(src => `<img src="${esc(src)}" onclick="openLightbox('${esc(src)}')" alt="Evidence photo">`).join('');
+      evSection.style.display = '';
+    } else {
+      evSection.style.display = 'none';
+    }
+    openModal('entityDetailModal');
+  }
+
+  /* ── REPORT-A-USER-OR-BUSINESS MODAL ─────────────────────── */
+  function openReportEntityModal() {
+    document.getElementById('rem-entity-name').value = '';
+    document.getElementById('rem-reason').value = 'Harassment or abusive behavior';
+    document.getElementById('rem-desc').value = '';
+    document.getElementById('rem-files').value = '';
+    remPendingFiles = [];
+    renderRemPreview();
+    openModal('reportEntityModal');
+  }
+
+  document.addEventListener('change', e => {
+    if (e.target && e.target.id === 'rem-files') {
+      Array.from(e.target.files || []).forEach(file => remPendingFiles.push(file));
+      renderRemPreview();
+    }
+  });
+
+  function renderRemPreview() {
+    const wrap = document.getElementById('rem-preview');
+    if (!wrap) return;
+    wrap.innerHTML = remPendingFiles.map((file, i) => `
+      <div style="position:relative">
+        <img src="${URL.createObjectURL(file)}" style="width:100%;height:90px;object-fit:cover;border-radius:10px;border:1px solid rgba(1,34,36,0.1)">
+        <button type="button" onclick="removeRemFile(${i})" style="position:absolute;top:4px;right:4px;background:rgba(1,34,36,0.7);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:11px;cursor:pointer;line-height:1">✕</button>
+      </div>`).join('');
+  }
+
+  function removeRemFile(i) {
+    remPendingFiles.splice(i, 1);
+    renderRemPreview();
+  }
+
+  function submitEntityReport() {
+    const entityName = document.getElementById('rem-entity-name').value.trim();
+    const reason      = document.getElementById('rem-reason').value;
+    const desc        = document.getElementById('rem-desc').value.trim();
+
+    if (!entityName) { showToast('Please tell us who you\u2019re reporting.', 'error'); return; }
+    if (!desc)        { showToast('Please add a short description.', 'error'); return; }
+
+    // reports.php reads $_POST / $_FILES, so this must be sent as
+    // multipart/form-data, not JSON.
+    const fd = new FormData();
+    fd.append('entity_name', entityName);
+    fd.append('reason', reason);
+    fd.append('description', desc);
+    remPendingFiles.forEach(file => fd.append('images[]', file));
+
+    fetch(ENTITY_CREATE_URL, {
+      method: 'POST',
+      body: fd, // do NOT set Content-Type manually — the browser sets the multipart boundary
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.success) { showToast(data.message || 'Could not submit your report.', 'error'); return; }
+      closeModal('reportEntityModal');
+      showToast('Report submitted. Our team will review it shortly.');
+      loadEntityReports();
+    })
+    .catch(() => showToast('Could not reach the server.', 'error'));
+  }
+
+  /* ── TOPBAR PROFILE SYNC ──────────────────────────────────── */
   (async function () {
     const API = 'php/userprof.php';
     try {
@@ -281,6 +978,139 @@ body { background: #F4F1E6; }
       console.warn('Could not sync avatar.', err);
     }
   })();
+
+  /* ── LOGOUT CONFIRM ───────────────────────────────────────── */
+  function confirmLogout() {
+    document.getElementById('logoutConfirmPopup').style.display = 'flex';
+  }
+  function closeLogoutConfirm() {
+    document.getElementById('logoutConfirmPopup').style.display = 'none';
+  }
+  function doLogout() {
+    window.location.href = 'php/logout.php';
+  }
+
+  /* ── FEEDBACK ─────────────────────────────────────────────── */
+  let fbRating = 0;
+  let fbTarget = 'app';
+
+  function setFbRating(v) {
+    fbRating = v;
+    document.querySelectorAll('#fb-stars span').forEach(x =>
+      x.classList.toggle('on', parseInt(x.dataset.v, 10) <= v));
+  }
+  document.querySelectorAll('#fb-stars span').forEach(s =>
+    s.addEventListener('click', () => setFbRating(parseInt(s.dataset.v, 10))));
+
+  function setFbTarget(t) {
+    fbTarget = t;
+    document.getElementById('fb-t-app').classList.toggle('active', t === 'app');
+    document.getElementById('fb-t-facility').classList.toggle('active', t === 'facility');
+    document.getElementById('fb-facility-group').style.display = t === 'facility' ? 'block' : 'none';
+  }
+
+  async function openFeedbackModal() {
+    setFbRating(0);
+    setFbTarget('app');
+    document.getElementById('fb-comment').value = '';
+    document.getElementById('fb-facility').innerHTML = '<option value="">Loading…</option>';
+    openModal('feedbackModal');
+
+    // facilities to pick from
+    try {
+      const res  = await fetch('php/feedback.php?action=facilities');
+      const data = await res.json();
+      const list = (data.success && data.facilities) || [];
+      document.getElementById('fb-facility').innerHTML = list.length
+        ? '<option value="">Select a facility…</option>' + list.map(f => `<option value="${f.id}">${esc((f.name || '').trim())}${f.type ? ' (' + esc(f.type) + ')' : ''}</option>`).join('')
+        : '<option value="">No facilities available</option>';
+    } catch (err) {
+      document.getElementById('fb-facility').innerHTML = '<option value="">Could not load facilities</option>';
+    }
+  }
+
+  async function submitFeedback() {
+    if (!fbRating) { showToast('Please choose a star rating.', 'error'); return; }
+    const facilityId = document.getElementById('fb-facility').value;
+    if (fbTarget === 'facility' && !facilityId) { showToast('Please choose a facility.', 'error'); return; }
+
+    const btn = document.getElementById('fb-submit');
+    btn.disabled = true;
+    try {
+      const res = await fetch('php/feedback.php?action=create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          rating: fbRating,
+          comment: document.getElementById('fb-comment').value.trim(),
+          target_type: fbTarget,
+          facility_id: fbTarget === 'facility' ? facilityId : null
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        closeModal('feedbackModal');
+        showToast('Thank you for your feedback!');
+        loadMyFeedback();
+        switchReportTab('feedback');
+      } else {
+        showToast(data.message || 'Could not submit feedback.', 'error');
+      }
+    } catch (err) {
+      showToast('Could not reach the server.', 'error');
+    }
+    btn.disabled = false;
+  }
+
+  /* ── MY FEEDBACK TAB ──────────────────────────────────────── */
+  function loadMyFeedback() {
+    fetch('php/feedback.php?action=list_mine')
+      .then(r => r.json())
+      .then(data => renderMyFeedback(data.success ? (data.feedback || []) : []))
+      .catch(() => renderMyFeedback([]));
+  }
+
+  function renderMyFeedback(items) {
+    document.getElementById('fb-loading').style.display = 'none';
+    const badge = document.getElementById('fb-tab-badge');
+    if (!items.length) {
+      document.getElementById('fb-content').style.display = 'none';
+      document.getElementById('fb-empty').style.display = 'block';
+      badge.style.display = 'none';
+      return;
+    }
+    document.getElementById('fb-empty').style.display = 'none';
+    document.getElementById('fb-content').style.display = 'block';
+    badge.textContent = items.length;
+    badge.style.display = 'inline-block';
+
+    document.getElementById('fb-tbody').innerHTML = items.map(f => {
+      const about = f.target_type === 'facility'
+        ? `<strong>${esc((f.facility_name || 'Facility').trim())}</strong>`
+        : '<strong>PawConnect app</strong>';
+      const r = parseInt(f.rating, 10) || 0;
+      const stars = `<span style="color:#DA8063">${'★'.repeat(r)}</span><span style="color:rgba(1,34,36,0.15)">${'★'.repeat(5 - r)}</span>`;
+      const comment = f.comment ? esc(f.comment) : '<span style="color:rgba(1,34,36,0.4)">—</span>';
+      return `<tr>
+        <td>${about}</td>
+        <td style="white-space:nowrap">${stars}</td>
+        <td>${comment}</td>
+        <td>${formatDateDisplay(f.created_at)}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  /* ── INIT ─────────────────────────────────────────────────── */
+  loadMissingReports();
+  loadEntityReports();
+  loadMyFeedback();
+
+  // Deep link from notifications: report.html?feedback=1 opens the popup
+  if (new URLSearchParams(window.location.search).get('feedback') === '1') {
+    switchReportTab('feedback');
+    openFeedbackModal();
+    history.replaceState(null, '', window.location.pathname);
+  }
 </script>
 </body>
 </html>

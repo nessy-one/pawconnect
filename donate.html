@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PawConnect - Donate</title>
     <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -64,16 +65,37 @@
             display: flex; align-items: center;
             gap: 20px; margin-left: auto; flex-shrink: 0;
         }
+        .nav { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
         .nav a {
             display: flex; align-items: center; justify-content: center;
-            text-decoration: none; transition: opacity 0.15s, transform 0.15s;
-        }
+            text-decoration: none;
+            transition: opacity 0.15s, transform 0.15s;
+            position: relative;
+            padding: 2px;
+        } 
         .nav a:hover { opacity: 0.75; transform: scale(1.1); }
-        .nav svg {
-            width: 24px; height: 24px;
-            stroke: var(--dark); fill: none;
-            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+        .nav svg { width: 24px; height: 24px; stroke: #012224; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        .topbar-bell-badge {
+            position: absolute;
+            top: -5px;
+            right: -7px;
+            background: #d64545;
+            color: white;
+            font-size: 9.5px;
+            font-weight: 700;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 0 3px;
+            border: 2px solid var(--salmon);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+            line-height: 1;
         }
+
         .hamburger {
             display: none; flex-direction: column;
             gap: 5px; cursor: pointer; padding: 4px; margin-left: auto;
@@ -118,7 +140,9 @@
             position: relative;
         }
         .hero::before {
-            content: '🐾';
+            content: '\f1b0'; /* fa-paw */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
             position: absolute;
             font-size: 160px;
             opacity: 0.08;
@@ -393,6 +417,7 @@
             border: 1.5px solid #d5d0bc;
             box-shadow: 0 4px 20px rgba(0,0,0,0.07);
             overflow: hidden;
+            margin-bottom: 36px;
         }
 
         .wish-inner {
@@ -450,6 +475,269 @@
         }
         .wish-tag:hover .wish-dot { background: rgba(244,241,230,0.7); }
 
+        /* ── TRANSPARENCY / IMPACT REPORTS SECTION ── */
+        .transparency-section {
+            background: var(--cream-dark);
+            border-radius: 16px;
+            border: 1.5px solid #d5d0bc;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+            overflow: hidden;
+            margin-bottom: 36px;
+        }
+        .transparency-header {
+            background: var(--blue);
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .transparency-header-text h2 {
+            font-family: 'Cherry Bomb One', cursive;
+            font-size: clamp(22px, 3vw, 30px);
+            color: var(--cream);
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .transparency-header-text p {
+            font-size: 13px;
+            color: rgba(244,241,230,0.85);
+            line-height: 1.6;
+            max-width: 480px;
+        }
+        .transparency-filter {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .filter-chip {
+            padding: 7px 16px;
+            border-radius: 999px;
+            border: 1.5px solid rgba(244,241,230,0.6);
+            background: transparent;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--cream);
+            cursor: pointer;
+            transition: background 0.18s, color 0.18s;
+            white-space: nowrap;
+        }
+        .filter-chip.active,
+        .filter-chip:hover {
+            background: var(--cream);
+            color: var(--blue-dark);
+            border-color: var(--cream);
+        }
+
+/*        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            padding: 28px 32px 8px;
+        }
+
+        .impact-card {
+            background: var(--cream);
+            border-radius: 14px;
+            border: 1.5px solid #d0cbb8;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.18s, box-shadow 0.18s;
+        }
+        .impact-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.10);
+        }
+        .impact-card-img {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+            background: #ddd8c6;
+        }
+        .impact-card-img img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .impact-tag {
+            position: absolute;
+            top: 10px; left: 10px;
+            background: var(--salmon);
+            color: var(--cream);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 5px 10px;
+            border-radius: 999px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .impact-card-body {
+            padding: 16px 18px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+        .impact-card-body h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--dark);
+            line-height: 1.35;
+        }
+        .impact-date {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--blue-dark);
+        }
+        .impact-card-body p {
+            font-size: 13px;
+            color: #6b6555;
+            line-height: 1.55;
+            flex: 1;
+        }
+        .impact-amount {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--salmon-dark);
+        }
+        .impact-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--blue-dark);
+            text-decoration: none;
+            cursor: pointer;
+            transition: gap 0.15s, opacity 0.15s;
+        }
+        .impact-link:hover { gap: 9px; opacity: 0.8; }
+        .impact-link svg {
+            width: 13px; height: 13px;
+            stroke: var(--blue-dark);
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .transparency-footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 32px 30px;
+        }
+        .btn-view-all {
+            padding: 11px 26px;
+            border-radius: 999px;
+            border: 1.5px solid var(--blue);
+            background: transparent;
+            color: var(--blue-dark);
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.18s, color 0.18s;
+        }
+        .btn-view-all:hover {
+            background: var(--blue);
+            color: var(--cream);
+        }
+
+        /* ── IMPACT GRID FIXES ── */
+.impact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);   /* 6 cards = 2 clean rows of 3 */
+    gap: 20px;
+    padding: 28px 32px 8px;
+}
+.impact-card { cursor: pointer; }
+.impact-card-img img { font-size: 0; color: transparent; }  /* hides alt text if an image fails */
+.impact-tag { z-index: 2; }
+.impact-card-body h4 { min-height: calc(1.35em * 2); }      /* keeps titles aligned across cards */
+
+/* Placeholder shown when an image can't load */
+.impact-card-img.no-img,
+.modal-img.no-img {
+    background: linear-gradient(135deg, #e8e4d4, #d8d2bc);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.impact-card-img.no-img::after,
+.modal-img.no-img::after {
+    content: '\f1b0'; /* fa-paw */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 48px;
+    opacity: 0.35;
+}
+.impact-card-img.no-img img,
+.modal-img.no-img img { display: none; }
+
+@media (max-width: 900px) {
+    .impact-grid { grid-template-columns: repeat(2, 1fr); padding: 22px 20px 4px; }
+}
+@media (max-width: 560px) {
+    .impact-grid { grid-template-columns: 1fr; gap: 16px; padding: 18px 16px 4px; }
+}
+
+        /* ── RECEIPT MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(1,34,36,0.55);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-box {
+            background: var(--cream);
+            border-radius: 16px;
+            max-width: 460px;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .modal-img {
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: #ddd8c6;
+        }
+        .modal-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .modal-content { padding: 22px 24px 26px; }
+        .modal-content h4 {
+            font-size: 17px; font-weight: 700; color: var(--dark); margin-bottom: 6px;
+        }
+        .modal-content .impact-date { display: block; margin-bottom: 10px; }
+        .modal-content p { font-size: 13.5px; color: #6b6555; line-height: 1.6; margin-bottom: 14px; }
+        .modal-close {
+            width: 100%;
+            padding: 11px;
+            border-radius: 9px;
+            border: none;
+            background: var(--blue);
+            color: var(--cream);
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+        .modal-close:hover { background: var(--blue-dark); }
+
         /* ── RESPONSIVE ── */
         @media (max-width: 960px) {
             .main-grid {
@@ -480,6 +768,8 @@
             .wish-img { display: none; }
             .wish-grid { justify-content: center; }
             .field-row { grid-template-columns: 1fr; }
+            .transparency-header { flex-direction: column; align-items: flex-start; }
+            .impact-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); padding: 22px 20px 4px; }
         }
 
         @media (max-width: 480px) {
@@ -495,6 +785,9 @@
             .qr-box img { width: 160px; height: 160px; }
             .wish-inner { padding: 22px 18px; }
             .wish-tag { font-size: 13px; padding: 7px 15px; }
+            .transparency-header { padding: 20px 20px; }
+            .impact-grid { grid-template-columns: 1fr 1fr; gap: 12px; padding: 18px 16px 4px; }
+            .impact-card-body { padding: 12px 14px 14px; }
         }
     </style>
 </head>
@@ -522,8 +815,9 @@
             <a href="save.html" title="Favourites">
                 <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             </a>
-            <a href="notifications.html" title="Notifications">
+             <a href="notifications.html" title="Notifications">
                 <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                <span class="topbar-bell-badge" id="topbarBellBadge">0</span>
             </a>
         </div>
         <div class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
@@ -635,7 +929,7 @@
                 <div class="qr-box">
                     <h3>Scan to Donate</h3>
                     <p>Use GCash, Maya, or any QR-enabled banking app to scan and donate directly.</p>
-                    <img src="image/qr.png" alt="QR Code for Donation">
+                    <img src="image/qr.jpg" alt="QR Code for Donation">
                     <span class="qr-label">GCash / Maya / Online Banking</span>
                 </div>
             </div>
@@ -644,9 +938,9 @@
 
         <!-- DIVIDER -->
         <div class="divi">
-            <h2>🐾 HELP US HELP MORE STRAY ANIMALS</h2>
+            <h2><i class="fa-solid fa-paw"></i> HELP US HELP MORE STRAY ANIMALS</h2>
         </div>
-
+         
         <!-- WISHLIST -->
         <div class="wish-section">
             <div class="wish-inner">
@@ -669,7 +963,165 @@
             </div>
         </div>
 
+        <!-- DONATION TRANSPARENCY / IMPACT REPORTS -->
+        <!-- <div class="transparency-section">
+            <div class="transparency-header">
+                <div class="transparency-header-text">
+                    <h2>Donation Transparency</h2>
+                    <p>See exactly how your generosity is put to work — photos, receipts, purchased items, and progress updates from the shelter.</p>
+                </div>
+                <div class="transparency-filter" id="transparencyFilter">
+                    <button class="filter-chip active" onclick="filterImpact('all', this)">All</button>
+                    <button class="filter-chip" onclick="filterImpact('Medical Care', this)">Medical</button>
+                    <button class="filter-chip" onclick="filterImpact('Food & Supplies', this)">Food & Supplies</button>
+                    <button class="filter-chip" onclick="filterImpact('Rescue Operations', this)">Rescue</button>
+                    <button class="filter-chip" onclick="filterImpact('Shelter Animals', this)">Shelter</button>
+                </div>
+            </div>
+
+            <div class="impact-grid" id="impactGrid">
+
+                <div class="impact-card" data-category="Medical Care" onclick="openReceipt(this)"
+                     data-title="Vaccination Drive for 24 Puppies"
+                     data-date="July 28, 2026"
+                     data-amount="₱18,400 utilized"
+                     data-desc="Funded a full round of anti-rabies and 5-in-1 vaccines for 24 puppies at the shelter, plus deworming tablets for the whole litter.">
+                    <div class="impact-card-img">
+                        <span class="impact-tag">Medical</span>
+                        <img src="image/impact-vaccines.jpg" alt="Puppies receiving vaccinations">
+                    </div>
+                    <div class="impact-card-body">
+                        <span class="impact-date">July 28, 2026</span>
+                        <h4>Vaccination Drive for 24 Puppies</h4>
+                        <p>Anti-rabies &amp; 5-in-1 vaccines plus deworming for the whole litter.</p>
+                        <span class="impact-amount">₱18,400 utilized</span>
+                        <a class="impact-link">View receipt
+                            <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="impact-card" data-category="Food & Supplies" onclick="openReceipt(this)"
+                     data-title="200kg Dog & Cat Food Restock"
+                     data-date="July 15, 2026"
+                     data-amount="₱24,900 utilized"
+                     data-desc="Purchased 200kg of dry dog and cat food to cover the shelter's feeding needs for the month, sourced from a bulk supplier in Tarlac.">
+                    <div class="impact-card-img">
+                        <span class="impact-tag">Supplies</span>
+                        <img src="image/impact-foodrestock.jpg" alt="Sacks of pet food">
+                    </div>
+                    <div class="impact-card-body">
+                        <span class="impact-date">July 15, 2026</span>
+                        <h4>200kg Dog &amp; Cat Food Restock</h4>
+                        <p>A month's worth of feeding covered through a bulk local supplier.</p>
+                        <span class="impact-amount">₱24,900 utilized</span>
+                        <a class="impact-link">View receipt
+                            <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="impact-card" data-category="Rescue Operations" onclick="openReceipt(this)"
+                     data-title="Roadside Rescue: Injured Stray, Brgy. San Roque"
+                     data-date="July 9, 2026"
+                     data-amount="₱7,650 utilized"
+                     data-desc="Covered transport, emergency wound treatment, and a week of antibiotics for a stray dog rescued after a road accident.">
+                    <div class="impact-card-img">
+                        <span class="impact-tag">Rescue</span>
+                        <img src="image/impact-rescue.jpg" alt="Rescued stray dog recovering">
+                    </div>
+                    <div class="impact-card-body">
+                        <span class="impact-date">July 9, 2026</span>
+                        <h4>Roadside Rescue: Injured Stray</h4>
+                        <p>Transport, wound treatment, and antibiotics after a road accident.</p>
+                        <span class="impact-amount">₱7,650 utilized</span>
+                        <a class="impact-link">View receipt
+                            <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="impact-card" data-category="Shelter Animals" onclick="openReceipt(this)"
+                     data-title="New Bedding & Kennel Repairs"
+                     data-date="June 30, 2026"
+                     data-amount="₱11,200 utilized"
+                     data-desc="Replaced worn-out bedding across 15 kennels and repaired two damaged enclosures ahead of the rainy season.">
+                    <div class="impact-card-img">
+                        <span class="impact-tag">Shelter</span>
+                        <img src="image/impact-bedding.jpg" alt="New kennel bedding">
+                    </div>
+                    <div class="impact-card-body">
+                        <span class="impact-date">June 30, 2026</span>
+                        <h4>New Bedding &amp; Kennel Repairs</h4>
+                        <p>15 kennels re-bedded and 2 enclosures repaired before the rains.</p>
+                        <span class="impact-amount">₱11,200 utilized</span>
+                        <a class="impact-link">View receipt
+                            <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="impact-card" data-category="Medical Care" onclick="openReceipt(this)"
+                     data-title="Spay & Neuter Batch: 12 Cats"
+                     data-date="June 18, 2026"
+                     data-amount="₱21,000 utilized"
+                     data-desc="Sponsored a spay/neuter batch for 12 shelter cats with our partner veterinary clinic, including post-op recovery care.">
+                    <div class="impact-card-img">
+                        <span class="impact-tag">Medical</span>
+                        <img src="image/impact-spayneuter.jpg" alt="Cat recovering after spay/neuter surgery">
+                    </div>
+                    <div class="impact-card-body">
+                        <span class="impact-date">June 18, 2026</span>
+                        <h4>Spay &amp; Neuter Batch: 12 Cats</h4>
+                        <p>Surgeries and post-op recovery care with our partner vet clinic.</p>
+                        <span class="impact-amount">₱21,000 utilized</span>
+                        <a class="impact-link">View receipt
+                            <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="impact-card" data-category="Rescue Operations" onclick="openReceipt(this)"
+                     data-title="Flood Response: 8 Animals Relocated"
+                     data-date="June 3, 2026"
+                     data-amount="₱15,300 utilized"
+                     data-desc="Emergency relocation and temporary housing for 8 animals from a flood-affected barangay, including transport fuel and crates.">
+                    <div class="impact-card-img">
+                        <span class="impact-tag">Rescue</span>
+                        <img src="image/impact-flood.jpg" alt="Animals being relocated during flood response">
+                    </div>
+                    <div class="impact-card-body">
+                        <span class="impact-date">June 3, 2026</span>
+                        <h4>Flood Response: 8 Animals Relocated</h4>
+                        <p>Emergency relocation and temporary housing for a flood-affected barangay.</p>
+                        <span class="impact-amount">₱15,300 utilized</span>
+                        <a class="impact-link">View receipt
+                            <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="transparency-footer">
+                <button class="btn-view-all" onclick="alert('This would open the full Impact Reports archive.')">View Full Transparency Report</button>
+            </div>
+        </div> -->
     </div><!-- /page -->
+
+    <!-- RECEIPT / REPORT MODAL -->
+    <div class="modal-overlay" id="receiptModal" onclick="if(event.target===this) closeReceipt()">
+        <div class="modal-box">
+            <div class="modal-img"><img id="modalImg" src="" alt=""></div>
+            <div class="modal-content">
+                <span class="impact-date" id="modalDate"></span>
+                <h4 id="modalTitle"></h4>
+                <p id="modalDesc"></p>
+                <p style="font-weight:700; color: var(--salmon-dark);" id="modalAmount"></p>
+                <button class="modal-close" onclick="closeReceipt()">Close</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         function toggleMenu() {
@@ -701,8 +1153,100 @@
                 alert('Please enter a valid donation amount.');
                 return;
             }
-            alert(`Thank you for your donation of ₱${parseInt(amount).toLocaleString()}! Every peso helps. 🐾`);
+            const firstName = document.querySelector('.field-row .field:nth-child(1) input').value.trim();
+            const lastName  = document.querySelector('.field-row .field:nth-child(2) input').value.trim();
+            const email     = document.querySelector('input[type="email"]').value.trim();
+            const mobile    = document.querySelector('input[type="tel"]').value.trim();
+            const purpose   = document.querySelector('.field select').value;
+            const recurring = document.getElementById('tabRecurring').classList.contains('active');
+
+            if (!firstName || !lastName) { alert('Please enter your first and last name.'); return; }
+            if (!email) { alert('Please enter your email address.'); return; }
+
+            const btn = document.querySelector('.btn-donate');
+            btn.disabled = true;
+            btn.textContent = 'Processing…';
+
+            fetch('php/donate.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    first_name: firstName, last_name: lastName, email, mobile,
+                    purpose, amount: parseFloat(amount), recurring,
+                }),
+            })
+            .then(r => r.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.textContent = 'Donate Now';
+                if (!data.success) { alert(data.message || 'Could not process your donation.'); return; }
+                alert(`Thank you for your donation of ₱${parseInt(amount).toLocaleString()}! Every peso helps.`);
+                document.getElementById('amountInput').value = '';
+                document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+            })
+            .catch(() => {
+                btn.disabled = false;
+                btn.textContent = 'Donate Now';
+                alert('Could not reach the server. Please try again.');
+            });
         }
+
+        /* ── TRANSPARENCY / IMPACT REPORTS ── */
+        function filterImpact(category, btn) {
+            document.querySelectorAll('#transparencyFilter .filter-chip').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.impact-card').forEach(card => {
+                const match = category === 'all' || card.dataset.category === category;
+                card.style.display = match ? '' : 'none';
+            });
+        }
+
+        function openReceipt(card) {
+            const modalImg = document.getElementById('modalImg');
+            const wrap = modalImg.parentElement;
+            wrap.classList.remove('no-img');
+            modalImg.onerror = () => wrap.classList.add('no-img');
+            modalImg.src = card.querySelector('img').src;
+            modalImg.alt = card.dataset.title;
+            document.getElementById('modalTitle').textContent = card.dataset.title;
+            document.getElementById('modalDate').textContent = card.dataset.date;
+            document.getElementById('modalDesc').textContent = card.dataset.desc;
+            document.getElementById('modalAmount').textContent = card.dataset.amount;
+            document.getElementById('receiptModal').classList.add('open');
+        }
+
+        function closeReceipt() {
+            document.getElementById('receiptModal').classList.remove('open');
+        }
+
+        document.querySelectorAll('.impact-card-img img').forEach(img => {
+            const markBroken = () => img.parentElement.classList.add('no-img');
+            img.addEventListener('error', markBroken);
+            if (img.complete && img.naturalWidth === 0) markBroken();
+        });
+
+        // ── NOTIFICATION BADGE ───────────────────────────────────────────
+        async function loadUnreadBadge() {
+            try {
+                const res = await fetch('php/notifications.php?action=unread_count');
+                const data = await res.json();
+                if (!data.success) return;
+
+                const badge = document.getElementById('topbarBellBadge');
+                if (!badge) return;
+
+                if (data.count > 0) {
+                    badge.textContent = data.count > 9 ? '9+' : data.count;
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            } catch (err) {
+                console.warn('Could not load unread notification count.', err);
+            }
+        }
+
+        loadUnreadBadge();
     </script>
 </body>
 </html>

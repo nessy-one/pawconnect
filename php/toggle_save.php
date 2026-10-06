@@ -18,18 +18,23 @@ if (!$item_id) {
     echo json_encode(['success' => false, 'message' => 'Missing item_id.']);
     exit;
 }
-
-if ($action === 'save') {
-    $stmt = $conn->prepare("INSERT IGNORE INTO saves (user_id, item_id, item_type) VALUES (?, ?, ?)");
-    $stmt->bind_param("iis", $user_id, $item_id, $item_type);
-    $stmt->execute();
-    echo json_encode(['success' => true]);
-} elseif ($action === 'unsave') {
-    $stmt = $conn->prepare("DELETE FROM saves WHERE user_id=? AND item_id=? AND item_type=?");
-    $stmt->bind_param("iis", $user_id, $item_id, $item_type);
-    $stmt->execute();
-    echo json_encode(['success' => true]);
-} else {
-    echo json_encode(['success' => false, 'message' => 'Invalid action.']);
-}
+try {
+    if ($action === 'save') {
+        $stmt = $conn->prepare("INSERT IGNORE INTO saves (user_id, item_id, item_type) VALUES (?, ?, ?)");
+        $stmt->bind_param("iis", $user_id, $item_id, $item_type);
+        $stmt->execute();
+        echo json_encode(['success' => true]);
+    } elseif ($action === 'unsave') {
+        $stmt = $conn->prepare("DELETE FROM saves WHERE user_id=? AND item_id=? AND item_type=?");
+        $stmt->bind_param("iis", $user_id, $item_id, $item_type);
+        $stmt->execute();
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Invalid action.']);
+    }
+} catch (\Throwable $e) {
+    error_log('toggle_save.php error: ' . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Server error.']);
+}  
 ?>

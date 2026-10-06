@@ -2,7 +2,7 @@
 // register.php
 session_start();
 include "db.php";
-
+ 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $name = trim($_POST['name']);
@@ -15,8 +15,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // $mobile = trim($_POST['mobile'] ?? '');
  
     // Validation
+    // if (empty($name) || empty($username) || empty($email) || empty($password)) {
+    //     die("All fields are required.");
+    // }
+
     if (empty($name) || empty($username) || empty($email) || empty($password)) {
-        die("All fields are required.");
+        header("Location: ../register.html?error=missing_fields");
+        exit();
     }
 
     if ($password !== $confirm) {
@@ -32,13 +37,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $check->bind_param("s", $email);
     $check->execute();
     $check->store_result();
-
     if ($check->num_rows > 0) {
         die("Email already registered.");
-        
     }
 
-    // Hash password
+    // Check if username already exists — BEFORE inserting, not after
+    $check2 = $conn->prepare("SELECT id FROM users WHERE username = ?");
+    $check2->bind_param("s", $username);
+    $check2->execute();
+    $check2->store_result();
+    if ($check2->num_rows > 0) {
+        header("Location: ../register.html?error=username_taken");
+        exit();
+    }
+
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     // Insert user
@@ -48,16 +60,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare("INSERT INTO users (name, username, email, password) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("ssss", $name, $username, $email, $hashedPassword);
 
+    
     if ($stmt->execute()) {
-        // Save session
         $_SESSION['user_id'] = $stmt->insert_id;
-        $_SESSION['email'] = $email;
-        // $_SESSION['role'] = $role;
-
-        // Redirect (important for system flow)
+        $_SESSION['user']    = $username;
+        $_SESSION['name']    = $name;
+        $_SESSION['email']   = $email;
         header("Location: ../login.html?registered=1");
         exit();
-
     } else {
         echo "Error: " . $stmt->error;
     }

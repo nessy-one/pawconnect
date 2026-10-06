@@ -1,10 +1,12 @@
 <!DOCTYPE html>
+<!-- products.html -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PawConnect – products</title>
     <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -17,7 +19,7 @@
             --card-bg: #FFFDF6;
             --shadow:  0 2px 12px rgba(0,0,0,0.08);
         }
-
+  
         body {
             background: var(--cream);
             font-family: 'Poppins', sans-serif;
@@ -50,9 +52,10 @@
         .search {
             flex: 1;
             position: relative;
-            max-width: 1200px;
+            max-width: 80%;
             margin: 0 auto;
         }
+
         .search input {
             width: 100%;
             padding: 9px 40px 9px 16px;
@@ -65,6 +68,7 @@
             outline: none;
             box-shadow: 0 1px 4px rgba(0,0,0,0.08);
         }
+
         .search input::placeholder { color: var(--gray); }
         .search .search-icon {
             position: absolute; right: 12px; top: 50%;
@@ -72,10 +76,41 @@
             pointer-events: none;
         }
 
-        .nav { display: flex; align-items: center; gap: 18px; flex-shrink: 0; }
-        .nav a { display: flex; align-items: center; text-decoration: none; transition: opacity .15s; }
-        .nav a:hover { opacity: .7; }
-        .nav svg { width: 24px; height: 24px; stroke: var(--dark); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .nav {
+            display: flex; align-items: center;
+            gap: 20px; margin-left: auto; flex-shrink: 0;
+        }
+        .nav a {
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none;
+            transition: opacity 0.15s, transform 0.15s;
+            position: relative;
+            padding: 2px;
+        } 
+        .nav a:hover { opacity: 0.75; transform: scale(1.1); }
+        .nav svg {
+            width: 24px; height: 24px;
+            stroke: #053053; fill: none;
+            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+        }
+
+        .topbar-bell-badge {
+            position: absolute;
+            top: -6px;
+            right: -7px;
+            background: #c23b3b;
+            color: white;
+            font-size: 10px;
+            font-weight: 500;
+            min-width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 0 3px;
+            line-height: 1;
+        }
 
         /* ── PAGE ── */
         .page { max-width: 1440px; margin: 0 auto; padding: 32px 48px 60px; }
@@ -83,15 +118,16 @@
         /* ── HERO BANNER ── */
         .hero {
             display: flex;
-            align-items: center;
+            align-items: stretch;
             gap: 28px;
             margin-bottom: 36px;
             background: linear-gradient(135deg, #fff9ef 0%, #f0e9d2 100%);
             border-radius: 18px;
-            padding: 28px 32px;
+            padding: 22px 32px;
             box-shadow: var(--shadow);
             overflow: hidden;
             position: relative;
+            height: 250px;
         }
         .hero::before {
             content: '';
@@ -103,14 +139,17 @@
         }
         .hero-title {
             font-family: 'Cherry Bomb One', cursive;
-            font-size: clamp(36px, 6vw, 60px);
+            font-size: clamp(26px, 3.4vw, 42px);
             color: var(--blue);
             line-height: 1.1;
             flex-shrink: 0;
+            display: flex;
+            align-items: center;
         }
+
         .hero img {
             flex: 1;
-            max-height: 200px;
+            height: 100%;
             width: 100%;
             object-fit: cover;
             border-radius: 12px;
@@ -127,44 +166,102 @@
             margin-bottom: 16px;
         }
 
-        /* ── CATEGORY CHIPS ── */
-        .categories { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+        /* ── PAGE LAYOUT (filters sidebar + product grid) ── */
+        .page-layout {
+            display: flex;
+            align-items: flex-start;
+            gap: 28px;
+        }
 
-        .cat-chip {
+        .products-main { flex: 1; min-width: 0; }
+
+        /* ── FILTERS PANEL ── */
+        .filters-panel {
+            width: 264px;
+            flex-shrink: 0;
+            background: var(--card-bg);
+            border-radius: 22px;
+            box-shadow: var(--shadow);
+            padding: 26px 24px 22px;
+            position: sticky;
+            top: 90px;
+        }
+        .filters-header {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 18px 8px 10px;
-            border-radius: 999px;
-            border: 2px solid #e0dbd0;
-            background: var(--card-bg);
-            cursor: pointer;
-            transition: all .2s;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+        .filters-header h2 {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        .clear-btn {
+            background: none;
+            border: none;
             font-family: 'Poppins', sans-serif;
-            font-size: 13px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--salmon);
+            cursor: pointer;
+            padding: 4px 6px;
+        }
+        .clear-btn:hover { text-decoration: underline; }
+
+        .filter-section { margin-bottom: 6px; }
+        .filter-section-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            padding: 12px 0 10px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+        }
+        .filter-section:first-child .filter-section-head { border-top: none; }
+        .filter-section-head span:first-child {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        .toggle-icon {
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px;
             font-weight: 600;
             color: var(--gray);
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-        }
-        .cat-chip:hover { border-color: var(--blue); color: var(--blue); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(78,141,192,.15); }
-        .cat-chip.active { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 4px 14px rgba(78,141,192,.35); }
-        .cat-chip.active .cat-icon { filter: brightness(0) invert(1); }
-
-        .cat-icon {
-            width: 32px; height: 32px;
-            border-radius: 50%;
-            background: var(--cream);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 17px;
             flex-shrink: 0;
-            transition: filter .2s;
         }
-        .cat-chip.active .cat-icon { background: rgba(255,255,255,.2); filter: none; }
+
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding: 2px 0 14px;
+        }
+        .filter-options.collapsed { display: none; }
+
+        .filter-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13.5px;
+            color: var(--dark);
+            cursor: pointer;
+            line-height: 1.4;
+        }
+        .filter-check input[type="checkbox"] {
+            width: 17px; height: 17px;
+            accent-color: var(--blue);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
 
         /* ── PRODUCT GRID ── */
         .pet-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
         }
 
@@ -313,7 +410,7 @@
 
         /* ── EMPTY STATE ── */
         .empty-state { display: none; text-align: center; padding: 60px 20px; color: var(--gray); grid-column: 1/-1; }
-        .empty-state .emoji { font-size: 48px; margin-bottom: 12px; }
+        .empty-state .empty-state-icon { font-size: 48px; margin-bottom: 12px; }
         .empty-state p { font-size: 15px; }
 
         /* ── UNSAVE CONFIRM MODAL ── */
@@ -361,8 +458,11 @@
             .nav { gap: 12px; }
             .nav svg { width: 22px; height: 22px; }
             .page { padding: 20px 16px 48px; }
-            .hero { flex-direction: column; padding: 20px; gap: 16px; text-align: center; }
-            .hero img { max-height: 150px; }
+            .hero { flex-direction: column; height: auto; padding: 20px; gap: 14px; text-align: center; }
+            .hero-title { justify-content: center; }
+            .hero img { height: 130px; }
+            .page-layout { flex-direction: column; }
+            .filters-panel { width: 100%; position: static; top: auto; }
             .pet-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
             .pet-card .card-img-wrap { height: 150px; }
         }
@@ -373,6 +473,7 @@
             .search input { font-size: 13px; padding: 8px 36px 8px 12px; }
             .cat-chip { padding: 7px 14px 7px 8px; font-size: 12px; }
             .cat-icon { width: 28px; height: 28px; font-size: 15px; }
+            .hero img { height: 110px; }
             .pet-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .pet-card .card-img-wrap { height: 130px; }
             .card-name { font-size: 13px; }
@@ -409,6 +510,7 @@
         </a>
         <a href="notifications.html" title="Notifications">
             <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="topbar-bell-badge" id="topbarBellBadge">0</span>
         </a>
     </div>
 </div>
@@ -417,44 +519,57 @@
 
     <!-- HERO BANNER -->
     <div class="hero">
-        <div class="hero-title">Shop</div>
+        <div class="hero-title">Pet Supplies</div>
         <img src="image/shop.jpg" alt="Shop">
     </div>
 
-    <!-- CATEGORIES -->
-    <div class="section-label">Browse by Category</div>
-    <div class="categories">
-        <button class="cat-chip active" data-cat="all" onclick="filterCat('all', this)">
-            <div class="cat-icon">🐾</div> All
-        </button>
-        <button class="cat-chip" data-cat="toy" onclick="filterCat('toy', this)">
-            <div class="cat-icon">🧸</div> Toys
-        </button>
-        <button class="cat-chip" data-cat="accessories" onclick="filterCat('accessories', this)">
-            <div class="cat-icon">🏷️</div> Accessories
-        </button>
-        <button class="cat-chip" data-cat="apparel" onclick="filterCat('apparel', this)">
-            <div class="cat-icon">👕</div> Apparel
-        </button>
-        <button class="cat-chip" data-cat="food" onclick="filterCat('food', this)">
-            <div class="cat-icon">🍖</div> Food
-        </button>
-        <button class="cat-chip" data-cat="grooming" onclick="filterCat('grooming', this)">
-            <div class="cat-icon">🛁</div> Grooming
-        </button>
-        <button class="cat-chip" data-cat="others" onclick="filterCat('others', this)">
-            <div class="cat-icon">📦</div> Others
-        </button>
-    </div>
+    <div class="page-layout">
 
-    <div class="section-label">Discover</div>
+        <!-- FILTERS PANEL -->
+        <aside class="filters-panel">
+            <div class="filters-header">
+                <h2>Filters</h2>
+                <button class="clear-btn" onclick="clearFilters()">Clear</button>
+            </div>
 
-    <!-- PRODUCT GRID -->
-    <div class="pet-grid" id="petGrid">
-        <div class="empty-state" id="emptyState">
-            <div class="emoji">🐾</div>
-            <p>No products found. Try a different category or search.</p>
+            <div class="filter-section">
+                <div class="filter-section-head" onclick="toggleSection(this)">
+                    <span>Pet Type</span>
+                    <span class="toggle-icon">−</span>
+                </div>
+                <div class="filter-options">
+                    <label class="filter-check"><input type="checkbox" class="species-check" value="dog" onchange="onFilterChange()"> Dogs</label>
+                    <label class="filter-check"><input type="checkbox" class="species-check" value="cat" onchange="onFilterChange()"> Cats</label>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-section-head" onclick="toggleSection(this)">
+                    <span>Category</span>
+                    <span class="toggle-icon">−</span>
+                </div>
+                <div class="filter-options">
+                    <label class="filter-check"><input type="checkbox" class="category-check" value="toy" onchange="onFilterChange()"> Toys</label>
+                    <label class="filter-check"><input type="checkbox" class="category-check" value="accessories" onchange="onFilterChange()"> Accessories</label>
+                    <label class="filter-check"><input type="checkbox" class="category-check" value="apparel" onchange="onFilterChange()"> Apparel</label>
+                    <label class="filter-check"><input type="checkbox" class="category-check" value="food" onchange="onFilterChange()"> Food</label>
+                    <label class="filter-check"><input type="checkbox" class="category-check" value="grooming" onchange="onFilterChange()"> Grooming</label>
+                    <label class="filter-check"><input type="checkbox" class="category-check" value="others" onchange="onFilterChange()"> Others</label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- PRODUCT GRID -->
+        <div class="products-main">
+            <div class="section-label">Discover</div>
+            <div class="pet-grid" id="petGrid">
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-state-icon"><i class="fa-solid fa-paw"></i></div>
+                    <p>No products found. Try a different category or search.</p>
+                </div>
+            </div>
         </div>
+
     </div>
 
 </div>
@@ -481,7 +596,7 @@
 <!-- UNSAVE CONFIRM MODAL -->
 <div class="unsave-overlay" id="unsaveOverlay">
     <div class="unsave-box">
-        <div class="unsave-emoji">💔</div>
+        <div class="unsave-emoji"></div>
         <h3>Remove from saves?</h3>
         <p>This product will be removed from your saved list.</p>
         <div class="unsave-actions">
@@ -492,15 +607,17 @@
 </div>
 
 <script>
-    const USER_ID = 1;
-    let activeCategory = 'all';
+//    const USER_ID = 1;
 
     // ── FETCH PRODUCTS ──────────────────────────────────────────────
     function fetchProducts() {
-        const search = document.getElementById('searchInput').value.trim();
+        const categories = Array.from(document.querySelectorAll('.category-check:checked')).map(cb => cb.value);
+        const species    = Array.from(document.querySelectorAll('.species-check:checked')).map(cb => cb.value);
+        const search      = document.getElementById('searchInput').value.trim();
         const params = new URLSearchParams();
-        if (activeCategory !== 'all') params.append('category', activeCategory);
-        if (search)                   params.append('search',   search);
+        if (categories.length) params.append('category', categories.join(','));
+        if (species.length)    params.append('species',  species.join(','));
+        if (search)             params.append('search',   search);
 
         fetch('php/get_products.php?' + params.toString())
             .then(res => res.json())
@@ -525,9 +642,15 @@
             card.dataset.type = p.category;
             card.dataset.id   = p.id;
 
-            const cat   = p.category.charAt(0).toUpperCase() + p.category.slice(1);
-            const price = '₱ ' + parseFloat(p.price).toLocaleString();
+           /* const cat   = p.category.charAt(0).toUpperCase() + p.category.slice(1);
+            const price = '₱ ' + parseFloat(p.price).toLocaleString();*/
 
+            const cat = p.category.charAt(0).toUpperCase() + p.category.slice(1);
+
+            const minPrice = parseFloat(p.min_price);
+            const maxPrice = parseFloat(p.max_price);
+
+            const price = `₱ ${minPrice.toLocaleString()} - ₱ ${maxPrice.toLocaleString()}`;
             card.innerHTML = `
                 <div class="card-img-wrap">
                     <img src="product/${p.image}" alt="${p.name}"
@@ -556,7 +679,7 @@
 
     // ── RESTORE SAVED HEARTS ────────────────────────────────────────
     function applySavedHearts() {
-        fetch(`php/get_saved.php?user_id=${USER_ID}&item_type=product`)
+        fetch('php/get_saved.php?item_type=product')
             .then(r => r.json())
             .then(data => {
                 if (!data.success) return;
@@ -583,13 +706,13 @@
             fetch('php/toggle_save.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'save', item_id: prodId, item_type: 'product', user_id: USER_ID })
+                body: JSON.stringify({ action: 'save', item_id: prodId, item_type: 'product' })
             })
             .then(r => r.json())
             .then(data => {
                 btn.classList.remove('saving');
                 if (data.success) {
-                    showToast('Saved! Redirecting… ❤️');
+                    showToast('Saved! Redirecting…');
                     setTimeout(() => window.location.href = 'save.html', 900);
                 } else {
                     btn.classList.remove('liked');
@@ -598,7 +721,7 @@
             })
             .catch(() => {
                 btn.classList.remove('saving');
-                showToast('Saved! Redirecting… ❤️');
+                showToast('Saved! Redirecting…');
                 setTimeout(() => window.location.href = 'save.html', 900);
             });
 
@@ -609,7 +732,7 @@
                 fetch('php/toggle_save.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'unsave', item_id: prodId, item_type: 'product', user_id: USER_ID })
+                    body: JSON.stringify({ action: 'unsave', item_id: prodId, item_type: 'product' })
                 })
                 .then(r => r.json())
                 .then(data => {
@@ -634,12 +757,21 @@
         };
     }
 
-    // ── CATEGORY FILTER ─────────────────────────────────────────────
-    function filterCat(cat, btn) {
-        activeCategory = cat;
-        document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
-        btn.classList.add('active');
+    // ── FILTERS PANEL (Pet Type + Category checkboxes) ───────────────
+    function onFilterChange() {
         fetchProducts();
+    }
+
+    function clearFilters() {
+        document.querySelectorAll('.filters-panel input[type="checkbox"]').forEach(cb => cb.checked = false);
+        fetchProducts();
+    }
+
+    function toggleSection(headerEl) {
+        const options = headerEl.nextElementSibling;
+        const icon    = headerEl.querySelector('.toggle-icon');
+        const collapsed = options.classList.toggle('collapsed');
+        icon.textContent = collapsed ? '+' : '−';
     }
 
     // ── SEARCH (debounced) ──────────────────────────────────────────
@@ -653,7 +785,7 @@
                 fetch('php/log_activity.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: USER_ID, item_type: 'product', search_term: search })
+                    body: JSON.stringify({ item_type: 'product', search_term: search })
                 });
             }
         }, 300);
@@ -678,7 +810,7 @@
             data = {
                 id:          source.id,
                 name:        source.name,
-                price:       '₱ ' + parseFloat(source.price).toLocaleString(),
+                price:       `₱ ${parseFloat(source.min_price).toLocaleString()} - ₱ ${parseFloat(source.max_price).toLocaleString()}`,
                 category:    source.category,
                 description: source.description || '',
                 image:       source.image ? `product/${source.image}` : ''
@@ -705,7 +837,7 @@
     }
 
     function loadSimilar(productId) {
-        fetch(`php/recommend.php?module=products&user_id=${USER_ID}&product_id=${productId}`)
+        fetch(`php/recommend.php?module=products&product_id=${productId}`)
             .then(r => r.json())
             .then(data => {
                 if (!data.success || !data.recommendations.length) return;
@@ -718,7 +850,7 @@
                                 <div class="similar-item" data-product='${JSON.stringify(p).replace(/'/g, "&apos;")}'>
                                     <span class="similar-dot"></span>
                                     <span class="similar-name">${p.name}</span>
-                                    <span class="similar-price">₱${parseFloat(p.price).toFixed(2)}</span>
+                                    <span class="similar-price">₱${parseFloat(p.min_price).toLocaleString()} - ₱${parseFloat(p.max_price).toLocaleString()}</span>
                                 </div>`).join('')}
                         </div>
                     </div>`;
@@ -758,6 +890,29 @@
             toast.style.transform = 'translateX(-50%) translateY(20px)';
         }, 2500);
     }
+
+    // ── NOTIFICATION BADGE ───────────────────────────────────────────
+    async function loadUnreadBadge() {
+        try {
+            const res = await fetch('php/notifications.php?action=unread_count');
+            const data = await res.json();
+            if (!data.success) return;
+
+            const badge = document.getElementById('topbarBellBadge');
+            if (!badge) return;
+
+            if (data.count > 0) {
+                badge.textContent = data.count > 9 ? '9+' : data.count;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        } catch (err) {
+            console.warn('Could not load unread notification count.', err);
+        }
+    }
+
+    loadUnreadBadge();
 
     // ── INITIAL LOAD ────────────────────────────────────────────────
     const qs = new URLSearchParams(window.location.search).get('search');

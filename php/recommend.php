@@ -1,10 +1,14 @@
 <?php
 header('Content-Type: application/json');
 
-$host = "localhost";
-$user = "root";
-$pass = "123456";
-$db   = "pawconnect";
+// $host = "localhost";
+// $user = "root";
+// $pass = "123456";
+// $db   = "pawconnect";
+session_start();
+$userId = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : 0;
+
+require __DIR__ . '/db.php';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass, [
@@ -16,7 +20,7 @@ try {
     exit;
 }
 
-// ── Module router ─────────────────────────────────────────────────
+// ── Module router 
 $module = trim($_GET['module'] ?? '');
 if (!in_array($module, ['pets', 'products'])) {
     echo json_encode(['success' => false,
@@ -24,9 +28,9 @@ if (!in_array($module, ['pets', 'products'])) {
     exit;
 }
 
-$userId = isset($_GET['user_id']) ? (int)$_GET['user_id'] : 0;
+// $userId = isset($_GET['user_id']) ? (int)$_GET['user_id'] : 0;
 
-// ── Shared helper: frequency score ───────────────────────────────
+// ── Shared helper: frequency score ─────────────────
 // Returns 0.0–1.0 based on how often $value appears in $history
 function frequencyScore(array $history, string $value): float {
     if (empty($history)) return 0.0;
@@ -79,13 +83,24 @@ if ($module === 'pets') {
     // 3. Get current pet
     $currentPet = null;
     if ($petId > 0) {
-        $stmt = $pdo->prepare("SELECT * FROM pet WHERE id = ? LIMIT 1");
+        $stmt = $pdo->prepare(
+            "SELECT p.*, rt.chip_uid AS chip_uid
+             FROM pet p
+             LEFT JOIN rfid_tags rt ON rt.pet_id = p.id AND rt.status = 'active'
+             WHERE p.id = ?
+             LIMIT 1"
+        );
         $stmt->execute([$petId]);
         $currentPet = $stmt->fetch();
     }
 
     // 4. Fetch all other available pets
-    $stmt = $pdo->prepare("SELECT * FROM pet WHERE id != ? AND status = 'available'");
+    $stmt = $pdo->prepare(
+        "SELECT p.*, rt.chip_uid AS chip_uid
+         FROM pet p
+         LEFT JOIN rfid_tags rt ON rt.pet_id = p.id AND rt.status = 'active'
+         WHERE p.id != ? AND p.status = 'available'"
+    );
     $stmt->execute([$petId ?: 0]);
     $allPets = $stmt->fetchAll();
 
@@ -109,7 +124,7 @@ if ($module === 'pets') {
         if ($currentPet) {
             if (strtolower($pet['type'])     === strtolower($currentPet['type']))     $score += 3.0;
             if (strtolower($pet['breed'])    === strtolower($currentPet['breed']))    $score += 2.0;
-            if (strtolower($pet['urgency'])  === strtolower($currentPet['urgency']))  $score += 1.0;
+            if (strtolower($pet['urgency'] ?? '') === strtolower($currentPet['urgency'] ?? '')) $score += 1.0;
             if (strtolower($pet['location'] ?? '') === strtolower($currentPet['location'] ?? '')) $score += 1.0;
         }
 
@@ -230,7 +245,7 @@ elseif ($module === 'products') {
         foreach ($profile['terms'] as $term) {
             similar_text($term, strtolower($product['name']),        $p1);
             similar_text($term, strtolower($product['category']),    $p2);
-            similar_text($term, strtolower($product['description']), $p3);
+            similar_text($term, strtolower($product['description'] ?? ''), $p3);
             $score += (max($p1, $p2, $p3) / 100) * 1.0;
         }
 

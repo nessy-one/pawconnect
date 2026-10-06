@@ -1,22 +1,18 @@
 <?php
 session_start();
-//credentials: admin / admin123
-//admin_login.php
+// admin_login.php
 
-// Redirect if already logged in as admin
 if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
     header("Location: admin_dashboard.php");
     exit();
 }
-
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
 
-    // Connect to database
-    include "../db.php";
+    include "../php/db.php";
 
     // Fetch the admin user
     $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? AND role = 'admin' LIMIT 1");
@@ -26,25 +22,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if ($result->num_rows === 1) {
         $admin = $result->fetch_assoc();
-
-        // Check password (use password_verify if hashed, direct compare if plaintext)
         $passwordMatch = password_verify($password, $admin['password']);
-        // If still using plaintext temporarily: $passwordMatch = ($password === $admin['password']);
 
-        if ($passwordMatch) {
+        if (!$passwordMatch) {
+            $error = "Invalid username or password.";
+        } elseif ($admin['status'] === 'suspended') {
+            $error = "This account has been suspended.";
+        } else {
             $_SESSION['admin_id']   = $admin['id'];
+            $_SESSION['user_id']    = $admin['id'];
             $_SESSION['admin_name'] = $admin['name'];
             $_SESSION['role']       = $admin['role'];
 
             header("Location: admin_dashboard.php");
             exit();
-        } else {
-            $error = "Invalid username or password.";
         }
     } else {
         $error = "Invalid username or password.";
     }
-
     $stmt->close();
     $conn->close();
 }

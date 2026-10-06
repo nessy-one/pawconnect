@@ -312,7 +312,7 @@ body { background: #F4F1E6; }
 
 <script>
   // ── CONFIG ────────────────────────────────────────────────
-  const API = 'profile_api.php'; // Path to PHP file
+  const API = 'userprof.php'; 
 
   // ── HELPERS ───────────────────────────────────────────────
   function showPopup(message, isError = false) {
@@ -506,4 +506,4 @@ body { background: #F4F1E6; }
 </script>
 
 </body>
-</html>
+</html> 

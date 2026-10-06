@@ -3,21 +3,15 @@
 session_start();
 header('Content-Type: application/json');
 
-// ── DB CONFIG ────────────────────────────────────────
-$host   = "localhost";
-$user   = "root";
-$pass   = "123456";
-$db = "pawconnect";
+// ── DB CONNECTION ──────────────────────────────────────
+// FIX: this used to reimplement its own DB connection with hardcoded
+// credentials instead of reusing db.php — meaning the credentials lived
+// in two places that had to be kept in sync by hand. Use the shared
+// connection everywhere instead.
+require __DIR__ . '/db.php';
 
 function getdb(): mysqli {
-    global $host, $user, $pass, $db;
-    $conn = new mysqli($host, $user, $pass, $db);
-    if ($conn->connect_error) {
-        http_response_code(500);
-        echo json_encode(['success' => false, 'message' => 'DB connection failed: ' . $conn->connect_error]);
-        exit;
-    }
-    $conn->set_charset('utf8mb4');
+    global $conn;
     return $conn;
 }
 
@@ -25,22 +19,33 @@ function getdb(): mysqli {
 $action = $_GET['action'] ?? '';
 
 switch ($action) {
-    case 'list':   listMissing();   break;
-    case 'report': reportMissing(); break;
+    case 'list':      listMissing(); break;
+    case 'list_mine': listMine();    break;
+    case 'report':    reportMissing(); break;
     default:
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Unknown action.']);
 }
 
-// ── LIST ─────────────────────────────────────────────
+// ── LIST (public — all missing pets) ──────────────────
 function listMissing(): void {
     $db   = getdb();
     $type = $_GET['type'] ?? 'all';
 
-    if ($type === 'dog') {
-        $stmt = $db->prepare("SELECT * FROM missing WHERE pet_id = 1 ORDER BY id DESC");
-    } elseif ($type === 'cat') {
-        $stmt = $db->prepare("SELECT * FROM missing WHERE pet_id = 2 ORDER BY id DESC");
+    // if ($type === 'dog') {
+    //     $stmt = $db->prepare("SELECT * FROM missing WHERE pet_id = 1 ORDER BY id DESC");
+    // } elseif ($type === 'cat') {
+    //     $stmt = $db->prepare("SELECT * FROM missing WHERE pet_id = 2 ORDER BY id DESC");
+    // } else {
+    //     $stmt = $db->prepare("SELECT * FROM missing ORDER BY id DESC");
+    // }
+    if ($type === 'dog' || $type === 'cat') {
+        $stmt = $db->prepare(
+            "SELECT m.* FROM missing m
+            JOIN pet p ON p.id = m.pet_id
+            WHERE p.type = ? ORDER BY m.id DESC"
+        );
+        $stmt->bind_param('s', $type);
     } else {
         $stmt = $db->prepare("SELECT * FROM missing ORDER BY id DESC");
     }
@@ -53,6 +58,44 @@ function listMissing(): void {
     }
 
     echo json_encode($rows);
+    $stmt->close();
+    $db->close();
+}
+
+// ── LIST MINE (reports filed by the logged-in user) ───
+function listMine(): void {
+    if (!isset($_SESSION['user_id'])) {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'message' => 'Not logged in.']);
+        return;
+    }
+
+    $db  = getdb();
+    $uid = (int)$_SESSION['user_id'];
+
+    $stmt = $db->prepare(
+        "SELECT id, name, breed, place, date, contact, image, pet_id
+         FROM missing WHERE user_id = ? ORDER BY id DESC"
+    );
+    $stmt->bind_param('i', $uid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $reports = [];
+    while ($row = $result->fetch_assoc()) {
+        $reports[] = [
+            'id'          => $row['id'],
+            'pet_name'    => $row['name'],
+            'report_type' => 'missing', 
+            'location'    => $row['place'],
+            'created_at'  => $row['date'], 
+            'status'      => 'Open',       
+            'description' => $row['breed'] ? ('Breed: ' . $row['breed']) : '',
+            'images'      => $row['image'] ? [$row['image']] : [],
+        ];
+    }
+
+    echo json_encode(['success' => true, 'reports' => $reports]);
     $stmt->close();
     $db->close();
 }
@@ -107,7 +150,6 @@ function reportMissing(): void {
             return;
         }
 
-        // Save to miss/ folder (same level as missing.html)
         $uploadDir = __DIR__ . '/../miss/';
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0755, true);
@@ -126,16 +168,15 @@ function reportMissing(): void {
         $image_path = 'miss/' . $filename; // relative path stored in DB
     }
 
+    $marks = trim($_POST['marks'] ?? '');
+
     // ── INSERT ────────────────────────────────────────
     $stmt = $db->prepare(
-        "INSERT INTO missing (name, breed, place, date, contact, image, pet_id, user_id)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        "INSERT INTO missing (name, breed, place, date, contact, image, pet_id, user_id, marks)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
     );
 
-    $stmt->bind_param(
-        'ssssssii',
-        $name, $breed, $place, $date, $contact, $image_path, $pet_id, $user_id
-    );
+    $stmt->bind_param('ssssssiis', $name, $breed, $place, $date, $contact, $image_path, $pet_id, $user_id, $marks);
 
     if ($stmt->execute()) {
         echo json_encode(['success' => true, 'id' => $db->insert_id]);

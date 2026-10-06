@@ -19,13 +19,8 @@ register_shutdown_function(function () {
 
 // Set error handler so warnings/notices also return JSON
 set_error_handler(function ($severity, $msg, $file, $line) {
-    ob_end_clean();
-    header('Content-Type: application/json');
-    echo json_encode([
-        'success' => false,
-        'message' => 'PHP Error: ' . $msg . ' in ' . basename($file) . ':' . $line
-    ]);
-    exit;
+    error_log("Notice: $msg in $file:$line");
+    return true; // let execution continue instead of exiting
 });
 
 header('Content-Type: application/json');
@@ -74,6 +69,12 @@ $stmt->execute([$username]);
 $userRow = $stmt->fetch();
 $userId = $userRow ? (int)$userRow['id'] : 0;
 
+// Admin / vet logins keep their account id in $_SESSION['user_id'] and may not set
+// $_SESSION['user'], so fall back to it. Without this they get "Not logged in."
+if (!$userId && !empty($_SESSION['user_id'])) {
+    $userId = (int)$_SESSION['user_id'];
+}
+
 if (!$userId) {
     jsonOut(['success' => false, 'message' => 'Not logged in.']);
 }
@@ -102,19 +103,18 @@ try {
 }
 
 // ── UPLOAD DIR ───────────────────────────────────────────────
-$uploadDir = __DIR__ . '/uploads/profile_photos/';
+require_once __DIR__ . '/profile_photo.php';
 
-// Absolute URL so the browser resolves it from any page location
-$scheme    = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-$host      = $_SERVER['HTTP_HOST'];
-$scriptDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
-$uploadUrl = $scheme . '://' . $host . $scriptDir . '/uploads/profile_photos/';
+// delete na kasi gumawa nanaman aq ng isang file tangina ayw q n magthesis puta
+// $scheme    = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+// $host      = $_SERVER['HTTP_HOST'];
+// $scriptDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+// $uploadUrl = $scheme . '://' . $host . $scriptDir . '/uploads/profile_photos/';
 
-if (!is_dir($uploadDir)) {
-    mkdir($uploadDir, 0755, true);
-}
+// if (!is_dir($uploadDir)) {
+//     mkdir($uploadDir, 0755, true);
+// }
 
-// ── ROUTER ───────────────────────────────────────────────────
 $action = $_GET['action'] ?? ($_POST['action'] ?? '');
 
 switch ($action) {
@@ -134,10 +134,10 @@ switch ($action) {
             jsonOut(['success' => false, 'message' => 'User not found.']);
         }
 
-        $photoPath = $uploadDir . $userId . '.jpg';
-        $photoUrl  = file_exists($photoPath)
-            ? $uploadUrl . $userId . '.jpg?v=' . filemtime($photoPath)
-            : null;
+        $photoUrl = profilePhotoUrl($userId);
+        // $photoUrl  = file_exists($photoPath)
+        //     ? $uploadUrl . $userId . '.jpg?v=' . filemtime($photoPath)
+        //     : null;
 
         jsonOut([
             'success' => true,
@@ -193,58 +193,21 @@ switch ($action) {
 
     // ── UPLOAD PHOTO ─────────────────────────────────────────
     case 'upload_photo':
-        if (!extension_loaded('gd')) {
-            jsonOut(['success' => false, 'message' => 'GD image library not enabled. In XAMPP: open php.ini, remove the semicolon from ";extension=gd", then restart Apache.']);
-        }
         if (empty($_FILES['photo'])) {
             jsonOut(['success' => false, 'message' => 'No file uploaded.']);
         }
+        $result = processProfilePhotoUpload($userId, $_FILES['photo']);
+        if (!$result['success']) jsonOut($result);
 
-        $file    = $_FILES['photo'];
-        $allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-        $maxSize = 5 * 1024 * 1024;
+        $upd = $pdo->prepare("UPDATE users SET profile_image = ? WHERE id = ?");
+        $upd->execute([$result['photo'], $userId]);
 
-        if ($file['error'] !== UPLOAD_ERR_OK) {
-            jsonOut(['success' => false, 'message' => 'Upload error code: ' . $file['error']]);
-        }
-
-        $finfo    = new finfo(FILEINFO_MIME_TYPE);
-        $mimeReal = $finfo->file($file['tmp_name']);
-
-        if (!in_array($mimeReal, $allowed)) {
-            jsonOut(['success' => false, 'message' => 'Only JPEG, PNG, GIF, WEBP allowed.']);
-        }
-
-        if ($file['size'] > $maxSize) {
-            jsonOut(['success' => false, 'message' => 'File too large (max 5 MB).']);
-        }
-
-        $dest = $uploadDir . $userId . '.jpg';
-
-        $src = null;
-        switch ($mimeReal) {
-            case 'image/jpeg': $src = imagecreatefromjpeg($file['tmp_name']); break;
-            case 'image/png':  $src = imagecreatefrompng($file['tmp_name']);  break;
-            case 'image/gif':  $src = imagecreatefromgif($file['tmp_name']);  break;
-            case 'image/webp': $src = imagecreatefromwebp($file['tmp_name']); break;
-        }
-
-        if (!$src) {
-            jsonOut(['success' => false, 'message' => 'Could not process image.']);
-        }
-
-        imagejpeg($src, $dest, 90);
-        imagedestroy($src);
-
-        jsonOut(['success' => true, 'photo' => $uploadUrl . $userId . '.jpg?v=' . time(), 'message' => 'Photo updated.']);
-
+        jsonOut(['success' => true, 'photo' => $result['photo'], 'message' => 'Photo updated.']);
+    
     // ── REMOVE PHOTO ─────────────────────────────────────────
     case 'remove_photo':
-        $dest = $uploadDir . $userId . '.jpg';
-        if (file_exists($dest)) unlink($dest);
+        removeProfilePhoto($userId);
+        $upd = $pdo->prepare("UPDATE users SET profile_image = NULL WHERE id = ?");
+        $upd->execute([$userId]);
         jsonOut(['success' => true, 'message' => 'Photo removed.']);
-
-    default:
-        http_response_code(400);
-        jsonOut(['success' => false, 'message' => 'Unknown action: ' . htmlspecialchars($action)]);
 }

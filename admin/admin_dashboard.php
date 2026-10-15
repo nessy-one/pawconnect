@@ -422,10 +422,78 @@ body {
 /* ── DB status card ── */
 .db-status-card { display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid rgba(1,34,36,0.08); border-radius: 12px; padding: 12px 16px; font-size: 12px; color: rgba(1,34,36,0.6); margin-bottom: 16px; }
 .db-status-dot { width: 8px; height: 8px; border-radius: 50%; background: #DA8063; flex-shrink: 0; }
+
+/* ── RESPONSIVE ── */
+.menu-toggle {
+  display: none; width: 38px; height: 38px; padding: 0; flex-shrink: 0;
+  border: 1.5px solid rgba(1,34,36,0.15); border-radius: 10px;
+  background: transparent; color: #012224; cursor: pointer;
+  align-items: center; justify-content: center;
+}
+.menu-toggle:hover { background: rgba(78,141,192,0.1); }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(1,34,36,0.4); z-index: 140; }
+.topbar-left { min-width: 0; }
+
+@media (max-width: 1100px) {
+  /* !important is needed because some stat grids have inline column counts */
+  .stat-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .two-col { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 900px) {
+  .menu-toggle { display: flex; }
+  .sidebar {
+    position: fixed; top: 0; left: 0; height: 100dvh; z-index: 150;
+    transform: translateX(-100%); transition: transform .25s ease;
+  }
+  .sidebar.open { transform: none; box-shadow: 4px 0 24px rgba(1,34,36,0.2); }
+  .sidebar-overlay.show { display: block; }
+  body.menu-open { overflow: hidden; }
+
+  .topbar { padding: 10px 14px; }
+  .page { padding: 18px 14px 28px; }
+
+  /* tables scroll sideways inside their panel instead of being cut off */
+  .panel { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tbl { min-width: 620px; }
+}
+
+@media (max-width: 560px) {
+  .topbar-brand-name, .topbar-divider, .topbar-right > span { display: none; }
+  .topbar-right { gap: 10px; }
+  .notif-dropdown { position: fixed; top: 62px; left: 10px; right: 10px; width: auto; }
+
+  .page-header h2 { font-size: 17px; }
+  .stat-card { padding: 14px; }
+  .stat-card .value { font-size: 24px; }
+
+  .search-box { flex: 1 1 100%; max-width: none; }
+  .filter-select { flex: 1 1 140px; }
+  .toolbar .btn { flex: 1 1 100%; justify-content: center; }
+  .tabs { width: auto; max-width: 100%; overflow-x: auto; }
+  .tab { white-space: nowrap; flex-shrink: 0; }
+
+  .form-row { grid-template-columns: 1fr; }
+  .overlay { padding: 16px 10px; }
+  .modal-body { padding: 16px; max-height: calc(100dvh - 190px); }
+  .modal-foot { flex-wrap: wrap; }
+  .modal-foot .btn { flex: 1 1 auto; justify-content: center; }
+  .info-row { flex-direction: column; gap: 2px; }
+  .info-label { width: auto; min-width: 0; }
+  .evidence-gallery { grid-template-columns: repeat(2, 1fr); }
+  .lightbox-overlay { padding: 16px; }
+  .logout-card { padding: 24px 20px; max-width: 90vw; }
+  .toast { left: 16px; right: 16px; bottom: 16px; }
+}
+
+@media (max-width: 340px) {
+  .stat-grid { grid-template-columns: 1fr !important; }
+}
 </style>
 </head>
 <body>
 <div class="app">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <!-- ═══════════════ SIDEBAR ═══════════════ -->
 <nav class="sidebar" role="navigation" aria-label="Main navigation">
@@ -483,6 +551,9 @@ body {
   <!-- Topbar -->
   <div class="topbar">
     <div class="topbar-left">
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+      </button>
       <div class="topbar-brand">
         <div class="topbar-mark">
           <img src="admin-img/logo.png" alt="PawConnect logo"
@@ -1703,6 +1774,22 @@ body {
 </div>
 
 <script>
+(function () {
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('sidebarOverlay');
+  const btn = document.getElementById('menuToggle');
+  function setMenu(open) {
+    sb.classList.toggle('open', open);
+    ov.classList.toggle('show', open);
+    document.body.classList.toggle('menu-open', open);
+    btn.setAttribute('aria-expanded', open);
+  }
+  btn.addEventListener('click', () => setMenu(!sb.classList.contains('open')));
+  ov.addEventListener('click', () => setMenu(false));
+  sb.querySelectorAll('.nav-item').forEach(n => n.addEventListener('click', () => setMenu(false)));
+  window.addEventListener('resize', () => { if (window.innerWidth > 900) setMenu(false); });
+})();
+
 //  DATA STORE
 let facilities = [];
 
@@ -3846,9 +3933,6 @@ document.addEventListener('DOMContentLoaded', () => {
   loadAnimals();
   setInterval(loadAnimals, 30000);
 });
-
-
-
 
 /* ---------- LOGOUT ---------- */
 const overlay = document.getElementById('logout-overlay');

@@ -409,16 +409,74 @@ body{
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:rgba(1,34,36,0.15);border-radius:3px;}
 
+/* ── RESPONSIVE ── */
+.menu-toggle {
+  display: none; width: 38px; height: 38px; padding: 0; flex-shrink: 0;
+  border: 1.5px solid rgba(1,34,36,0.15); border-radius: 10px;
+  background: transparent; color: var(--text); cursor: pointer;
+  align-items: center; justify-content: center;
+}
+.menu-toggle:hover { background: rgba(78,141,192,0.1); }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(1,34,36,0.4); z-index: 140; }
+.topbar-left { min-width: 0; }
+
 @media (max-width:1100px){
   .stats-grid{grid-template-columns:repeat(2,1fr);}
   .two-col, .announce-grid{grid-template-columns:1fr;}
   .reg-grid, .photo-grid{grid-template-columns:1fr;}
   .check-row{grid-template-columns:1fr;}
 }
+
+@media (max-width: 900px) {
+  .menu-toggle { display: flex; }
+  .sidebar {
+    position: fixed; top: 0; left: 0; height: 100dvh; z-index: 150;
+    transform: translateX(-100%); transition: transform .25s ease;
+  }
+  .sidebar.open { transform: none; box-shadow: 4px 0 24px rgba(1,34,36,0.2); }
+  .sidebar-overlay.show { display: block; }
+  body.menu-open { overflow: hidden; }
+
+  .topbar { padding: 10px 14px; }
+  .content { padding: 18px 14px 32px; }
+
+  .panel { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .rec-table { min-width: 560px; }
+  .panel-head { flex-wrap: wrap; }
+}
+
+@media (max-width: 560px) {
+  .topbar-brand-name, .topbar-divider, .who { display: none; }
+  .topbar-right { gap: 10px; }
+
+  .page-title { font-size: 17px; }
+  .stat-card { padding: 14px; }
+  .stat-value { font-size: 24px; }
+
+  /* adoption notification rows: buttons drop under the text */
+  .notif-item { flex-wrap: wrap; }
+  .notif-body { flex: 1 1 180px; min-width: 0; }
+  .notif-actions { flex-direction: row; width: 100%; padding-left: 44px; }
+  .req-top, .due-top { flex-wrap: wrap; }
+
+  .modal-card { padding: 18px; max-height: 90dvh; }
+  .modal-actions, .reg-actions { flex-wrap: wrap; }
+  .modal-actions .btn-primary, .modal-actions .btn-mini,
+  .reg-actions .btn-primary, .reg-actions .btn-mini { flex: 1 1 auto; justify-content: center; }
+  .logout-overlay { padding: 16px 10px; }
+  .logout-card { padding: 24px 20px; max-width: 90vw; }
+  .photo-drop { min-height: 140px; }
+  .toast { left: 16px; right: 16px; bottom: 16px; }
+}
+
+@media (max-width: 340px) {
+  .stats-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 <div class="app">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <!-- ═══════════════ SIDEBAR ═══════════════ -->
 <nav class="sidebar" role="navigation" aria-label="Main navigation">
@@ -472,6 +530,9 @@ body{
 
   <div class="topbar">
     <div class="topbar-left">
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+      </button>
       <div class="topbar-brand">
         <div class="topbar-mark">
           <img src="logo.png" alt="PawConnect logo"
@@ -917,6 +978,22 @@ body{
 </div>
 
 <script>
+(function () {
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('sidebarOverlay');
+  const btn = document.getElementById('menuToggle');
+  function setMenu(open) {
+    sb.classList.toggle('open', open);
+    ov.classList.toggle('show', open);
+    document.body.classList.toggle('menu-open', open);
+    btn.setAttribute('aria-expanded', open);
+  }
+  btn.addEventListener('click', () => setMenu(!sb.classList.contains('open')));
+  ov.addEventListener('click', () => setMenu(false));
+  sb.querySelectorAll('.nav-item').forEach(n => n.addEventListener('click', () => setMenu(false)));
+  window.addEventListener('resize', () => { if (window.innerWidth > 900) setMenu(false); });
+})();
+
 (function(){
   const FACILITY_NAME = <?= json_encode(FACILITY_NAME) ?>;
 

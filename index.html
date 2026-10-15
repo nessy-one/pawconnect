@@ -112,6 +112,22 @@
     }
 
     @keyframes fadeUp { from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);} }
+    
+  /* ── RESPONSIVE ── */
+    body { height: 100dvh; }
+
+    @media (max-width: 480px) {
+      .btn-primary { padding: 12px 34px; font-size: 16px; }
+      .subhead, .tagline { padding: 0 8px; }
+      .btn-wrap { flex-wrap: wrap; justify-content: center; }
+    }
+
+    @media (max-height: 500px) {
+      .logo-img { width: clamp(180px, 28vw, 300px); }
+      .btn-wrap { margin-top: 14px; }
+      .btn-primary { padding: 10px 32px; font-size: 15px; }
+    }
+  
   </style>
 </head>
 <body>

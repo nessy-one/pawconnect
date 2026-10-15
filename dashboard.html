@@ -426,10 +426,37 @@
             .buttons { gap: 8px; }
             .qr-box img { width: 140px; height: 140px; }
         }
+
+        @media (max-width: 320px) {
+            .header { gap: 8px; padding: 8px 10px; }
+            .buttons { grid-template-columns: 1fr 1fr; gap: 6px; }
+            .btn-card img { width: 72px; height: 64px; }
+            .content { width: 98%; }
+        }
+
+        /* ── MOBILE MENU FIX ── */
+.hamburger { background: none; border: none; padding: 10px 8px; }
+.hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.mobile-nav {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 99;
+    padding: 4px 16px 8px; gap: 0;
+    border-top: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.18);
+}
+.mobile-nav a { padding: 14px 4px; border-bottom: 1px solid rgba(255,255,255,0.22); }
+.mobile-nav a:last-child { border-bottom: none; }
+.mobile-nav .topbar-bell-badge {
+    position: static; margin-left: auto;
+    min-width: 20px; height: 20px; font-size: 11px; font-weight: 600;
+}
+
+@media (min-width: 769px) { .mobile-nav { display: none !important; } }
     </style>
 </head>
 <body>
-
     <!-- HEADER -->
     <div class="header">
         <a href="dashboard.html">
@@ -457,25 +484,26 @@
                 <span class="topbar-bell-badge" id="topbarBellBadgeDesktop">0</span>
             </a>
         </div>
-        <div class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu" aria-expanded="false" type="button">
             <span></span><span></span><span></span>
-        </div>
-    </div>
+        </button>
 
-    <!-- MOBILE NAV -->
-    <div class="mobile-nav" id="mobileNav">
-        <a href="userprof.html">
-            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            Profile
-        </a>
-        <a href="save.html">
-            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-            Favourites
-        </a>
-        <a href="notifications.html" title="Notifications">
-            <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-            <span class="topbar-bell-badge" id="topbarBellBadge">0</span>
-        </a>
+        <!-- MOBILE NAV (inside the header so it can overlay the page) -->
+        <div class="mobile-nav" id="mobileNav">
+            <a href="userprof.html">
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Profile
+            </a>
+            <a href="save.html">
+                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                Favourites
+            </a>
+            <a href="notifications.html">
+                <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                Notifications
+                <span class="topbar-bell-badge" id="topbarBellBadge">0</span>
+            </a>
+        </div>
     </div>
 
     <!-- MAIN CONTENT -->
@@ -573,28 +601,26 @@
     <div class="page-end"></div>
 
 <script>
-    // ── MOBILE MENU ──────────────────────────────────────────────────
-    function toggleMenu() {
-        document.getElementById('mobileNav').classList.toggle('open');
+    // ── MOBILE MENU ──
+    function setMenu(open) {
+        const nav = document.getElementById('mobileNav');
+        const hb  = document.getElementById('hamburger');
+        nav.classList.toggle('open', open);
+        hb.classList.toggle('active', open);
+        hb.setAttribute('aria-expanded', open);
     }
-    document.addEventListener('click', function(e) {
-        const nav       = document.getElementById('mobileNav');
-        const hamburger = document.getElementById('hamburger');
-        if (!nav.contains(e.target) && !hamburger.contains(e.target)) {
-            nav.classList.remove('open');
-        }
+    function toggleMenu() {
+        setMenu(!document.getElementById('mobileNav').classList.contains('open'));
+    }
+    document.addEventListener('click', function (e) {
+        const nav = document.getElementById('mobileNav');
+        const hb  = document.getElementById('hamburger');
+        if (!nav.contains(e.target) && !hb.contains(e.target)) setMenu(false);
     });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+    window.addEventListener('resize', () => { if (window.innerWidth > 768) setMenu(false); });
 
     // ── DASHBOARD SEARCH ─────────────────────────────────────────────
-    // Detects what the user is searching for and redirects to the right page.
-    //
-    // Keywords that suggest each page:
-    //   adopt.html      → pet names, breeds, "cat", "dog", "adopt", "rescue"
-    //   products.html   → "food", "toy", "collar", "shampoo", "buy", "shop", "product"
-    //   facilities.html → "clinic", "vet", "boarding", "hospital", "shelter", "facility"
-    //
-    // If nothing matches, defaults to adopt.html (most common action).
-
     const searchInput = document.querySelector('.search input');
 
     const KEYWORDS = {

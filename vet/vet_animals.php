@@ -1,13 +1,5 @@
 <?php
-/**
- * vet_animals.php — backend for the vet "Register New Animal" page.
- * Place next to vet_reservations.php / vet_records.php.
- *
- * Actions
- *   GET  ?action=list_facilities
- *   POST action=create      (multipart: pet fields + photo_before / photo_after)
- *   POST action=add_photo   (pet_id, kind=before|after, photo) — e.g. add the "after" photo later
- */
+/* vet_animals.php — backend for the vet "Register New Animal" page.*/
 session_start();
 header('Content-Type: application/json');
 
@@ -22,23 +14,33 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'vet') {
 }
 
 // ── DB connection ─────────────────────────────────────────────
-// Use the same include your other vet_*.php files use. It must expose a
-// mysqli connection named $conn.
 require __DIR__ . '/../php/db.php';
 mysqli_report(MYSQLI_REPORT_OFF);
 $conn->set_charset('utf8mb4');
 
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 const PHOTO_MIMES = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/gif' => 'gif', 'image/webp' => 'webp'];
+const PHOTO_DIR = __DIR__ . '/../adopt';   // same folder pet_profile.html reads from (adopt/...)
 
 $action = $_GET['action'] ?? $_POST['action'] ?? '';
-
-/* ---------- helpers ---------- */
 
 function clean($v, $max = 255){
   $v = trim((string)($v ?? ''));
   if ($v === '') return null;
   return mb_substr($v, 0, $max);
+}
+
+// The profile page builds image URLs from the pet name, so the name must be safe in a filename/URL.
+function name_is_file_safe($name){
+  return !preg_match('/[\\\\\/:*?"<>|#%\x00-\x1f]/', $name) && $name[0] !== '.';
+}
+
+// Same naming scheme as pet_profile.html:
+//   after  -> adopt/<name lowercase>.png
+//   before -> adopt/<name lowercase>_before.png
+function photo_filename($name, $kind){
+  $slug = mb_strtolower($name, 'UTF-8');
+  return $kind === 'before' ? $slug . '_before.png' : $slug . '.png';
 }
 
 // Returns null if no file was sent, an error string if invalid, or ['tmp'=>..,'ext'=>..].
@@ -52,23 +54,35 @@ function check_photo($key){
   return ['tmp' => $f['tmp_name'], 'ext' => PHOTO_MIMES[$mime]];
 }
 
-// Moves the file and returns the root-based web path (e.g. /pawconnect/php/uploads/pet_photos/12_before_ab12.jpg).
-function store_photo(array $p, $petId, $kind, &$savedFiles){
-  $dir = __DIR__ . '/../php/uploads/pet_photos';
-  if (!is_dir($dir) && !mkdir($dir, 0755, true)) return null;
-  $fname = sprintf('%d_%s_%s.%s', $petId, $kind, bin2hex(random_bytes(4)), $p['ext']);
-  $dest = $dir . '/' . $fname;
-  if (!move_uploaded_file($p['tmp'], $dest)) return null;
+// The profile page always requests .png, so convert whatever was uploaded to a real PNG.
+function save_as_png($tmp, $dest){
+  if (function_exists('imagecreatefromstring')) {
+    $img = @imagecreatefromstring((string)file_get_contents($tmp));
+    if ($img) {
+      imagealphablending($img, false);
+      imagesavealpha($img, true);
+      $ok = imagepng($img, $dest);
+      imagedestroy($img);
+      if ($ok) return true;
+    }
+  }
+  return move_uploaded_file($tmp, $dest);  // fallback if GD is unavailable
+}
+
+// Saves into adopt/ and returns the path stored in the DB (relative, like the profile page uses).
+function store_photo(array $p, $petName, $kind, &$savedFiles){
+  if (!is_dir(PHOTO_DIR) && !mkdir(PHOTO_DIR, 0755, true)) return null;
+  $fname = photo_filename($petName, $kind);
+  $dest  = PHOTO_DIR . '/' . $fname;
+  if (!save_as_png($p['tmp'], $dest)) return null;
   $savedFiles[] = $dest;
-  $root = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/\\');   // "/pawconnect"
-  return $root . '/php/uploads/pet_photos/' . $fname;
+  return 'adopt/' . $fname;
 }
 
 /* ---------- list_facilities ---------- */
 if ($action === 'list_facilities') {
   $rows = [];
-  // Adjust table/column names if your facility table is named differently.
-  $res = $conn->query('SELECT id, name FROM facilities ORDER BY name');
+  $res = $conn->query('SELECT id, name FROM facility ORDER BY name');
   if ($res) while ($r = $res->fetch_assoc()) $rows[] = ['id' => (int)$r['id'], 'name' => $r['name']];
   else out(false, ['message' => 'Could not read facilities: ' . $conn->error], 500);
   out(true, ['facilities' => $rows]);
@@ -81,6 +95,7 @@ if ($action === 'create') {
   $name = clean($_POST['name'] ?? null);
   $type = clean($_POST['type'] ?? null, 50);
   if (!$name) out(false, ['message' => 'Animal name is required.'], 422);
+  if (!name_is_file_safe($name)) out(false, ['message' => 'Animal name cannot contain / \\ : * ? " < > | # % characters or start with a dot.'], 422);
   if (!in_array($type, ['Dog', 'Cat'], true)) out(false, ['message' => 'Type must be Dog or Cat.'], 422);
 
   $ageRaw = trim($_POST['age'] ?? '');
@@ -118,7 +133,13 @@ if ($action === 'create') {
   foreach (['before' => 'photo_before', 'after' => 'photo_after'] as $kind => $key) {
     $p = check_photo($key);
     if (is_string($p)) out(false, ['message' => $p], 422);
-    if ($p) $photos[$kind] = $p;
+    if ($p) {
+      // Profile images are looked up by pet name, so don't overwrite another animal's photo.
+      if (file_exists(PHOTO_DIR . '/' . photo_filename($name, $kind))) {
+        out(false, ['message' => "A photo for an animal named \"{$name}\" already exists. Use a different name."], 409);
+      }
+      $photos[$kind] = $p;
+    }
   }
 
   $conn->begin_transaction();
@@ -138,7 +159,7 @@ if ($action === 'create') {
     $stmt->close();
 
     foreach ($photos as $kind => $p) {
-      $path = store_photo($p, $petId, $kind, $saved);
+      $path = store_photo($p, $name, $kind, $saved);
       if (!$path) throw new Exception('Could not save the ' . $kind . ' photo on the server.');
       $s2 = $conn->prepare('INSERT INTO pet_photos (pet_id, kind, photo_path, uploaded_by) VALUES (?,?,?,?)');
       if (!$s2) throw new Exception($conn->error);
@@ -167,15 +188,23 @@ if ($action === 'add_photo') {
   if (!$p) out(false, ['message' => 'Attach an image.'], 422);
   if (is_string($p)) out(false, ['message' => $p], 422);
 
-  $chk = $conn->prepare('SELECT id FROM pet WHERE id = ?');
+  // Need the pet's name: the file name is built from it.
+  $chk = $conn->prepare('SELECT name FROM pet WHERE id = ?');
   $chk->bind_param('i', $petId); $chk->execute();
-  if (!$chk->get_result()->fetch_assoc()) out(false, ['message' => 'Animal not found.'], 404);
+  $pet = $chk->get_result()->fetch_assoc();
+  $chk->close();
+  if (!$pet) out(false, ['message' => 'Animal not found.'], 404);
+  if (!name_is_file_safe($pet['name'])) out(false, ['message' => 'This animal\'s name contains characters that cannot be used in a photo file name.'], 422);
 
   $saved = [];
-  $path = store_photo($p, $petId, $kind, $saved);
+  $path = store_photo($p, $pet['name'], $kind, $saved);   // replaces the existing photo of that kind
   if (!$path) out(false, ['message' => 'Could not save the photo on the server.'], 500);
 
   $uid = (int)$_SESSION['user_id'];
+  // Keep one row per pet/kind since the file itself is replaced.
+  $del = $conn->prepare('DELETE FROM pet_photos WHERE pet_id = ? AND kind = ?');
+  $del->bind_param('is', $petId, $kind); $del->execute(); $del->close();
+
   $s = $conn->prepare('INSERT INTO pet_photos (pet_id, kind, photo_path, uploaded_by) VALUES (?,?,?,?)');
   $s->bind_param('issi', $petId, $kind, $path, $uid);
   if (!$s->execute()) { @unlink($saved[0]); out(false, ['message' => $s->error], 500); }

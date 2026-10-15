@@ -23,8 +23,7 @@ try {
 }
 
 // ── EXPIRE OLD RESERVATIONS FIRST ─────────────────────────────────
-// Flip any pet whose reserved_at + reserved_days window has passed back
-// to available, before building the listing. (Shared helper — see db.php.)
+// Flip any pet whose reserved_at + reserved_days window has passed back to available, before building the listing. 
 expireOldReservations($pdo);
 
 // Validate id
@@ -47,20 +46,9 @@ $stmt = $pdo->prepare(
 $stmt->execute([$id]);
 $pet = $stmt->fetch();
 
-if (!$pet) {
+if (!$pet || $pet['status'] !== 'available' || $pet['approval_status'] !== 'approved') {
     echo json_encode(['success' => false, 'message' => 'Pet not found.']);
     exit;
 }
-
-// Add how many days are actually left, for accurate display on the page       ----------- i2 pa dinelete q basta error yarn ?!?!?!
-// if ($pet['status'] === 'reserved' && !empty($pet['reserved_at']) && !empty($pet['reserved_days'])) {
-//     $expiresAt = new DateTime($pet['reserved_at']);
-//     $expiresAt->modify('+' . intval($pet['reserved_days']) . ' days');
-//     $now = new DateTime();
-//     $daysLeft = (int)ceil(($expiresAt->getTimestamp() - $now->getTimestamp()) / 86400);
-//     $pet['reserved_days_remaining'] = max(0, $daysLeft);
-// } else {
-//     $pet['reserved_days_remaining'] = null;
-// }
 
 echo json_encode(['success' => true, 'pet' => $pet]);

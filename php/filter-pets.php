@@ -24,16 +24,16 @@ try {
 }
 
 // ── EXPIRE OLD RESERVATIONS FIRST ─────────────────────────────────
-// Flip any pet whose reserved_at + reserved_days window has passed back
-// to available, before building the listing. (Shared helper — see db.php.)
+// Flip any pet whose reserved_at + reserved_days window has passed back to available, before building the listing. (Shared helper — see db.php.)
 expireOldReservations($pdo);
 
 $conditions = [];
 $params     = [];
 
-// ── EXCLUDE MEDICAL-CARE PETS ─────────────────────────────────────
-// Pets flagged 'needs_treatment' (awaiting a private vet request) or 'under_vet_care' (an approved medical case already exists) are not part of the normal adoption pool — they only show up on the Private Vet side. See admin_medical_cases.php / private_vet_api.php.
-$conditions[] = "p.status NOT IN ('needs_treatment', 'under_vet_care')";
+// ── ONLY SHOW ANIMALS OPEN FOR ADOPTION ───────────────────────────
+// Allow-list: anything not explicitly 'available' (unavailable, in_custody, under_treatment, reserved, adopted, ...) is hidden. Vet submissions must also be approved by the admin first.
+$conditions[] = "p.status = 'available'";
+$conditions[] = "p.approval_status = 'approved'";
 
 // ── TYPE filter 
 $filterType = '';

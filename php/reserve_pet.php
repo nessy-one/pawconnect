@@ -41,7 +41,7 @@ if (!in_array($duration, [1, 3, 5, 7], true)) {
 }
 
 // Check if pet is still available
-$stmt = $conn->prepare("SELECT status FROM pet WHERE id = ?");
+$stmt = $conn->prepare("SELECT status, approval_status FROM pet WHERE id = ?");
 $stmt->bind_param("i", $pet_id);
 $stmt->execute();
 $result = $stmt->get_result()->fetch_assoc();
@@ -51,8 +51,8 @@ if (!$result) {
     echo json_encode(['success' => false, 'message' => 'Pet not found.']);
     exit;
 }
-if ($result['status'] !== 'available') {
-    echo json_encode(['success' => false, 'message' => 'This pet is no longer available.']);
+if ($result['status'] !== 'available' || $result['approval_status'] !== 'approved') {
+    echo json_encode(['success' => false, 'message' => 'This pet is not available for adoption.']);
     exit;
 }
 

@@ -1116,6 +1116,7 @@
 
     function renderPetGrid(pets) {
         const grid = document.getElementById('petGrid');
+        pets = (pets || []).filter(p => p.status === 'available');
         if (!pets || pets.length === 0) { renderEmpty(); return; }
 
         grid.innerHTML = pets.map(p => {

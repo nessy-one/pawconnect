@@ -458,6 +458,10 @@ body {
       <i class="ti ti-speakerphone"></i> Announcements
       <span class="nav-badge" id="badge-announcements">0</span>
     </div>
+    <div class="nav-item" onclick="navigate(this,'animals')">
+      <i class="ti ti-paw"></i> Animal Records
+      <span class="nav-badge" id="badge-animals">0</span>
+    </div>
     <div class="nav-section">Operations</div>
     <div class="nav-item" onclick="navigate(this,'rfid')">
       <i class="ti ti-id"></i> RFID Management
@@ -1003,8 +1007,186 @@ body {
       </table>
     </div>
   </div>
+
+  <!-- ─── PAGE: ANIMAL RECORDS ─── (included by admin dashboard inside .main) -->
+  <div class="page" id="page-animals">
+    <div class="page-header">
+      <h2>Animal Records</h2>
+      <p>View, edit and manage all registered animals, control adoption availability, and review records submitted by authorized veterinarians.</p>
+    </div>
+  
+    <div class="stat-grid">
+      <div class="stat-card"><div class="icon ic-blue"><i class="ti ti-paw"></i></div><div class="label">Total animals</div><div class="value" id="an-stat-total">0</div><div class="sub">All registered records</div></div>
+      <div class="stat-card"><div class="icon ic-green"><i class="ti ti-circle-check"></i></div><div class="label">Available for adoption</div><div class="value" id="an-stat-available">0</div><div class="sub up">Visible to adopters</div></div>
+      <div class="stat-card"><div class="icon ic-coral"><i class="ti ti-clock"></i></div><div class="label">Reserved / in process</div><div class="value" id="an-stat-reserved">0</div><div class="sub warn">Adoption in progress</div></div>
+      <div class="stat-card"><div class="icon ic-pink"><i class="ti ti-clipboard-check"></i></div><div class="label">Vet submissions pending</div><div class="value" id="an-stat-pending">0</div><div class="sub warn">Awaiting your review</div></div>
+    </div>
+  
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'tab-an-all')">All animals</div>
+      <div class="tab" onclick="switchTab(this,'tab-an-vet')">Vet submissions <span class="nav-badge" id="an-vet-badge" style="margin-left:4px">0</span></div>
+    </div>
+  
+    <div id="tab-an-all">
+      <div class="toolbar">
+        <div class="search-box"><i class="ti ti-search"></i><input type="text" id="an-search" placeholder="Search by name, breed or chip…" oninput="filterAnimals()"></div>
+        <select class="filter-select" id="an-type-filter" onchange="filterAnimals()">
+          <option value="">All species</option><option value="dog">Dog</option><option value="cat">Cat</option><option value="other">Other</option>
+        </select>
+        <select class="filter-select" id="an-status-filter" onchange="filterAnimals()">
+          <option value="">All availability</option>
+          <option value="available">Available</option>
+          <option value="reserved">Reserved</option>
+          <option value="adopted">Adopted</option>
+          <option value="under_treatment">Under treatment</option>
+          <option value="in_custody">In custody</option>
+          <option value="unavailable">Unavailable</option>
+        </select>
+        <button class="btn btn-primary btn-sm" onclick="openAddAnimal()"><i class="ti ti-plus"></i> Add animal</button>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span class="title">Registered animals <span style="font-weight:400;color:rgba(1,34,36,0.4)" id="an-count">(0)</span></span></div>
+        <table class="tbl">
+          <thead><tr><th>Animal</th><th>Species / breed</th><th>Health</th><th>Availability</th><th>Registered</th><th>Actions</th></tr></thead>
+          <tbody id="an-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  
+    <div id="tab-an-vet" style="display:none">
+      <div class="panel">
+        <div class="panel-head"><span class="title">Submitted by authorized veterinarians <span style="font-weight:400;color:rgba(1,34,36,0.4)" id="an-vet-count">(0)</span></span></div>
+        <table class="tbl">
+          <thead><tr><th>Animal</th><th>Submitted by</th><th>Details</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="an-vet-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Animal detail modal -->
+  <div class="overlay" id="animalDetailModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3><i class="ti ti-paw" style="color:#4E8DC0"></i> <span id="and-title">Animal details</span></h3>
+        <button class="modal-close" onclick="closeModal('animalDetailModal')"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section">
+          <div class="modal-section-title">Profile</div>
+          <div class="info-row"><div class="info-label"><i class="ti ti-paw"></i> Name</div><div class="info-val" id="and-name"></div></div>
+          <div class="info-row"><div class="info-label"><i class="ti ti-dog"></i> Species / breed</div><div class="info-val" id="and-breed"></div></div>
+          <div class="info-row"><div class="info-label"><i class="ti ti-gender-bigender"></i> Sex / age</div><div class="info-val" id="and-sexage"></div></div>
+          <div class="info-row"><div class="info-label"><i class="ti ti-building"></i> Shelter</div><div class="info-val" id="and-shelter"></div></div>
+          <div class="info-row"><div class="info-label"><i class="ti ti-heart-handshake"></i> Availability</div><div class="info-val" id="and-status"></div></div>
+          <div class="info-row"><div class="info-label"><i class="ti ti-id"></i> RFID chip</div><div class="info-val" id="and-chip"></div></div>
+          <div class="info-row"><div class="info-label"><i class="ti ti-stethoscope"></i> Submitted by</div><div class="info-val" id="and-vet"></div></div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-title">Medical information</div>
+          <div id="and-med" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"></div>
+          <div class="info-row"><div class="info-label"><i class="ti ti-heartbeat"></i> Health status</div><div class="info-val" id="and-health"></div></div>
+          <div class="info-row"><div class="info-label"><i class="ti ti-notes"></i> Medical notes</div><div class="info-val" id="and-notes"></div></div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-title">Description</div>
+          <div style="font-size:13px;color:rgba(1,34,36,0.7);line-height:1.65" id="and-desc"></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" onclick="closeModal('animalDetailModal')">Close</button>
+        <button class="btn btn-danger btn-sm" id="and-delete-btn"><i class="ti ti-trash"></i> Delete</button>
+        <button class="btn btn-primary" id="and-edit-btn"><i class="ti ti-edit"></i> Edit record</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Animal add/edit modal -->
+  <div class="overlay" id="animalFormModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3><i class="ti ti-paw" style="color:#4E8DC0"></i> <span id="afo-title">Add animal</span></h3>
+        <button class="modal-close" onclick="closeModal('animalFormModal')"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="afo-id" value="">
+        <div class="modal-section">
+          <div class="modal-section-title">Profile</div>
+          <div class="form-row">
+            <div class="form-group"><label>Name</label><input type="text" id="afo-name"></div>
+            <div class="form-group"><label>Species</label>
+              <select id="afo-type"><option value="dog">Dog</option><option value="cat">Cat</option><option value="other">Other</option></select></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Breed</label><input type="text" id="afo-breed"></div>
+            <div class="form-group"><label>Sex</label>
+              <select id="afo-gender"><option value="">Unknown</option><option value="male">Male</option><option value="female">Female</option></select></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Age (years)</label><input type="number" min="0" id="afo-age" placeholder="e.g. 2"></div>
+            <div class="form-group"><label>Shelter / facility</label><select id="afo-facility"></select></div>
+          </div>
+          <div class="form-group"><label>Description</label><textarea id="afo-desc"></textarea></div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-title">Adoption availability</div>
+          <div class="form-group"><label>Status</label>
+            <select id="afo-status">
+              <option value="available">Available</option>
+              <option value="reserved">Reserved</option>
+              <option value="adopted">Adopted</option>
+              <option value="under_treatment">Under treatment</option>
+              <option value="in_custody">In custody</option>
+              <option value="unavailable">Unavailable</option>
+            </select></div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-title">Medical information</div>
+          <div class="form-row">
+            <div class="form-group"><label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="afo-vaccinated" style="width:auto"> Vaccinated</label></div>
+            <div class="form-group"><label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="afo-dewormed" style="width:auto"> Dewormed</label></div>
+          </div>
+          <div class="form-group"><label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="afo-neutered" style="width:auto"> Neutered / spayed</label></div>
+          <div class="form-group"><label>Health status</label><input type="text" id="afo-health"></div>
+          <div class="form-group"><label>Medical notes</label><textarea id="afo-notes"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" onclick="closeModal('animalFormModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveAnimal()"><i class="ti ti-device-floppy"></i> Save animal</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Vet submission review modal -->
+  <div class="overlay" id="animalReviewModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3><i class="ti ti-clipboard-check" style="color:#DA8063"></i> Review vet submission</h3>
+        <button class="modal-close" onclick="closeModal('animalReviewModal')"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section">
+          <div class="info-row"><div class="info-label"><i class="ti ti-paw"></i> Animal</div><div class="info-val" id="arv-animal"></div></div>
+          <div class="info-row"><div class="info-label"><i class="ti ti-stethoscope"></i> Submitted by</div><div class="info-val" id="arv-vet"></div></div>
+          <div class="info-row"><div class="info-label"><i class="ti ti-heartbeat"></i> Health</div><div class="info-val" id="arv-health"></div></div>
+          <div class="info-row"><div class="info-label"><i class="ti ti-notes"></i> Medical notes</div><div class="info-val" id="arv-notes"></div></div>
+          <div class="info-row"><div class="info-label"><i class="ti ti-file-description"></i> Description</div><div class="info-val" id="arv-desc"></div></div>
+        </div>
+        <div class="modal-section">
+          <div class="form-group"><label>Review notes (optional)</label><textarea id="arv-review-notes" placeholder="Shared with the vet if you reject or ask for changes…"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" onclick="closeModal('animalReviewModal')">Close</button>
+        <button class="btn btn-reject" onclick="reviewAnimal('reject')"><i class="ti ti-x"></i> Reject</button>
+        <button class="btn btn-approve" onclick="reviewAnimal('approve')"><i class="ti ti-check"></i> Approve &amp; list</button>
+      </div>
+    </div>
+  </div>
 </div><!-- end .main -->
 </div><!-- end .app -->
+
 
 <!-- ═══════════════ MODALS ═══════════════ -->
 
@@ -1051,93 +1233,6 @@ body {
     </div>
   </div>
 </div>
-
-<!-- Flag Animal as Needing Treatment Modal -->
-<!-- <div class="overlay" id="flagPetModal">
-  <div class="modal">
-    <div class="modal-head">
-      <h3><i class="ti ti-flag" style="color:#D97757"></i> Flag animal as needing treatment</h3>
-      <button class="modal-close" onclick="closeModal('flagPetModal')"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="modal-section">
-        <div class="form-group">
-          <label>Animal</label>
-          <select id="fpm-pet-select"><option value="">Loading available animals…</option></select>
-        </div>
-        <p style="font-size:12px;color:rgba(1,34,36,0.55);margin-top:4px">
-          Only animals currently marked <strong>available</strong> can be flagged. Flagging removes the animal
-          from the normal adoption pool and makes it visible to verified private vets on the Medical Cases list.
-        </p>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeModal('flagPetModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="submitFlagPet()"><i class="ti ti-flag"></i> Flag animal</button>
-    </div>
-  </div>
-</div> -->
-
-<!-- Private Vet / Clinic Review Modal -->
-<!-- <div class="overlay" id="pvReviewModal">
-  <div class="modal">
-    <div class="modal-head">
-      <h3><i class="ti ti-stethoscope" style="color:#4E8DC0"></i> <span id="pvm-title">Review clinic</span></h3>
-      <button class="modal-close" onclick="closeModal('pvReviewModal')"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="modal-section">
-        <div class="modal-section-title">Clinic details</div>
-        <div class="form-group"><label>Clinic / practice name</label><div id="pvm-clinic"></div></div>
-        <div class="form-row">
-          <div class="form-group"><label>Veterinarian</label><div id="pvm-vet"></div></div>
-          <div class="form-group"><label>License #</label><div id="pvm-license"></div></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Email</label><div id="pvm-email"></div></div>
-          <div class="form-group"><label>Contact</label><div id="pvm-contact"></div></div>
-        </div>
-        <div class="form-group"><label>Address</label><div id="pvm-address"></div></div>
-        <div class="form-group"><label>Specialization</label><div id="pvm-specialization"></div></div>
-        <div class="form-group"><label>License document</label><div id="pvm-license-doc">—</div></div>
-      </div>
-      <div class="modal-section" id="pvm-reject-section" style="display:none">
-        <div class="modal-section-title">Rejection reason</div>
-        <div class="form-group"><textarea id="pvm-reject-reason" placeholder="Let the clinic know what needs fixing before they can be verified…"></textarea></div>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeModal('pvReviewModal')">Close</button>
-      <button class="btn btn-ghost" id="pvm-reject-btn" style="color:#a04820" onclick="handlePvRejectClick()">Reject</button>
-      <button class="btn btn-primary" id="pvm-verify-btn">Verify clinic</button>
-    </div>
-  </div>
-</div> -->
-
-<!-- Medical Case Review Modal -->
-<!-- <div class="overlay" id="mcReviewModal">
-  <div class="modal">
-    <div class="modal-head">
-      <h3><i class="ti ti-kit-medical" style="color:#7C8A5C"></i> <span id="mcm-title">Review medical case request</span></h3>
-      <button class="modal-close" onclick="closeModal('mcReviewModal')"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="modal-section">
-        <div class="form-row">
-          <div class="form-group"><label>Animal</label><div id="mcm-animal"></div></div>
-          <div class="form-group"><label>Requesting clinic</label><div id="mcm-clinic"></div></div>
-        </div>
-        <div class="form-group"><label>Reason for request</label><div id="mcm-reason"></div></div>
-        <div class="form-group"><label>Decision notes (optional)</label><textarea id="mcm-notes" placeholder="Any notes for the clinic or your own records…"></textarea></div>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeModal('mcReviewModal')">Cancel</button>
-      <button class="btn btn-ghost" id="mcm-deny-btn" style="color:#a04820">Deny</button>
-      <button class="btn btn-primary" id="mcm-approve-btn">Approve</button>
-    </div>
-  </div>
-</div> -->
 
 <!-- Admin profile photo modal -->
 <div class="overlay" id="adminSelfPhotoModal">
@@ -2327,11 +2422,16 @@ let rfidActionType = ''; // 'deactivate' | 'reactivate'
 
 //  NAVIGATION
 const pageTitles = {
-  dashboard:'Dashboard Analytics', facilities:'Facility Management',
-  users:'User Management', verification:'Verification & Approval', reports:'Reports & Feedback',
-  adoption:'Adoption Requests', rfid:'RFID Management',
-  donations:'Donation Management', announcements:'Community Announcements'
-  // privatevets:'Private Vet / Clinic Verification', medicalcases:'Medical Case Requests'
+  dashboard:'Dashboard Analytics', 
+  facilities:'Facility Management',
+  users:'User Management', 
+  verification:'Verification & Approval', 
+  reports:'Reports & Feedback',
+  adoption:'Adoption Requests', 
+  rfid:'RFID Management',
+  donations:'Donation Management', 
+  announcements:'Community Announcements',
+  animals:'Animal Records',
 };
 
 function navigate(el, pageId) {
@@ -2403,6 +2503,7 @@ const NOTIF_STYLE = {
   vet_approved:     { cls: 'act-green', icon: 'ti-check' },
   vet_denied:       { cls: 'act-coral', icon: 'ti-x' },
   handoff_reported: { cls: 'act-blue',  icon: 'ti-shield-check' },
+  animal_registered: { cls: 'act-coral', icon: 'ti-clipboard-plus' },
 };
 
 function loadAdminNotifications() {
@@ -2418,7 +2519,7 @@ function loadAdminNotifications() {
             const s = NOTIF_STYLE[n.type] || NOTIF_STYLE.handoff_reported;
             const isUnread = Number(n.is_read) === 0;
             return `
-            <div class="notif-item ${isUnread ? 'unread' : ''}" onclick="handleNotifClick('adoption')">
+            <div class="notif-item ${isUnread ? 'unread' : ''}" onclick="handleNotifClick('${n.type === 'animal_registered' ? 'animals' : 'adoption'}')">
               <div class="notif-icon ${s.cls}"><i class="ti ${s.icon}"></i></div>
               <div style="flex:1">
                 <div class="notif-text">${esc(n.message)}</div>
@@ -3430,235 +3531,6 @@ function esc(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-//  PRIVATE VET / CLINIC VERIFICATION
-// let privateVets = [];
-
-// function loadPrivateVets() {
-//   fetch('admin_private_vets.php?action=list')
-//     .then(r => r.json())
-//     .then(data => {
-//       if (!data.success) { showToast('Failed to load private vets.', 'error'); return; }
-//       privateVets = data.vets;
-//       renderPrivateVets();
-//     })
-//     .catch(() => showToast('Could not reach the server to load private vets.', 'error'));
-// }
-
-// function pvBadgeClass(status) {
-//   return status === 'verified' ? 'active' : status === 'rejected' ? 'rejected' : 'pending';
-// }
-
-// function renderPrivateVets() {
-//   const pending = privateVets.filter(v => v.verification_status === 'pending');
-
-//   const pendingTbody = document.getElementById('pv-pending-tbody');
-//   pendingTbody.innerHTML = pending.length ? pending.map(v => `
-//     <tr>
-//       <td><strong>${esc(v.clinic_name)}</strong></td>
-//       <td>${esc(v.name || v.username)}</td>
-//       <td>${esc(v.license_number)}</td>
-//       <td>${esc(v.contact || v.mobile || '—')}</td>
-//       <td>${esc(v.created_at)}</td>
-//       <td><button class="btn btn-primary btn-sm" onclick="openPvReview(${v.id})">Review</button></td>
-//     </tr>`).join('') : '<tr><td colspan="6" style="text-align:center;padding:24px;color:rgba(1,34,36,0.4)">No clinics awaiting verification.</td></tr>';
-//   document.getElementById('pv-pending-count').textContent = `(${pending.length})`;
-//   document.getElementById('badge-privatevets').textContent = pending.length;
-
-//   const allTbody = document.getElementById('pv-all-tbody');
-//   allTbody.innerHTML = privateVets.length ? privateVets.map(v => `
-//     <tr class="clickable" onclick="openPvReview(${v.id})">
-//       <td><strong>${esc(v.clinic_name)}</strong></td>
-//       <td>${esc(v.name || v.username)}</td>
-//       <td>${esc(v.email)}</td>
-//       <td><span class="badge ${pvBadgeClass(v.verification_status)}">${esc(v.verification_status)}</span></td>
-//       <td>${esc(v.verified_at || '—')}</td>
-//     </tr>`).join('') : '<tr><td colspan="5" style="text-align:center;padding:24px;color:rgba(1,34,36,0.4)">No private vets registered yet.</td></tr>';
-//   document.getElementById('pv-all-count').textContent = `(${privateVets.length})`;
-// }
-
-// function openPvReview(id) {
-//   const v = privateVets.find(x => x.id === id);
-//   if (!v) return;
-
-//   document.getElementById('pvm-title').textContent = v.clinic_name;
-//   document.getElementById('pvm-clinic').textContent = v.clinic_name;
-//   document.getElementById('pvm-vet').textContent = v.name || v.username;
-//   document.getElementById('pvm-license').textContent = v.license_number;
-//   document.getElementById('pvm-email').textContent = v.email;
-//   document.getElementById('pvm-contact').textContent = v.contact || v.mobile || '—';
-//   document.getElementById('pvm-address').textContent = v.address;
-//   document.getElementById('pvm-specialization').textContent = v.specialization || '—';
-
-//   const docEl = document.getElementById('pvm-license-doc');
-//   docEl.innerHTML = v.license_document
-//     ? `<a href="../${esc(v.license_document)}" target="_blank" style="color:#4E8DC0">View uploaded document →</a>`
-//     : '—';
-
-//   document.getElementById('pvm-reject-section').style.display = 'none';
-//   document.getElementById('pvm-reject-reason').value = '';
-
-//   const verifyBtn = document.getElementById('pvm-verify-btn');
-//   const rejectBtn = document.getElementById('pvm-reject-btn');
-//   const alreadyDecided = v.verification_status !== 'pending';
-
-//   verifyBtn.style.display = alreadyDecided && v.verification_status === 'verified' ? 'none' : 'inline-flex';
-//   verifyBtn.textContent = v.verification_status === 'rejected' ? 'Verify clinic' : 'Verify clinic';
-//   verifyBtn.onclick = () => setPvStatus(v.id, 'verify');
-
-//   rejectBtn.style.display = v.verification_status === 'rejected' ? 'none' : 'inline-flex';
-
-//   openModal('pvReviewModal');
-// }
-
-// function handlePvRejectClick() {
-//   const section = document.getElementById('pvm-reject-section');
-//   if (section.style.display === 'none') {
-//     section.style.display = 'block';
-//     return;
-//   }
-//   const reason = document.getElementById('pvm-reject-reason').value.trim();
-//   if (!reason) { showToast('Please provide a reason for rejecting.', 'error'); return; }
-//   const title = document.getElementById('pvm-title').textContent;
-//   const v = privateVets.find(x => x.clinic_name === title);
-//   if (v) setPvStatus(v.id, 'reject', reason);
-// }
-
-// function setPvStatus(id, action, reason) {
-//   fetch('admin_private_vets.php?action=' + action, {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify(action === 'reject' ? { id, reason } : { id }),
-//   })
-//   .then(r => r.json())
-//   .then(data => {
-//     if (!data.success) { showToast(data.message || 'Could not update clinic status.', 'error'); return; }
-//     closeModal('pvReviewModal');
-//     showToast(action === 'verify' ? 'Clinic verified.' : 'Clinic rejected.');
-//     loadPrivateVets();
-//   })
-//   .catch(() => showToast('Could not reach the server.', 'error'));
-// }
-
-//  MEDICAL CASE REQUESTS
-// let medicalCases = [];
-// let flaggablePets = [];
-
-// function loadMedicalCases() {
-//   fetch('admin_medical_cases.php?action=list')
-//     .then(r => r.json())
-//     .then(data => {
-//       if (!data.success) { showToast('Failed to load medical cases.', 'error'); return; }
-//       medicalCases = data.cases;
-//       renderMedicalCases();
-//     })
-//     .catch(() => showToast('Could not reach the server to load medical cases.', 'error'));
-// }
-
-// function mcBadgeClass(status) {
-//   return status === 'approved' || status === 'completed' ? 'active'
-//        : status === 'denied' ? 'rejected' : 'pending';
-// }
-
-// function renderMedicalCases() {
-//   const pending = medicalCases.filter(c => c.status === 'pending');
-
-//   const pendingTbody = document.getElementById('mc-pending-tbody');
-//   pendingTbody.innerHTML = pending.length ? pending.map(c => `
-//     <tr>
-//       <td><strong>${esc(c.pet_name)}</strong> <span style="color:rgba(1,34,36,0.4);font-size:11px">(${esc(c.pet_type)})</span></td>
-//       <td>${esc(c.clinic_name || c.vet_name)}</td>
-//       <td style="max-width:260px">${esc((c.reason || '').slice(0, 90))}${(c.reason || '').length > 90 ? '…' : ''}</td>
-//       <td>${esc(c.created_at)}</td>
-//       <td><button class="btn btn-primary btn-sm" onclick="openMcReview(${c.id})">Review</button></td>
-//     </tr>`).join('') : '<tr><td colspan="5" style="text-align:center;padding:24px;color:rgba(1,34,36,0.4)">No medical case requests awaiting a decision.</td></tr>';
-//   document.getElementById('mc-pending-count').textContent = `(${pending.length})`;
-//   document.getElementById('badge-medicalcases').textContent = pending.length;
-
-//   const allTbody = document.getElementById('mc-all-tbody');
-//   allTbody.innerHTML = medicalCases.length ? medicalCases.map(c => `
-//     <tr class="${c.status === 'pending' ? 'clickable' : ''}" ${c.status === 'pending' ? `onclick="openMcReview(${c.id})"` : ''}>
-//       <td><strong>${esc(c.pet_name)}</strong></td>
-//       <td>${esc(c.clinic_name || c.vet_name)}</td>
-//       <td><span class="badge ${mcBadgeClass(c.status)}">${esc(c.status)}</span></td>
-//       <td>${esc(c.reviewed_at || '—')}</td>
-//     </tr>`).join('') : '<tr><td colspan="4" style="text-align:center;padding:24px;color:rgba(1,34,36,0.4)">No medical cases yet.</td></tr>';
-//   document.getElementById('mc-all-count').textContent = `(${medicalCases.length})`;
-// }
-
-// function openMcReview(id) {
-//   const c = medicalCases.find(x => x.id === id);
-//   if (!c) return;
-
-//   document.getElementById('mcm-animal').textContent = `${c.pet_name} (${c.pet_type}, ${c.pet_breed})`;
-//   document.getElementById('mcm-clinic').textContent = c.clinic_name || c.vet_name;
-//   document.getElementById('mcm-reason').textContent = c.reason;
-//   document.getElementById('mcm-notes').value = '';
-
-//   const approveBtn = document.getElementById('mcm-approve-btn');
-//   const denyBtn = document.getElementById('mcm-deny-btn');
-//   const isPending = c.status === 'pending';
-
-//   approveBtn.style.display = isPending ? 'inline-flex' : 'none';
-//   denyBtn.style.display = isPending ? 'inline-flex' : 'none';
-//   approveBtn.onclick = () => decideMedicalCase(c.id, 'approve');
-//   denyBtn.onclick = () => decideMedicalCase(c.id, 'deny');
-
-//   openModal('mcReviewModal');
-// }
-
-// function decideMedicalCase(id, action) {
-//   const notes = document.getElementById('mcm-notes').value.trim();
-//   fetch('admin_medical_cases.php?action=' + action, {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify({ id, notes }),
-//   })
-//   .then(r => r.json())
-//   .then(data => {
-//     if (!data.success) { showToast(data.message || 'Could not update the case.', 'error'); return; }
-//     closeModal('mcReviewModal');
-//     showToast(action === 'approve' ? 'Case approved — animal is now under vet care.' : 'Case denied.');
-//     loadMedicalCases();
-//   })
-//   .catch(() => showToast('Could not reach the server.', 'error'));
-// }
-
-// function openFlagPetModal() {
-//   const select = document.getElementById('fpm-pet-select');
-//   select.innerHTML = '<option value="">Loading available animals…</option>';
-//   openModal('flagPetModal');
-
-//   fetch('admin_medical_cases.php?action=list_flaggable_pets')
-//     .then(r => r.json())
-//     .then(data => {
-//       if (!data.success) { showToast('Failed to load animals.', 'error'); return; }
-//       flaggablePets = data.pets;
-//       select.innerHTML = flaggablePets.length
-//         ? flaggablePets.map(p => `<option value="${p.id}">${esc(p.name)} — ${esc(p.type)}, ${esc(p.breed)}</option>`).join('')
-//         : '<option value="">No available animals to flag right now</option>';
-//     })
-//     .catch(() => showToast('Could not reach the server.', 'error'));
-// }
-
-// function submitFlagPet() {
-//   const petId = document.getElementById('fpm-pet-select').value;
-//   if (!petId) { showToast('Please select an animal.', 'error'); return; }
-
-//   fetch('admin_medical_cases.php?action=flag_pet', {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify({ pet_id: petId }),
-//   })
-//   .then(r => r.json())
-//   .then(data => {
-//     if (!data.success) { showToast(data.message || 'Could not flag this animal.', 'error'); return; }
-//     closeModal('flagPetModal');
-//     showToast('Animal flagged as needing treatment.');
-//     loadMedicalCases();
-//   })
-//   .catch(() => showToast('Could not reach the server.', 'error'));
-// }
-
 //  LIVE RFID SCANS
 let lastScanId = 0;
 let liveScanReady = false;   
@@ -3738,6 +3610,245 @@ function pollLiveScans() {
     })
     .catch(() => {});
 }
+
+
+// Runs after the main dashboard script has defined esc(), showToast(), openModal(), etc.
+let animals = [];
+let animalDeleteId = null;
+let animalReviewId = null;
+ 
+const AN_STATUS = {
+  available:       { cls: 'approved', label: 'Available' },
+  reserved:        { cls: 'pending',  label: 'Reserved' },
+  adopted:         { cls: 'owner',    label: 'Adopted' },
+  under_treatment: { cls: 'pending',  label: 'Under treatment' },
+  unavailable:     { cls: 'inactive', label: 'Unavailable' },
+  in_custody: { cls: 'pending', label: 'In custody' },
+};
+ 
+function loadAnimals() {
+  fetch('admin_animals.php?action=list')
+    .then(r => r.json())
+    .then(data => {
+      if (!data.success) { showToast(data.message || 'Failed to load animals.', 'error'); return; }
+      animals = data.animals.map(a => ({ ...a, id: parseInt(a.id, 10) }));
+      filterAnimals();
+      renderVetSubmissions();
+      updateAnimalStats();
+    })
+    .catch(() => showToast('Could not reach the server for animals.', 'error'));
+}
+ 
+function cap(s) { s = String(s || ''); return s.charAt(0).toUpperCase() + s.slice(1); }
+ 
+function isPendingSubmission(a) { return a.approval_status === 'pending'; }
+ 
+function updateAnimalStats() {
+  const live = animals.filter(a => !isPendingSubmission(a) && a.approval_status !== 'rejected');
+  const pending = animals.filter(isPendingSubmission).length;
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set('an-stat-total', live.length);
+  set('an-stat-available', live.filter(a => a.status === 'available').length);
+  set('an-stat-reserved', live.filter(a => a.status === 'reserved').length);
+  set('an-stat-pending', pending);
+  set('an-vet-badge', pending);
+  set('badge-animals', pending);
+}
+ 
+function filterAnimals() {
+  const q = (document.getElementById('an-search')?.value || '').toLowerCase();
+  const type = document.getElementById('an-type-filter')?.value || '';
+  const status = document.getElementById('an-status-filter')?.value || '';
+  const list = animals.filter(a =>
+    !isPendingSubmission(a) && a.approval_status !== 'rejected' &&
+    (!q || (a.name||'').toLowerCase().includes(q) || (a.breed||'').toLowerCase().includes(q) || (a.chip_uid||'').toLowerCase().includes(q)) &&
+    (!type || a.type === type) &&
+    (!status || a.status === status)
+  );
+  const tbody = document.getElementById('an-tbody');
+  if (!tbody) return;
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:rgba(1,34,36,0.4)">No animals found.</td></tr>';
+  } else {
+    tbody.innerHTML = list.map(a => {
+      const s = AN_STATUS[a.status] || { cls: 'inactive', label: a.status || '—' };
+      const meds = [Number(a.vaccinated) > 0 ? 'Vaccinated' : null, Number(a.neutered) > 0 ? 'Neutered' : null].filter(Boolean).join(' · ');
+      return `
+      <tr class="clickable" onclick="openAnimalDetail(${a.id})">
+        <td><div style="display:flex;align-items:center;gap:9px"><div class="pet-ava"><i class="ti ti-paw"></i></div><div><strong>${esc(a.name || 'Unnamed')}</strong>${a.chip_uid ? `<div style="font-size:11px;color:rgba(1,34,36,0.45)">${esc(a.chip_uid)}</div>` : ''}</div></div></td>
+        <td>${esc(cap(a.type) || '—')}<div style="font-size:11px;color:rgba(1,34,36,0.45)">${esc(a.breed || '')}</div></td>
+        <td>${esc(a.health_status || '—')}<div style="font-size:11px;color:rgba(1,34,36,0.45)">${esc(meds)}</div></td>
+        <td><span class="badge ${s.cls}">${esc(s.label)}</span></td>
+        <td>${esc(a.created_at ? formatDateDisplay(String(a.created_at).slice(0,10)) : '—')}</td>
+        <td style="white-space:nowrap" onclick="event.stopPropagation()">
+          <button class="btn btn-ghost btn-sm" title="View" onclick="openAnimalDetail(${a.id})"><i class="ti ti-eye"></i></button>
+          <button class="btn btn-ghost btn-sm" title="Edit" onclick="openEditAnimal(${a.id})"><i class="ti ti-edit"></i></button>
+          <select class="filter-select" style="padding:5px 8px;font-size:12px;margin-left:6px" title="Change availability" onchange="setAnimalStatus(${a.id}, this.value)">
+            ${Object.entries(AN_STATUS).map(([k,v]) => `<option value="${k}" ${a.status === k ? 'selected' : ''}>${v.label}</option>`).join('')}
+          </select>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+  document.getElementById('an-count').textContent = `(${list.length})`;
+}
+ 
+function renderVetSubmissions() {
+  const list = animals.filter(a => a.submitted_by_vet);
+  const tbody = document.getElementById('an-vet-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = list.length ? list.map(a => {
+    const cls = a.approval_status === 'approved' ? 'approved' : a.approval_status === 'rejected' ? 'rejected' : 'pending';
+    const label = (a.approval_status || 'pending').replace(/^./, c => c.toUpperCase());
+    return `
+    <tr class="clickable" onclick="openAnimalReview(${a.id})">
+      <td><strong>${esc(a.name || 'Unnamed')}</strong><div style="font-size:11px;color:rgba(1,34,36,0.45)">${esc(a.type || '')} · ${esc(a.breed || '')}</div></td>
+      <td>${esc(a.vet_name || '—')}</td>
+      <td style="max-width:220px">${esc((a.health_status || a.description || '—').slice(0, 80))}</td>
+      <td>${esc(a.created_at || '—')}</td>
+      <td><span class="badge ${cls}">${esc(label)}</span></td>
+      <td><span style="font-size:12px;color:#4E8DC0;font-weight:500">${a.approval_status === 'pending' ? 'Review →' : 'View →'}</span></td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="6" style="text-align:center;padding:24px;color:rgba(1,34,36,0.4)">No vet submissions.</td></tr>';
+  document.getElementById('an-vet-count').textContent = `(${list.length})`;
+}
+ 
+function openAnimalDetail(id) {
+  const a = animals.find(x => x.id === id);
+  if (!a) return;
+  const s = AN_STATUS[a.status] || { label: a.status || '—' };
+  const on = v => Number(v) > 0;   // some rows store 2, so don't compare to 1
+  const T = (id, v) => document.getElementById(id).textContent = v || '—';
+  document.getElementById('and-title').textContent = a.name || 'Animal details';
+  T('and-name', a.name); T('and-breed', `${cap(a.type)}${a.breed ? ' — ' + a.breed : ''}`);
+  T('and-sexage', `${cap(a.gender) || '—'} / ${a.age != null ? a.age + ' yr' : '—'}`); T('and-shelter', a.facility_name);
+  T('and-status', s.label); T('and-chip', a.chip_uid); T('and-vet', a.vet_name || 'Admin / shelter');
+  T('and-health', a.health_status); T('and-notes', a.medical_notes); T('and-desc', a.description);
+  document.getElementById('and-med').innerHTML =
+    [['Vaccinated', a.vaccinated], ['Dewormed', a.dewormed], ['Neutered/spayed', a.neutered]]
+      .map(([l, v]) => `<span class="badge ${on(v) ? 'active' : 'inactive'}">${l}${on(v) ? '' : ' — no'}</span>`).join('');
+  document.getElementById('and-edit-btn').onclick = () => { closeModal('animalDetailModal'); openEditAnimal(id); };
+  document.getElementById('and-delete-btn').onclick = () => deleteAnimal(id);
+  openModal('animalDetailModal');
+}
+ 
+function fillAnimalFacilities(selected, shelterName) {
+  const sel = document.getElementById('afo-facility');
+  const list = facilities.filter(f => f.status !== 'pending');
+  sel.innerHTML = '<option value="">— None —</option>' +
+    list.map(f => `<option value="${f.id}">${esc(f.name)}</option>`).join('');
+  if (selected) sel.value = selected;
+  else if (shelterName) {
+    const m = list.find(f => f.name.trim().toLowerCase() === shelterName.trim().toLowerCase());
+    sel.value = m ? m.id : '';
+  } else sel.value = '';
+}
+ 
+function openAddAnimal() {
+  document.getElementById('afo-title').textContent = 'Add animal';
+  document.getElementById('afo-id').value = '';
+  ['name','breed','age','desc','health','notes'].forEach(k => document.getElementById('afo-' + k).value = '');
+  document.getElementById('afo-type').value = 'dog';
+  document.getElementById('afo-gender').value = '';
+  document.getElementById('afo-status').value = 'available';
+  ['vaccinated','dewormed','neutered'].forEach(k => document.getElementById('afo-' + k).checked = false);
+  fillAnimalFacilities('');
+  openModal('animalFormModal');
+}
+ 
+function openEditAnimal(id) {
+  const a = animals.find(x => x.id === id);
+  if (!a) return;
+  document.getElementById('afo-title').textContent = 'Edit animal — ' + (a.name || '');
+  document.getElementById('afo-id').value = id;
+  document.getElementById('afo-name').value = a.name || '';
+  document.getElementById('afo-type').value = (a.type || 'dog').toLowerCase();
+  document.getElementById('afo-breed').value = a.breed || '';
+  document.getElementById('afo-gender').value = (a.gender || '').toLowerCase();
+  document.getElementById('afo-age').value = a.age || '';
+  document.getElementById('afo-desc').value = a.description || '';
+  document.getElementById('afo-status').value = a.status || 'available';
+  document.getElementById('afo-vaccinated').checked = Number(a.vaccinated) > 0;
+  document.getElementById('afo-dewormed').checked = Number(a.dewormed) > 0;
+  document.getElementById('afo-neutered').checked = Number(a.neutered) > 0;
+  document.getElementById('afo-health').value = a.health_status || '';
+  document.getElementById('afo-notes').value = a.medical_notes || '';
+  fillAnimalFacilities(a.facility_id);
+  openModal('animalFormModal');
+}
+ 
+function animalPost(action, body, okMsg, closeId) {
+  return fetch('admin_animals.php?action=' + action, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (!d.success) { showToast(d.message || 'Action failed.', 'error'); loadAnimals(); return false; }
+    if (closeId) closeModal(closeId);
+    showToast(okMsg);
+    loadAnimals();
+    return true;
+  })
+  .catch(() => { showToast('Could not reach the server.', 'error'); return false; });
+}
+ 
+function saveAnimal() {
+  const idRaw = document.getElementById('afo-id').value;
+  const name = document.getElementById('afo-name').value.trim();
+  if (!name) { showToast('Please enter the animal\'s name.', 'error'); return; }
+  const body = {
+    id: idRaw ? parseInt(idRaw, 10) : undefined,
+    name,
+    type: document.getElementById('afo-type').value,
+    breed: document.getElementById('afo-breed').value.trim(),
+    gender: document.getElementById('afo-gender').value,
+    age: document.getElementById('afo-age').value.trim(),
+    description: document.getElementById('afo-desc').value.trim(),
+    facility_id: document.getElementById('afo-facility').value || null,
+    shelter: (() => { const s = document.getElementById('afo-facility'); return s.value ? s.options[s.selectedIndex].text : ''; })(),
+    status: document.getElementById('afo-status').value,
+    vaccinated: document.getElementById('afo-vaccinated').checked,
+    dewormed: document.getElementById('afo-dewormed').checked,
+    neutered: document.getElementById('afo-neutered').checked,
+    health_status: document.getElementById('afo-health').value.trim(),
+    medical_notes: document.getElementById('afo-notes').value.trim(),
+  };
+  animalPost(idRaw ? 'update' : 'create', body, `"${name}" saved.`, 'animalFormModal');
+}
+ 
+function setAnimalStatus(id, status) {
+  animalPost('set_status', { id, status }, 'Availability updated.');
+}
+ 
+function deleteAnimal(id) {
+  const a = animals.find(x => x.id === id);
+  if (!a || !confirm(`Delete "${a.name}"? This cannot be undone.`)) return;
+  animalPost('delete', { id }, `"${a.name}" deleted.`, 'animalDetailModal');
+}
+ 
+function openAnimalReview(id) {
+  const a = animals.find(x => x.id === id);
+  if (!a) return;
+  animalReviewId = id;
+  const T = (el, v) => document.getElementById(el).textContent = v || '—';
+  T('arv-animal', `${a.name || 'Unnamed'} (${a.type || ''}${a.breed ? ', ' + a.breed : ''})`);
+  T('arv-vet', a.vet_name); T('arv-health', a.health_status); T('arv-notes', a.medical_notes); T('arv-desc', a.description);
+  document.getElementById('arv-review-notes').value = a.review_notes || '';
+  openModal('animalReviewModal');
+}
+ 
+function reviewAnimal(decision) {
+  animalPost('review', { id: animalReviewId, decision, notes: document.getElementById('arv-review-notes').value.trim() },
+    decision === 'approve' ? 'Animal approved and listed.' : 'Submission rejected.', 'animalReviewModal');
+}
+ 
+document.addEventListener('DOMContentLoaded', () => {
+  loadAnimals();
+  setInterval(loadAnimals, 30000);
+});
+
+
+
 
 /* ---------- LOGOUT ---------- */
 const overlay = document.getElementById('logout-overlay');

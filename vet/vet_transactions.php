@@ -22,19 +22,6 @@ require_once __DIR__ . '/../php/db.php';
 
 const ROLE_NAME = 'vet';
 const UPLOAD_DIR = __DIR__ . '/../uploads/transactions/';   // filesystem path
-
-/**
- * FIX: this used to be 'uploads/transactions/' — a relative path with no
- * leading segment. That gets stored in the DB and handed straight to the
- * browser as an <img src>, but it's rendered inside pages that live one
- * folder below the project root (/admin/admin_dashboard.php and
- * /vet/vet_dashboard.php). A relative path with no '../' resolves against
- * THOSE folders, so the browser was requesting
- * /admin/uploads/transactions/xxx.jpg or /vet/uploads/transactions/xxx.jpg —
- * neither of which exists, since uploads/ is a sibling of admin/ and vet/,
- * not nested inside them. That's why the photo never showed up on either
- * side. '../uploads/transactions/' resolves correctly from both.
- */
 const UPLOAD_URL_PREFIX = '../uploads/transactions/';        // path used by <img src> from /admin/ and /vet/ pages
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024; // 5MB
 const ALLOWED_EXT = ['jpg', 'jpeg', 'png', 'webp'];

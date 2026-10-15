@@ -367,6 +367,43 @@ body{
   color:rgba(1,34,36,0.4);font-weight:600;margin-bottom:10px;
 }
 
+/* ── Animal registration ── */
+.reg-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 18px;}
+.reg-grid .full{grid-column:1 / -1;}
+.reg-section{margin:6px 0 14px;padding-top:14px;border-top:1px solid rgba(1,34,36,0.08);}
+.reg-section:first-child{border-top:none;padding-top:0;margin-top:0;}
+.check-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.check-card{
+  display:flex;align-items:center;gap:9px;padding:10px 13px;cursor:pointer;
+  border:1px solid rgba(1,34,36,0.15);border-radius:9px;background:var(--surface);
+  font-size:13px;transition:border-color .15s,background .15s;user-select:none;
+}
+.check-card:hover{background:var(--bg);}
+.check-card input{accent-color:var(--blue);width:16px;height:16px;cursor:pointer;}
+.check-card:has(input:checked){border-color:var(--blue);background:var(--blue-soft);color:var(--blue);font-weight:500;}
+.photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.photo-drop{
+  position:relative;border:1.5px dashed rgba(1,34,36,0.22);border-radius:12px;
+  min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;text-align:center;padding:14px;cursor:pointer;background:var(--bg);
+  transition:border-color .15s,background .15s;overflow:hidden;
+}
+.photo-drop:hover{border-color:var(--blue);background:var(--blue-soft);}
+.photo-drop i{font-size:26px;color:var(--blue);}
+.photo-drop .pd-title{font-size:13px;font-weight:600;}
+.photo-drop .pd-sub{font-size:11px;color:var(--muted);}
+.photo-drop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;}
+.photo-drop.has-image img{display:block;}
+.photo-drop.has-image > :not(img):not(.photo-clear){display:none;}
+.photo-clear{
+  position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;
+  background:rgba(1,34,36,0.7);color:#fff;border:none;cursor:pointer;display:none;
+  align-items:center;justify-content:center;z-index:2;
+}
+.photo-drop.has-image .photo-clear{display:flex;}
+.rfid-note{font-size:11.5px;color:var(--muted);margin-top:6px;}
+.reg-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;padding-top:16px;border-top:1px solid rgba(1,34,36,0.08);}
+
 /* ── Scrollbar ── */
 ::-webkit-scrollbar{width:6px;height:6px;}
 ::-webkit-scrollbar-track{background:transparent;}
@@ -375,6 +412,8 @@ body{
 @media (max-width:1100px){
   .stats-grid{grid-template-columns:repeat(2,1fr);}
   .two-col, .announce-grid{grid-template-columns:1fr;}
+  .reg-grid, .photo-grid{grid-template-columns:1fr;}
+  .check-row{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -412,7 +451,10 @@ body{
     <button class="nav-item" data-view="animals" type="button">
       <i class="ti ti-paw"></i> Animals Under Care
     </button>
-
+    <button class="nav-item" data-view="registration" type="button">
+      <i class="ti ti-clipboard-plus"></i> Animal Registration
+      <span class="nav-badge zero" id="nav-badge-registration">0</span>
+    </button>
     <div class="nav-section">Outreach</div>
     <button class="nav-item" data-view="announcements" type="button">
       <i class="ti ti-speakerphone"></i> Announcement Requests
@@ -454,7 +496,6 @@ body{
   </div>
 
   <div class="content">
-
     <!-- ===================== DASHBOARD VIEW ===================== -->
     <div class="view active" id="view-dashboard">
       <div class="page-title">Vet Dashboard</div>
@@ -568,7 +609,161 @@ body{
       </div>
     </div>
 
-    <!-- ===================== ANNOUNCEMENTS VIEW ===================== -->
+    <!-- ===================== ANIMAL REGISTRATION VIEW ===================== -->
+  <div class="view" id="view-registration">
+    <div class="page-title">Register New Animal</div>
+    <div class="page-sub">Add an animal to the pet records, upload its photos, and link an RFID tag if one is available.</div>
+
+    <div class="panel">
+      <div class="panel-head"><span class="title">Animal details</span></div>
+      <div class="panel-body">
+        <form id="reg-form" novalidate onsubmit="return false;">
+
+          <div class="reg-section">
+            <div class="section-title">Basic information</div>
+            <div class="reg-grid">
+              <div class="form-group">
+                <label class="form-label" for="reg-name">Animal name *</label>
+                <input class="form-input" type="text" id="reg-name" maxlength="255" placeholder="e.g. Brownie">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-type">Type *</label>
+                <select class="form-select" id="reg-type">
+                  <option value="">Select type…</option>
+                  <option value="Dog">Dog</option>
+                  <option value="Cat">Cat</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-breed">Breed</label>
+                <input class="form-input" type="text" id="reg-breed" maxlength="255" placeholder="e.g. Aspin, Puspin, Shih Tzu">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-age">Age (years)</label>
+                <input class="form-input" type="number" id="reg-age" min="0" max="40" step="1" placeholder="0 for under a year">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-gender">Gender</label>
+                <select class="form-select" id="reg-gender">
+                  <option value="">Select gender…</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-urgency">Urgency</label>
+                <select class="form-select" id="reg-urgency">
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                  <option value="Critical">Critical</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="reg-section">
+            <div class="section-title">Where the animal is</div>
+            <div class="reg-grid">
+              <div class="form-group">
+                <label class="form-label" for="reg-facility">Facility</label>
+                <select class="form-select" id="reg-facility"><option value="">Loading…</option></select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-shelter">Shelter</label>
+                <input class="form-input" type="text" id="reg-shelter" maxlength="255" placeholder="Shelter currently housing the animal">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-location">Location found</label>
+                <input class="form-input" type="text" id="reg-location" maxlength="255" placeholder="e.g. Near Holy Rosary Church, Angeles City">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-status">Listing status</label>
+                <select class="form-select" id="reg-status">
+                  <option value="in_custody">In custody — not listed for adoption</option>
+                  <option value="available">Available for adoption</option>
+                </select>
+              </div>
+              <div class="form-group full">
+                <label class="form-label" for="reg-story">Story / description</label>
+                <textarea class="form-textarea" id="reg-story" placeholder="How the animal was found, its temperament, and anything adopters should know…"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="reg-section">
+            <div class="section-title">Health</div>
+            <div class="check-row" style="margin-bottom:14px;">
+              <label class="check-card"><input type="checkbox" id="reg-vaccinated"> Vaccinated</label>
+              <label class="check-card"><input type="checkbox" id="reg-dewormed"> Dewormed</label>
+              <label class="check-card"><input type="checkbox" id="reg-neutered"> Neutered / spayed</label>
+            </div>
+            <div class="reg-grid">
+              <div class="form-group">
+                <label class="form-label" for="reg-health">Health status</label>
+                <select class="form-select" id="reg-health">
+                  <option value="Healthy">Healthy</option>
+                  <option value="Recovering">Recovering</option>
+                  <option value="Under treatment">Under treatment</option>
+                  <option value="Injured">Injured</option>
+                  <option value="Critical">Critical</option>
+                </select>
+              </div>
+              <div class="form-group full">
+                <label class="form-label" for="reg-notes">Medical notes</label>
+                <textarea class="form-textarea" id="reg-notes" placeholder="Injuries, treatments given, medications, follow-up needed…"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="reg-section">
+            <div class="section-title">Photos</div>
+            <div class="photo-grid">
+              <div>
+                <label class="photo-drop" id="drop-before" for="reg-photo-before">
+                  <i class="ti ti-camera-plus"></i>
+                  <span class="pd-title">Before photo</span>
+                  <span class="pd-sub">Condition when the animal arrived</span>
+                  <img alt="Before photo preview">
+                  <button type="button" class="photo-clear" data-clear="before" title="Remove photo"><i class="ti ti-x"></i></button>
+                </label>
+                <input type="file" id="reg-photo-before" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none;">
+              </div>
+              <div>
+                <label class="photo-drop" id="drop-after" for="reg-photo-after">
+                  <i class="ti ti-camera-check"></i>
+                  <span class="pd-title">After photo</span>
+                  <span class="pd-sub">Optional — after treatment or grooming</span>
+                  <img alt="After photo preview">
+                  <button type="button" class="photo-clear" data-clear="after" title="Remove photo"><i class="ti ti-x"></i></button>
+                </label>
+                <input type="file" id="reg-photo-after" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none;">
+              </div>
+            </div>
+            <div class="btn-note">JPEG, PNG, GIF or WEBP · Max 5 MB each</div>
+          </div>
+
+          <div class="reg-section">
+            <div class="section-title">RFID tag</div>
+            <div class="form-group" style="max-width:420px;margin-bottom:0;">
+              <label class="form-label" for="reg-chip">Chip ID (optional)</label>
+              <input class="form-input" type="text" id="reg-chip" maxlength="64" autocomplete="off" placeholder="Scan or type the ID from the reader" style="font-family:'Courier New',monospace;">
+              <div class="rfid-note">Leave blank if the animal isn't tagged yet. You can register a tag later from RFID Management.</div>
+            </div>
+          </div>
+
+          <div class="form-error" id="reg-error"></div>
+
+          <div class="reg-actions">
+            <button class="btn-mini cancel" id="reg-reset" type="button" style="padding:9px 16px;">Clear form</button>
+            <button class="btn-primary" id="reg-submit" type="button"><i class="ti ti-clipboard-plus"></i> Register animal</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- ============== ANNOUNCEMENTS VIEW ================ -->
     <div class="view" id="view-announcements">
       <div class="page-title">Announcement Requests</div>
       <div class="page-sub">Propose community events. An admin reviews each request before it's published to pet owners.</div>
@@ -618,7 +813,6 @@ body{
         </div>
       </div>
     </div>
-
   </div>
 </div><!-- end .main -->
 </div><!-- end .app -->
@@ -724,9 +918,6 @@ body{
 
 <script>
 (function(){
-
-  // PawConnect currently runs a single vet clinic. Keep this in sync with
-  // the FACILITY_NAME constant in vet_reservations.php.
   const FACILITY_NAME = <?= json_encode(FACILITY_NAME) ?>;
 
   const viewLabels = {
@@ -735,7 +926,8 @@ body{
     transactions: 'Successful Transactions',
     rfidmanagement: 'RFID Management',
     animals: 'Animals Under Care',
-    announcements: 'Announcement Requests'
+    announcements: 'Announcement Requests',
+    registration: 'Animal Registration',
   };
 
   const RESV_API = 'vet_reservations.php';
@@ -771,9 +963,7 @@ body{
     transactions: []   // loaded from the server via loadTransactions() — connected
   };
 
-  // Medical records, keyed by rfid_tag_id (the same "id" admin_rfid.php
-  // already returns per chip). Loaded from vet_records.php — see
-  // loadMedicalRecords() further down.
+  // Medical records, keyed by rfid_tag_id (the same "id" admin_rfid.php already returns per chip). Loaded from vet_records.php — see loadMedicalRecords() further down.
   let medicalRecords = {};
 
   function escapeHtml(s){
@@ -878,11 +1068,12 @@ body{
   // Adoption status of the *animal*, as tracked on the pet listing itself
   // (pet.status, joined in by admin_rfid.php as pet_status). This is
   // independent of the RFID chip's own active/deactivated/replaced state.
-  function adoptionStatusChipHtml(petStatus){
-    if(petStatus === 'adopted') return `<span class="status-chip inactive">Adopted</span>`;
-    if(!petStatus) return `<span class="status-chip inactive">Unassigned</span>`;
-    return `<span class="status-chip updated">Available</span>`;
-  }
+  // function adoptionStatusChipHtml(petStatus){
+  //   if(petStatus === 'adopted') return `<span class="status-chip inactive">Adopted</span>`;
+  //   if(!petStatus) return `<span class="status-chip inactive">Unassigned</span>`;
+  //   return `<span class="status-chip updated">Available</span>`;
+  // }
+  // !!!!!!!!!!!!!!!!!!!! wait tinanggal q i2 basta i2 yon iykyk
 
   const RECORDS_API = 'vet_records.php';
 
@@ -953,8 +1144,6 @@ body{
       const statusHtml = isActive
         ? statusChipHtml(rec.status)
         : `<span class="status-chip inactive">${chip.status === 'replaced' ? 'Replaced' : 'Deactivated'}</span>`;
-      // A tag that's still "active" on an animal whose listing already
-      // says "adopted" is stale — the vet needs to know to deactivate it.
       const needsDeactivation = isActive && chip.pet_status === 'adopted';
       const adoptedWarningHtml = needsDeactivation
         ? `<div style="margin-top:6px;"><span class="status-chip due" title="This animal has been adopted — deactivate this tag.">Adopted, tag still active</span></div>`
@@ -1038,12 +1227,68 @@ body{
     if(dueStatEl) dueStatEl.textContent = dueChips.length;
   }
 
-  // "Animals Under Care" is sourced from the full `pet` list (allPets,
-  // loaded via admin_rfid.php?action=list_pets — every animal, tagged or
-  // not). "Under care" = still at the facility, i.e. its adoption listing
-  // hasn't been marked "adopted" yet.
+  // function currentlyUnderCare(){
+  //   return allPets.filter(p => p.status !== 'adopted');
+  // }
+  function adoptionStatusChipHtml(petStatus){
+    if(petStatus === 'adopted')   return `<span class="status-chip inactive">Adopted</span>`;
+    if(petStatus === 'returned')  return `<span class="status-chip inactive">Returned</span>`;
+    if(petStatus === 'in_custody')return `<span class="status-chip due">In custody — not listed</span>`;
+    if(!petStatus)                return `<span class="status-chip inactive">Unassigned</span>`;
+    return `<span class="status-chip updated">Available</span>`;
+  }
   function currentlyUnderCare(){
-    return allPets.filter(p => p.status !== 'adopted');
+    return allPets.filter(p => !['adopted','returned','archived'].includes(p.status));
+  }
+
+  function findActiveTagForPet(petId){
+    return rfidChips.find(c => c.status === 'active' && Number(c.pet_id) === Number(petId));
+  }
+
+  function renderAnimals(){
+    const body = document.getElementById('animals-table-body');
+    if(!body) return;
+
+    const underCare = currentlyUnderCare();
+
+    body.innerHTML = underCare.length
+      ? underCare.map(pet => {
+          const tag = findActiveTagForPet(pet.id);
+          return `
+      <tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:9px">
+            <div class="pet-ava"><i class="ti ti-paw"></i></div>
+            <div>
+              <strong>${escapeHtml(pet.name || 'Unnamed')}</strong>
+              <div style="font-size:11px;color:rgba(1,34,36,0.45)">${escapeHtml([pet.type, pet.breed].filter(Boolean).join(' · ')) || '—'}</div>
+            </div>
+          </div>
+        </td>
+        <td>${tag ? `<span class="tag-chip">${escapeHtml(tag.chip_uid)}</span>` : `<span style="color:rgba(1,34,36,0.4);font-size:12px;">No tag registered</span>`}</td>
+        <td>${adoptionStatusChipHtml(pet.status)}</td>
+        <td>${tag ? '<span class="status-chip updated">Active</span>' : '<span class="status-chip inactive">Not tagged</span>'}</td>
+      </tr>`;
+        }).join('')
+      : `<tr><td colspan="4" class="empty-state">No animals currently under care.</td></tr>`;
+
+    const statEl = document.getElementById('stat-animals-under-care');
+    if(statEl) statEl.textContent = underCare.length;
+
+    const untaggedCount = underCare.filter(pet => !findActiveTagForPet(pet.id)).length;
+    const adoptedButActive = rfidChips.filter(c => c.status === 'active' && c.pet_status === 'adopted').length;
+    const metaEl = document.getElementById('stat-animals-meta');
+    if(metaEl){
+      if(adoptedButActive > 0){
+        metaEl.textContent = `${adoptedButActive} adopted animal${adoptedButActive === 1 ? '' : 's'} still tagged active`;
+      } else if(untaggedCount > 0){
+        metaEl.textContent = `${untaggedCount} of ${underCare.length} not yet tagged`;
+      } else {
+        metaEl.textContent = 'All tagged';
+      }
+      metaEl.classList.toggle('alert', adoptedButActive > 0);
+      metaEl.classList.toggle('ok', adoptedButActive === 0);
+    }
   }
 
   function findActiveTagForPet(petId){
@@ -1541,6 +1786,132 @@ body{
     }
   });
 
+  /* ---------- ANIMAL REGISTRATION ---------- */
+const PETS_API = 'vet_animals.php';
+const REG_MAX_BYTES = 5 * 1024 * 1024;
+const REG_OK_TYPES = ['image/jpeg','image/png','image/gif','image/webp'];
+const regEl = id => document.getElementById(id);
+const regFiles = { before: null, after: null };
+
+function regShowError(msg){
+  const el = regEl('reg-error');
+  el.textContent = msg; el.style.display = 'block';
+  el.scrollIntoView({behavior:'smooth', block:'center'});
+}
+function regHideError(){ regEl('reg-error').style.display = 'none'; }
+
+async function loadFacilities(){
+  const sel = regEl('reg-facility');
+  try{
+    const res = await fetch(`${PETS_API}?action=list_facilities`);
+    const data = await res.json();
+    if(!data.success) throw new Error(data.message);
+    sel.innerHTML = `<option value="">— None —</option>` + data.facilities.map(f =>
+      `<option value="${Number(f.id)}">${escapeHtml(f.name)}</option>`).join('');
+    const match = data.facilities.find(f => f.name === FACILITY_NAME);
+    if(match) sel.value = match.id;
+  }catch(err){
+    console.error('Could not load facilities:', err);
+    sel.innerHTML = `<option value="">Could not load facilities</option>`;
+  }
+}
+
+function setRegPhoto(kind, file){
+  const drop = regEl('drop-' + kind), img = drop.querySelector('img');
+  if(!file){
+    regFiles[kind] = null; img.removeAttribute('src');
+    drop.classList.remove('has-image'); regEl('reg-photo-' + kind).value = '';
+    return;
+  }
+  if(!REG_OK_TYPES.includes(file.type)){ showToast('Only JPEG, PNG, GIF or WEBP images are allowed.'); regEl('reg-photo-' + kind).value = ''; return; }
+  if(file.size > REG_MAX_BYTES){ showToast('Image must be smaller than 5 MB.'); regEl('reg-photo-' + kind).value = ''; return; }
+  regFiles[kind] = file;
+  const fr = new FileReader();
+  fr.onload = e => { img.src = e.target.result; drop.classList.add('has-image'); };
+  fr.readAsDataURL(file);
+}
+['before','after'].forEach(kind => {
+  regEl('reg-photo-' + kind).addEventListener('change', e => setRegPhoto(kind, e.target.files[0]));
+});
+document.querySelectorAll('[data-clear]').forEach(btn => {
+  btn.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); setRegPhoto(btn.dataset.clear, null); });
+});
+
+function resetRegForm(){
+  regEl('reg-form').reset();
+  setRegPhoto('before', null); setRegPhoto('after', null);
+  regHideError();
+  const match = Array.from(regEl('reg-facility').options).find(o => o.textContent === FACILITY_NAME);
+  if(match) regEl('reg-facility').value = match.value;
+}
+regEl('reg-reset').addEventListener('click', resetRegForm);
+
+regEl('reg-submit').addEventListener('click', async () => {
+  regHideError();
+  const name = regEl('reg-name').value.trim();
+  const type = regEl('reg-type').value;
+  const ageRaw = regEl('reg-age').value.trim();
+
+  if(!name){ regShowError("Enter the animal's name."); regEl('reg-name').focus(); return; }
+  if(!type){ regShowError('Choose whether the animal is a dog or a cat.'); regEl('reg-type').focus(); return; }
+  if(ageRaw !== '' && (!/^\d+$/.test(ageRaw) || Number(ageRaw) > 40)){ regShowError('Age must be a whole number between 0 and 40.'); regEl('reg-age').focus(); return; }
+
+  const fd = new FormData();
+  fd.append('action', 'create');
+  fd.append('name', name);
+  fd.append('type', type);
+  fd.append('breed', regEl('reg-breed').value.trim());
+  fd.append('age', ageRaw);
+  fd.append('gender', regEl('reg-gender').value);
+  fd.append('shelter', regEl('reg-shelter').value.trim());
+  fd.append('facility_id', regEl('reg-facility').value);
+  fd.append('location', regEl('reg-location').value.trim());
+  fd.append('urgency', regEl('reg-urgency').value);
+  fd.append('status', regEl('reg-status').value);
+  fd.append('story', regEl('reg-story').value.trim());
+  fd.append('vaccinated', regEl('reg-vaccinated').checked ? 1 : 0);
+  fd.append('dewormed',   regEl('reg-dewormed').checked ? 1 : 0);
+  fd.append('neutered',   regEl('reg-neutered').checked ? 1 : 0);
+  fd.append('health_status', regEl('reg-health').value);
+  fd.append('medical_notes', regEl('reg-notes').value.trim());
+  if(regFiles.before) fd.append('photo_before', regFiles.before);
+  if(regFiles.after)  fd.append('photo_after',  regFiles.after);
+
+  const btn = regEl('reg-submit');
+  btn.disabled = true; btn.textContent = 'Registering…';
+
+  try{
+    const res = await fetch(PETS_API, { method:'POST', body: fd });
+    const data = await res.json();
+    if(!data.success){ regShowError(data.message || 'Could not register the animal.'); return; }
+
+    const chip = regEl('reg-chip').value.trim();
+    let tagMsg = '';
+    if(chip){
+      try{
+        const r2 = await fetch(`${RFID_API}?action=register`, {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ chip_uid: chip, pet_id: data.pet_id })
+        });
+        const d2 = await r2.json();
+        tagMsg = d2.success ? ' RFID tag linked.' : ` Saved, but the tag wasn't linked: ${d2.message || 'unknown error'}.`;
+      }catch(e){
+        tagMsg = ' Saved, but the tag could not be linked (server unreachable).';
+      }
+    }
+
+    showToast(`${name} registered.${tagMsg}`);
+    resetRegForm();
+    // Same refresh the page already does on this event
+    loadRfidRegistry(); loadAllPets(); loadMedicalRecords();
+  }catch(err){
+    regShowError('Could not reach the server. Please try again.');
+  }finally{
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-clipboard-plus"></i> Register animal';
+  }
+});
+
   /* ---------- LOGOUT ---------- */
   const overlay = document.getElementById('logout-overlay');
   document.getElementById('logout-btn').addEventListener('click', () => overlay.classList.add('show'));
@@ -1549,7 +1920,7 @@ body{
     window.location.href = 'vet_logout.php';
   });
 
-  /* ---------- MY PROFILE PHOTO (same php/userprof.php as the user pages) ---------- */
+  /* ---------- MY PROFILE PHOTO ---------- */
   const PROFILE_API = '../php/userprof.php';
   const VET_INITIALS = <?= json_encode($initials) ?>;
   let vetPhoto = null;            // server path, or a data: URL right after an upload
@@ -1558,10 +1929,6 @@ body{
   function vetPhotoUrl(path){
     if(!path) return null;
     if(/^(https?:|data:|\/\/)/.test(path)) return path;
-    // Saved paths are root-based, e.g. "/pawconnect/php/uploads/profile_photos/6.jpg?v=1".
-    // Older rows were saved without the project folder ("/php/uploads/..."). This page sits
-    // one folder below the project root, so work out that root from the page's own URL
-    // ("/pawconnect/vet/x.php" -> "/pawconnect") and add it only if it's missing.
     const root = location.pathname.replace(/\/[^\/]*\/[^\/]*$/, '');
     let p = path.charAt(0) === '/' ? path : '/' + path.replace(/^(\.\.\/)+/, '');
     if(root && p.indexOf(root + '/') !== 0) p = root + p;
@@ -1668,6 +2035,10 @@ body{
   loadRfidRegistry();
   loadAllPets();
   loadMedicalRecords();
+  window.addEventListener('pawconnect:animals-changed', () => {
+    loadRfidRegistry(); loadAllPets(); loadMedicalRecords();
+  });
+  loadFacilities();
 })();
 </script>
 

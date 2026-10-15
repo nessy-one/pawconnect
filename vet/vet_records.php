@@ -1,7 +1,7 @@
 <?php
 session_start();
 header('Content-Type: application/json');
-require __DIR__ . '/../php/db.php'; // same pattern as admin_rfid.php — gives $conn (mysqli)
+require __DIR__ . '/../php/db.php'; 
 
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role'] !== 'vet') {
     http_response_code(401);

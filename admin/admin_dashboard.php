@@ -2179,6 +2179,7 @@ function setFeedbackStatus(id, status) {
 }
 
 let adoptionRequests = [];
+let seenPendingAdoptionIds = null;
 
 function loadAdoption() {
     fetch('admin_adoption.php?action=list')
@@ -2188,7 +2189,14 @@ function loadAdoption() {
             adoptionRequests = data.requests.map(a => ({ ...a, id: parseInt(a.id, 10) }));
             filterAdoption();
             buildRecentActivity();
-        })
+            const pendingNow = adoptionRequests.filter(a => a.status === 'pending');
+            if (seenPendingAdoptionIds !== null) {
+              const fresh = pendingNow.filter(a => !seenPendingAdoptionIds.has(a.id));
+              if (fresh.length === 1) showToast(`New adoption request: ${fresh[0].applicant_name} → ${fresh[0].pet_name || 'a pet'}`, 'success', NOTIF_TOAST_MS);
+              else if (fresh.length > 1) showToast(`${fresh.length} new adoption requests`, 'success', NOTIF_TOAST_MS);
+            }
+            seenPendingAdoptionIds = new Set(pendingNow.map(a => a.id));
+          })
         .catch(err => { console.error(err); showToast('Could not reach the server.', 'error'); });
 }
 
@@ -2549,14 +2557,17 @@ document.querySelectorAll('.overlay').forEach(ov => {
 });
 
 //  TOAST
-function showToast(msg, type = 'success') {
+let toastTimer;
+function showToast(msg, type = 'success', ms = 3000) {
+  if (isPolling && type === 'error') return;
   const t = document.getElementById('toast');
   const icon = t.querySelector('i');
   document.getElementById('toast-msg').textContent = msg;
   t.className = 'toast ' + type;
   icon.className = type === 'success' ? 'ti ti-circle-check' : 'ti ti-alert-circle';
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), ms);
 }
 
 //  NOTIFICATIONS
@@ -2593,6 +2604,12 @@ const NOTIF_STYLE = {
   animal_registered: { cls: 'act-coral', icon: 'ti-clipboard-plus' },
 };
 
+let isPolling = false;
+const POLL_MS = 10000;        // how often both dashboards check for updates
+const NOTIF_TOAST_MS = 6000;  // how long a "new notification" toast stays
+let adminSeenNotifIds = null; // null = first load, don't toast old items
+let lastAnimalsSig = '';
+
 function loadAdminNotifications() {
   fetch('admin_adoption.php?action=list_notifications')
     .then(r => r.json())
@@ -2600,6 +2617,14 @@ function loadAdminNotifications() {
       if (!data.success) return;
       const list = document.getElementById('notif-list');
       const unread = data.notifications.filter(n => Number(n.is_read) === 0).length;
+
+      const keyOf = n => n.id ?? (n.created_at + n.message);
+      if (adminSeenNotifIds !== null) {
+        const fresh = data.notifications.filter(n => Number(n.is_read) === 0 && !adminSeenNotifIds.has(keyOf(n)));
+        if (fresh.length === 1) showToast(fresh[0].message, 'success', NOTIF_TOAST_MS);
+        else if (fresh.length > 1) showToast(`${fresh.length} new notifications`, 'success', NOTIF_TOAST_MS);
+      }
+      adminSeenNotifIds = new Set(data.notifications.map(keyOf));
 
       list.innerHTML = data.notifications.length
         ? data.notifications.map(n => {
@@ -3719,6 +3744,9 @@ function loadAnimals() {
     .then(data => {
       if (!data.success) { showToast(data.message || 'Failed to load animals.', 'error'); return; }
       animals = data.animals.map(a => ({ ...a, id: parseInt(a.id, 10) }));
+      const sig = JSON.stringify(data.animals);
+      if (sig === lastAnimalsSig) return;
+      lastAnimalsSig = sig;
       filterAnimals();
       renderVetSubmissions();
       updateAnimalStats();
@@ -3929,10 +3957,7 @@ function reviewAnimal(decision) {
     decision === 'approve' ? 'Animal approved and listed.' : 'Submission rejected.', 'animalReviewModal');
 }
  
-document.addEventListener('DOMContentLoaded', () => {
-  loadAnimals();
-  setInterval(loadAnimals, 30000);
-});
+document.addEventListener('DOMContentLoaded', () => { loadAnimals(); });
 
 /* ---------- LOGOUT ---------- */
 const overlay = document.getElementById('logout-overlay');
@@ -4039,6 +4064,16 @@ async function removeAdminPhoto() {
   } catch (err) { showToast('Could not reach the server.', 'error'); }
 }
 
+function pollAdmin() {
+  if (document.hidden) return;
+  isPolling = true;
+  loadAdminNotifications(); loadAdoption(); loadVetTransactions();
+  loadAnimals(); loadAnnouncements(); loadReports(); loadFeedback(); loadRFID();
+  setTimeout(() => { isPolling = false; }, 3000);
+}
+setInterval(pollAdmin, POLL_MS);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) pollAdmin(); });
+
 //  INIT
 loadAdminPhoto();
 loadFacilities();
@@ -4049,11 +4084,11 @@ loadFeedback();
 loadAdoption();
 loadVetTransactions();
 loadAdminNotifications();
-setInterval(() => {
-  loadAdminNotifications();
-  loadAdoption();
-  loadVetTransactions();
-}, 20000);
+// setInterval(() => {
+//   loadAdminNotifications();
+//   loadAdoption();
+//   loadVetTransactions();
+// }, 20000);
 loadRFID();
 loadAnnouncements();
 loadReceivedDonations();

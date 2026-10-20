@@ -15,6 +15,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role
 
 $vetId  = (int) $_SESSION['user_id'];
 $action = $_GET['action'] ?? 'list_pending';
+session_write_close();
 
 function notifyApplicantFromVet(mysqli $conn, int $applicantUserId, string $petName, string $type, string $title, string $message): void {
     $target = (string) $applicantUserId;

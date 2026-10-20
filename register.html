@@ -344,24 +344,52 @@ input, select { font-size: 16px !important; } /* stops iOS zoom-on-focus */
   // Popup logic
   (function () {
     const params = new URLSearchParams(window.location.search);
-    if (params.get("registered") !== "1") return;
+    const registered = params.get("registered") === "1";
+    const err = params.get("error");
+    if (!registered && !err) return;
 
-    const overlay = document.createElement("div");
-    overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:9999;";
-
-    overlay.innerHTML = `
-      <div style="background:#fff;border-radius:16px;padding:32px 36px;text-align:center;min-width:260px;font-family:'Poppins',sans-serif;">
-        <div style="font-size:36px;margin-bottom:10px;"></div>
-        <p style="font-size:16px;font-weight:600;color:#333;margin:0 0 6px;">You're all set!</p>
-        <p style="font-size:13px;color:#888;margin:0 0 20px;">Your account has been created.</p>
-        <button id="popup-btn" style="padding:10px 28px;background:#4E8DC0;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">Sign in</button>
-      </div>`;
-
-    document.body.appendChild(overlay);
-
-    document.getElementById("popup-btn").onclick = function () {
-      window.location.href = "login.html";
+    const errors = {
+      missing_fields:    "Please fill in all the fields.",
+      password_mismatch: "Passwords do not match.",
+      invalid_email:     "Please enter a valid email address.",
+      email_taken:       "That email is already registered.",
+      username_taken:    "That username is already taken.",
+      server:            "Something went wrong. Please try again."
     };
+
+    // iconClass = Font Awesome classes, iconColor = hex color
+    function showPopup(iconClass, iconColor, title, message, btnText, onClick) {
+      const overlay = document.createElement("div");
+      overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;";
+      overlay.innerHTML = `
+        <div style="background:#fff;border-radius:16px;padding:32px 36px;text-align:center;min-width:260px;max-width:100%;font-family:'Poppins',sans-serif;">
+          <div style="font-size:44px;margin-bottom:12px;color:${iconColor};">
+            <i class="${iconClass}"></i>
+          </div>
+          <p style="font-size:16px;font-weight:600;color:#333;margin:0 0 6px;">${title}</p>
+          <p style="font-size:13px;color:#888;margin:0 0 20px;">${message}</p>
+          <button id="popup-btn" style="padding:10px 28px;background:#4E8DC0;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">${btnText}</button>
+        </div>`;
+      document.body.appendChild(overlay);
+      document.getElementById("popup-btn").onclick = () => onClick(overlay);
+    }
+
+    // Clean the URL so a refresh doesn't show the popup again
+    history.replaceState(null, "", window.location.pathname);
+
+    if (registered) {
+      showPopup(
+        "fa-solid fa-circle-check", "#4CAF50",
+        "You're all set!", "Your account has been created.", "Sign in",
+        () => window.location.href = "login.html"
+      );
+    } else {
+      showPopup(
+        "fa-solid fa-circle-exclamation", "#E05A47",
+        "Oops!", errors[err] || errors.server, "OK",
+        (overlay) => overlay.remove()
+      );
+    }
   })();
 </script>
 </body>

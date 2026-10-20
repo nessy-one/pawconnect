@@ -9,6 +9,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     echo json_encode(['success' => false, 'message' => 'Unauthorized.']);
     exit;
 }
+session_write_close(); // release the session lock so polling requests don't queue
 
 $action = $_GET['action'] ?? 'list';
 
@@ -145,39 +146,37 @@ try {
         }
 
         // Admin reviews the vet's hand-off proof and finalizes the adoption.
+                // Admin reviews the vet's hand-off proof and finalizes the adoption.
         case 'acknowledge_transaction': {
-            $d       = json_decode(file_get_contents('php://input'), true);
-            $txnId = (int)($_POST['transaction_id'] ?? 0);
-
-            define('ADMIN_PROOF_DIR', __DIR__ . '/../uploads/admin_proof/');
-            // FIX: this used to be '/uploads/admin_proof/' — an absolute
-            // path missing the app's own folder segment. The site lives
-            // under /pawconnect/ (see rfid_bridge.py's SERVER_URL), so the
-            // browser was requesting /uploads/admin_proof/... at the domain
-            // root instead of /pawconnect/uploads/admin_proof/..., and the
-            // photo never loaded. Same fix already applied in
-            // vet_transactions.php and admin_donations.php.
-            define('ADMIN_PROOF_URL', '/pawconnect/uploads/admin_proof/');
-
-            $newProofUrls = [];
-            if (!empty($_FILES['admin_proof']['name']) && is_array($_FILES['admin_proof']['name'])) {
-                if (!is_dir(ADMIN_PROOF_DIR)) mkdir(ADMIN_PROOF_DIR, 0755, true);
-                foreach ($_FILES['admin_proof']['name'] as $i => $name) {
-                    if ($_FILES['admin_proof']['error'][$i] !== UPLOAD_ERR_OK) continue;
-                    $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-                    if (!in_array($ext, ['jpg','jpeg','png','webp'], true)) continue;
-                    $filename = 'proof_' . $txnId . '_' . time() . '_' . $i . '.' . $ext;
-                    if (move_uploaded_file($_FILES['admin_proof']['tmp_name'][$i], ADMIN_PROOF_DIR . $filename)) {
-                        $newProofUrls[] = ADMIN_PROOF_URL . $filename;
-                    }
-                }
-            }
+            $d     = json_decode(file_get_contents('php://input'), true) ?: [];
+            $txnId = (int)($d['transaction_id'] ?? 0);
 
             if (!$txnId) { echo json_encode(['success' => false, 'message' => 'Missing transaction_id.']); exit; }
             if (!isset($_SESSION['user_id'])) {
                 echo json_encode(['success' => false, 'message' => 'Admin session missing user_id.']); exit;
             }
             $adminId = (int) $_SESSION['user_id'];
+
+            define('ADMIN_PROOF_DIR', __DIR__ . '/../uploads/admin_proof/');
+            define('ADMIN_PROOF_URL', '/pawconnect/uploads/admin_proof/');
+
+            $newProofUrls = [];
+            $proofInput = $d['admin_proof'] ?? [];
+            if (is_array($proofInput) && $proofInput) {
+                if (!is_dir(ADMIN_PROOF_DIR)) mkdir(ADMIN_PROOF_DIR, 0755, true);
+                $extMap = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
+                foreach ($proofInput as $i => $dataUrl) {
+                    if (!is_string($dataUrl) || !preg_match('#^data:(image/[a-z+]+);base64,(.+)$#i', $dataUrl, $m)) continue;
+                    $mime = strtolower($m[1]);
+                    if (!isset($extMap[$mime])) continue;
+                    $bin = base64_decode($m[2], true);
+                    if ($bin === false || strlen($bin) > 5 * 1024 * 1024) continue;
+                    $filename = 'proof_' . $txnId . '_' . time() . '_' . $i . '.' . $extMap[$mime];
+                    if (file_put_contents(ADMIN_PROOF_DIR . $filename, $bin) !== false) {
+                        $newProofUrls[] = ADMIN_PROOF_URL . $filename;
+                    }
+                }
+            }
 
             $stmt = mysqli_prepare($conn, "
                 SELECT t.id, t.status, t.reservation_id, t.animal_name,
@@ -231,10 +230,6 @@ try {
                 mysqli_stmt_execute($s3);
 
                 $petName = $row['animal_name'] ?: 'the pet';
-                // FIX: dropped the trailing emoji (🎉) — this was the source
-                // of the emoji baked into notifications rows 6 and 13 in the
-                // original dump. Icons/emoji should come from the UI layer
-                // (Font Awesome), not be hardcoded into stored message text.
                 notifyApplicant($conn, (int)$row['applicant_id'], $petName, 'adoption_approved',
                     'Adoption Verified & Complete!',
                     "Great news — your adoption of {$petName} has been verified and marked complete. Thank you for adopting through PawConnect!");
@@ -276,6 +271,6 @@ try {
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'message' => 'Server error: ' . $e->getMessage(), // remove/trim this detail once things are stable in production
+        'message' => 'Server error: ' . $e->getMessage(), 
     ]);
 }

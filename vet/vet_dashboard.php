@@ -1023,6 +1023,13 @@ body{
           person: r.applicant_name,
           time: timeAgoLabel((r.forwarded_at || '').replace(' ', 'T') || new Date().toISOString())
         }));
+        const ids = new Set(state.notifications.map(n => n.id));
+        if(seenNotifIds !== null){
+          const fresh = state.notifications.filter(n => !seenNotifIds.has(n.id));
+          if(fresh.length === 1) showToast(`New adoption request: ${fresh[0].person} → ${fresh[0].pet}`, NOTIF_TOAST_MS);
+          else if(fresh.length > 1) showToast(`${fresh.length} new adoption requests from admin`, NOTIF_TOAST_MS);
+        }
+        seenNotifIds = ids;
       } else {
         console.error('list_forwarded failed:', res.status, data.message);
         showToast(data.message ? `Couldn't load requests: ${data.message}` : 'Could not load adoption requests.');
@@ -1033,6 +1040,12 @@ body{
     }
     renderNotifications();
   }
+
+  const POLL_MS = 10000;
+  const NOTIF_TOAST_MS = 6000;
+  let seenNotifIds = null;        // adoption requests forwarded by admin
+  let txnStatusById = null;       // id -> status
+  let announceStatusById = null;  // id -> status
 
   let state = {
     notifications: [], // loaded from the server via loadNotifications() — connected
@@ -1047,12 +1060,12 @@ body{
     return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
 
-  function showToast(msg){
+  function showToast(msg, ms = 2200){
     const t = document.getElementById('toast');
     t.textContent = msg;
     t.classList.add('show');
     clearTimeout(t._timer);
-    t._timer = setTimeout(()=> t.classList.remove('show'), 2200);
+    t._timer = setTimeout(()=> t.classList.remove('show'), ms);
   }
 
   /* ---------- NAVIGATION ---------- */
@@ -1549,8 +1562,18 @@ body{
       const res = await fetch(`${ANNOUNCE_API}?action=list&mine=1`);
       const data = await res.json();
       if(data.success){
-        // Only show this clinic's own submissions.
         state.announcements = (data.announcements || []).filter(a => a.facility_name === FACILITY_NAME);
+        const cur = {};
+        state.announcements.forEach(a => cur[a.id] = a.status);
+        if(announceStatusById !== null){
+          state.announcements.forEach(a => {
+            const before = announceStatusById[a.id];
+            if(before === 'pending' && (a.status === 'approved' || a.status === 'rejected')){
+              showToast(`Your announcement "${a.title}" was ${a.status}.`, NOTIF_TOAST_MS);
+            }
+          });
+        }
+        announceStatusById = cur;
       } else {
         console.error('Announcement list failed:', data.message);
       }
@@ -1666,6 +1689,16 @@ body{
           status: t.status,
           meta: `${t.status === 'acknowledged' ? 'Acknowledged' : 'Reported'} ${timeAgoLabel(t.created_at)}`
         }));
+        const cur = {};
+        state.transactions.forEach(t => cur[t.id] = t.status);
+        if(txnStatusById !== null){
+          state.transactions.forEach(t => {
+            if(t.status === 'acknowledged' && txnStatusById[t.id] && txnStatusById[t.id] !== 'acknowledged'){
+              showToast(`Admin acknowledged the hand-off for ${t.animal}.`, NOTIF_TOAST_MS);
+            }
+          });
+        }
+        txnStatusById = cur;
       } else {
         console.error('Transaction list failed:', res.status, data.message);
       }
@@ -2116,6 +2149,18 @@ regEl('reg-submit').addEventListener('click', async () => {
     loadRfidRegistry(); loadAllPets(); loadMedicalRecords();
   });
   loadFacilities();
+
+  function pollVet(){
+  if(document.hidden) return;
+  loadNotifications();
+  loadTransactions();
+  loadAnnouncements();
+  loadRfidRegistry();
+  loadAllPets();
+  loadMedicalRecords();
+}
+setInterval(pollVet, POLL_MS);
+document.addEventListener('visibilitychange', () => { if(!document.hidden) pollVet(); });
 })();
 </script>
 

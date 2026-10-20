@@ -24,19 +24,20 @@ if ($result->num_rows == 1) {
             exit();
         }
 
+        if (empty($user['email_verified_at'])) {
+            require_once 'otp_lib.php';
+            $_SESSION['otp_email_signup'] = strtolower($user['email']);
+            $r = otp_issue($conn, $user['email'], 'signup');
+            if ($r['ok']) $_SESSION['otp_sent_at_signup'] = time();
+            header("Location: ../verify_otp.html?purpose=signup");
+            exit();
+        }
+
         $_SESSION['user'] = $username;
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['role'] = $user['role'];
         $_SESSION['name'] = $user['name'];
 
-        // FIX: admin_login.php also sets 'admin_id' and 'admin_name', and
-        // send_notif.php / admin_donations.php / admin_facility.php read
-        // those specifically. An admin who logs in through this general
-        // form (this file redirects role === 'admin' to the admin
-        // dashboard, so it's a real path) previously never got those keys
-        // set, so send_notif.php wrongly reported "Admins only," and
-        // donation/facility records got logged under the generic name
-        // "Admin" instead of the real one. Keep both conventions in sync.
         if ($user['role'] == 'admin') {
             $_SESSION['admin_id']   = $user['id'];
             $_SESSION['admin_name'] = $user['name'];
